@@ -8,10 +8,12 @@ using System;
 
 class Program {
   public static void Main (string[] args) {
+    string nome;
+    
     Console.WriteLine("Ola mundo 1");
     Console.WriteLine("Ola mundo 2");
     Console.WriteLine("Ola mundo 3"); //3 outputs
-    string nome = Console.ReadLine(); //input
+    nome = Console.ReadLine(); //input
     Console.WriteLine("Nome: " + nome); //output
   }
 }
