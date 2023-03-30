@@ -7,20 +7,21 @@ Console.WriteLine("Olá " + nome + "!!");
 Console.WriteLine("Bem vindo a FECAP!!");
 
 //ex2
+
 string nomeProduto;
-double preco1, preco2, preco3, media;
+double preco1, preco2, preco3, media, valorIdeal;
 
 Console.Write("Insira o nome do produto: ");
 nomeProduto = Console.ReadLine();
 
+Console.Write("Insira o preco ideal do produto: ");
+valorIdeal = Convert.ToDouble(Console.ReadLine());
+
 Console.Write("Insira o preco 1: ");
 preco1 = Convert.ToDouble(Console.ReadLine());
 
-
-
 Console.Write("Insira o preco 2: ");
 preco2 = Convert.ToDouble(Console.ReadLine());
-
 
 Console.Write("Insira o preco 3: ");
 preco3 = Convert.ToDouble(Console.ReadLine());
@@ -28,3 +29,17 @@ preco3 = Convert.ToDouble(Console.ReadLine());
 media = (preco1 + preco2 + preco3) / 3;
 
 Console.WriteLine("Preço médio do " + nomeProduto + " é R$" + media);
+
+if(media > valorIdeal)
+{
+    Console.WriteLine("O valor está maior que o ideal!");
+}
+
+else if(media < valorIdeal)
+{
+    Console.WriteLine("O valor está menor que o ideal!");
+}
+else
+{
+    Console.WriteLine("O valor é ideal!");
+}
