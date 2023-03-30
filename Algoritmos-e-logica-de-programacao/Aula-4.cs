@@ -22,8 +22,9 @@ if (escolha == 1)
     po = Convert.ToDouble(Console.ReadLine());
 
     mediaNota = 0.2 * n1 + 0.3 * pi + 0.5 * po;
+    Console.WriteLine("Sua média é: " + mediaNota);
 
-    if(mediaNota >= 6)
+    if (mediaNota >= 6)
     {
         Console.WriteLine("Você está aprovado!");
     }
