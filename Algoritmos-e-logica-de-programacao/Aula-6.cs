@@ -1,8 +1,11 @@
-int count, soma;
+double count, soma, lim;
 count = 1;
 soma = 0;
 
-while(count <= 10)
+Console.Write("Insira a quantidade de numeros que deseja somar: ");
+lim = Convert.ToDouble(Console.ReadLine());
+
+while(count <= lim)
 {
     soma += count;
     count++;
