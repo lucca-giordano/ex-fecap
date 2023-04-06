@@ -29,7 +29,7 @@ if (escolha == 1)
         Console.WriteLine("Você está aprovado!");
     }
 
-    else if(mediaNota >= 4)
+    else if (mediaNota >= 4)
     {
         Console.WriteLine("Você está de exame, precisa de 6 pontos!");
     }
@@ -52,7 +52,7 @@ else if (escolha == 2)
     //ex2
 
     string nomeProduto;
-    double preco1, preco2, preco3, media, valorIdeal;
+    double preco1, preco2, preco3, media, valorIdeal, maiorValor1, maiorValorF;
 
     Console.Write("Insira o nome do produto: ");
     nomeProduto = Console.ReadLine();
@@ -86,6 +86,11 @@ else if (escolha == 2)
     {
         Console.WriteLine("O valor é ideal!");
     }
+
+    maiorValor1 = Math.Max(preco1, preco2);
+    maiorValorF = Math.Max(maiorValor1, preco3);
+    Console.WriteLine("O maior valor inserido foi: R$" + maiorValorF);
+
 }
 
 else
