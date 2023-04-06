@@ -87,9 +87,7 @@ else if (escolha == 2)
         Console.WriteLine("O valor é ideal!");
     }
 
-    maiorValor1 = Math.Max(preco1, preco2);
-    maiorValorF = Math.Max(maiorValor1, preco3);
-    Console.WriteLine("O maior valor inserido foi: R$" + maiorValorF);
+    Console.WriteLine("O maior valor inserido foi: R$" + Math.Max(preco1, Math.Max(preco2, preco3)));
 
 }
 
