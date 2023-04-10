@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://dhbion0bpy6bf"]
+
+[ext_resource type="Texture2D" uid="uid://biy7yt28bomic" path="res://37f63434299b0dc23afe3d486877f646.png" id="1_bcv8y"]
+[ext_resource type="Script" path="res://fase1.cs" id="1_t4r82"]
+[ext_resource type="Script" path="res://CharacterBody.cs" id="3_vjdb6"]
+[ext_resource type="Texture2D" uid="uid://dk63mqna0br4w" path="res://icon.svg" id="4_um7if"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_owf05"]
+size = Vector2(3.67813, 2.50165)
+
+[node name="Node2D" type="Node2D"]
+position = Vector2(318, 255)
+script = ExtResource("1_t4r82")
+
+[node name="37f63434299b0Dc23Afe3d486877f646" type="Sprite2D" parent="."]
+position = Vector2(149, 48)
+texture = ExtResource("1_bcv8y")
+
+[node name="Button" type="Button" parent="."]
+offset_left = -77.0
+offset_top = -163.0
+offset_right = -69.0
+offset_bottom = -155.0
+scale = Vector2(4.61559, 4.88125)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+scale = Vector2(-2800.67, -58.9416)
+script = ExtResource("3_vjdb6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(540, 38)
+scale = Vector2(589.788, -0.514946)
+
+[node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(-0.000379868, 0.00793648)
+scale = Vector2(0.000189934, -0.00793651)
+texture = ExtResource("4_um7if")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-8, 78)
+scale = Vector2(147.63, -74.7507)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0.382715, -2.01336)
+scale = Vector2(3.72999, 0.261122)
+shape = SubResource("RectangleShape2D_owf05")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
