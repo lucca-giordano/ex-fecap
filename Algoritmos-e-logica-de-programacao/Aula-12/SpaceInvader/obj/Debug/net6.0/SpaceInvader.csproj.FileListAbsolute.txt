@@ -1,0 +1,15 @@
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\bin\Debug\net6.0\SpaceInvader.exe
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\bin\Debug\net6.0\SpaceInvader.deps.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\bin\Debug\net6.0\SpaceInvader.runtimeconfig.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\bin\Debug\net6.0\SpaceInvader.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\bin\Debug\net6.0\SpaceInvader.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.csproj.AssemblyReference.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.AssemblyInfoInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.AssemblyInfo.cs
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.csproj.CoreCompileInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\refint\SpaceInvader.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\SpaceInvader.genruntimeconfig.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader\obj\Debug\net6.0\ref\SpaceInvader.dll

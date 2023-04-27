@@ -1,0 +1,15 @@
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\bin\Debug\net6.0\JogoDaVelha_V1.exe
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\bin\Debug\net6.0\JogoDaVelha_V1.deps.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\bin\Debug\net6.0\JogoDaVelha_V1.runtimeconfig.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\bin\Debug\net6.0\JogoDaVelha_V1.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\bin\Debug\net6.0\JogoDaVelha_V1.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.csproj.AssemblyReference.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.AssemblyInfoInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.AssemblyInfo.cs
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.csproj.CoreCompileInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\refint\JogoDaVelha_V1.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\JogoDaVelha_V1.genruntimeconfig.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05\JogoDaVelha_V1\obj\Debug\net6.0\ref\JogoDaVelha_V1.dll

@@ -1,0 +1,15 @@
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\bin\Debug\net6.0\SpaceInvader_V3.exe
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\bin\Debug\net6.0\SpaceInvader_V3.deps.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\bin\Debug\net6.0\SpaceInvader_V3.runtimeconfig.json
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\bin\Debug\net6.0\SpaceInvader_V3.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\bin\Debug\net6.0\SpaceInvader_V3.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.csproj.AssemblyReference.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.AssemblyInfoInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.AssemblyInfo.cs
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.csproj.CoreCompileInputs.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\refint\SpaceInvader_V3.dll
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.pdb
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\SpaceInvader_V3.genruntimeconfig.cache
+C:\Users\egome\Dropbox\Documentos\__FECAP\_2023_1\ALGORITMOS_COMP\AULA05\AULA05B\SpaceInvader_V3\obj\Debug\net6.0\ref\SpaceInvader_V3.dll
