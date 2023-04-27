@@ -66,6 +66,29 @@ bool verificarLinha(string[] tab)
     return venceu;
 }
 
+bool verificarColuna(string[] tab)
+{
+    bool venceu = false; 
+    return venceu;
+}
+
+bool verificarDiagonal(string[] tab)
+{
+    bool venceu = false;
+    return venceu;
+}
+
+bool verificarVencedor(string[] tab)
+{
+bool venceu = false;
+    venceu = verificarLinha(tab);
+    if (!venceu)
+    {
+        venceu = verificarColuna(tab);
+    }
+
+}
+
 String[] Tabuleiro = new string[9];
 String[] Jogador = new String[2];
 Jogador[0] = "X";
@@ -87,6 +110,7 @@ while (!fim)
         {
             fim= true;
             vencedor = Jogador[JogVez];
+            Console.WriteLine("O jogador " + vencedor + " ganhou o jogo!");
         }
         JogVez = (JogVez + 1) % 2;
     }
