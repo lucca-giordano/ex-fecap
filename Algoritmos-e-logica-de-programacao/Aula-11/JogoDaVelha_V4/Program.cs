@@ -60,15 +60,44 @@ bool verificarLinha(string[] tab)
             {
                 venceu = true;
             }
-            linha += 3;
+            
         }
+        linha += 3;
     }
     return venceu;
 }
 
 bool verificarColuna(string[] tab)
 {
-    bool venceu = false; 
+    bool venceu = false;
+    int coluna = 0;
+    while (!venceu && coluna <= 2)
+    {
+        if (!String.IsNullOrEmpty(tab[coluna]))
+        {
+            if (tab[0] == tab[3] && tab[3] == tab[6])
+            {
+                venceu = true;
+            }
+            
+            else if (tab[1] == tab[4] && tab[4] == tab[7])
+            {
+                venceu = true;
+            }
+            else if (tab[2] == tab[5] && tab[5] == tab[8])
+            {
+                venceu = true;
+            }
+            else
+            {
+                venceu = false;
+            }
+            
+        }
+
+        coluna++;
+    }
+
     return venceu;
 }
 
@@ -80,12 +109,23 @@ bool verificarDiagonal(string[] tab)
 
 bool verificarVencedor(string[] tab)
 {
-bool venceu = false;
-    venceu = verificarLinha(tab);
+    bool venceu = false;
+
     if (!venceu)
+    {
+        venceu = verificarLinha(tab);
+    }
+
+    else if (!venceu)
     {
         venceu = verificarColuna(tab);
     }
+    else if (!venceu)
+    {
+        venceu = verificarDiagonal(tab);
+    }
+
+    return venceu;
 
 }
 
@@ -98,6 +138,7 @@ int Jogada = -1;
 imprimirTabuleiro(Tabuleiro);
 Boolean fim = false;
 String vencedor = "";
+bool venceu = false;
 while (!fim)
 {
 
@@ -106,6 +147,7 @@ while (!fim)
     if (jogadaValida(Jogada, Tabuleiro))
     {
         executarJogada(Jogada, Tabuleiro, Jogador[JogVez]);
+        venceu = verificarVencedor(Tabuleiro);
         if (verificarLinha(Tabuleiro))
         {
             fim= true;
