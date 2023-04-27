@@ -2,10 +2,10 @@
 
 String[][] iniciarTabuleiro()
 {
-    String[][]  Tab = new String[25][];
+    String[][]  Tab = new String[10][];
     for (int i = 0; i < Tab.Length; i++)
     {
-        Tab[i] = new String[10];
+        Tab[i] = new String[5];
     }
     return Tab;
 }
