@@ -32,4 +32,3 @@ Console.WriteLine("Pressione enter...");
 Console.ReadLine();
 Tabuleiro[1] = Jogador[1];
 imprimirTabuleiro(Tabuleiro);
-

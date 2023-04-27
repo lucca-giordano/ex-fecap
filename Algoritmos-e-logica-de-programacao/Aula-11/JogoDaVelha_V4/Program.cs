@@ -46,15 +46,21 @@ void executarJogada(int jogada, string[] tab, string jogador)
     tab[jogada] = jogador;
 }
 
-bool verificarVencedor(string[] tab)
+bool verificarLinha(string[] tab)
 {
     bool venceu = false;
     //Verifica apenas se a 1ªLINHA do Tabuleiro é VENCEDORA
-    if (!String.IsNullOrEmpty(tab[0]))
+    int linha = 0;
+    while (!venceu && linha < tab.Length)
     {
-        if (tab[0] == tab[1] && tab[1] == tab[2]) 
+        if (!String.IsNullOrEmpty(tab[linha]))
         {
-            venceu = true;
+            // verificar horizontal
+            if (tab[linha] == tab[linha + 1] && tab[linha + 1] == tab[linha + 2])
+            {
+                venceu = true;
+            }
+            linha += 3;
         }
     }
     return venceu;
@@ -77,7 +83,7 @@ while (!fim)
     if (jogadaValida(Jogada, Tabuleiro))
     {
         executarJogada(Jogada, Tabuleiro, Jogador[JogVez]);
-        if (verificarVencedor(Tabuleiro))
+        if (verificarLinha(Tabuleiro))
         {
             fim= true;
             vencedor = Jogador[JogVez];
