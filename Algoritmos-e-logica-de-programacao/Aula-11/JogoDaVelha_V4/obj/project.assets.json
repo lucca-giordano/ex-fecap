@@ -8,25 +8,26 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\egome\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\23024522\\.nuget\\packages\\": {},
+    "C:\\Users\\23024522\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\egome\\Dropbox\\Documentos\\__FECAP\\_2023_1\\ALGORITMOS_COMP\\AULA05\\AULA05\\JogoDaVelha_V4\\JogoDaVelha_V4.csproj",
+      "projectUniqueName": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Aula-11\\JogoDaVelha_V4\\JogoDaVelha_V4.csproj",
       "projectName": "JogoDaVelha_V4",
-      "projectPath": "C:\\Users\\egome\\Dropbox\\Documentos\\__FECAP\\_2023_1\\ALGORITMOS_COMP\\AULA05\\AULA05\\JogoDaVelha_V4\\JogoDaVelha_V4.csproj",
-      "packagesPath": "C:\\Users\\egome\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\egome\\Dropbox\\Documentos\\__FECAP\\_2023_1\\ALGORITMOS_COMP\\AULA05\\AULA05\\JogoDaVelha_V4\\obj\\",
+      "projectPath": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Aula-11\\JogoDaVelha_V4\\JogoDaVelha_V4.csproj",
+      "packagesPath": "C:\\Users\\23024522\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Aula-11\\JogoDaVelha_V4\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Users\\23024522\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\egome\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\23024522\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\23024522\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -58,8 +59,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -68,7 +68,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
