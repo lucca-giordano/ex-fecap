@@ -1,0 +1,15 @@
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\bin\Debug\net7.0\ConsoleApplciation2.exe
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\bin\Debug\net7.0\ConsoleApplciation2.deps.json
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\bin\Debug\net7.0\ConsoleApplciation2.runtimeconfig.json
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\bin\Debug\net7.0\ConsoleApplciation2.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\bin\Debug\net7.0\ConsoleApplciation2.pdb
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.csproj.AssemblyReference.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.AssemblyInfoInputs.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.AssemblyInfo.cs
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.csproj.CoreCompileInputs.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\refint\ConsoleApplciation2.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.pdb
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ConsoleApplciation2.genruntimeconfig.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Projeto1\ConsoleApplciation2\obj\Debug\net7.0\ref\ConsoleApplciation2.dll
