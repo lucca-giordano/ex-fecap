@@ -73,10 +73,39 @@ void executarJogada(ConsoleKeyInfo key, string[][] tabuleiro, String Base, int[]
                 posBase[1] = col;
             }
             break;
+
         case ConsoleKey.Spacebar:
             posTiro[0] = lin - 1;
             posTiro[1] = col;
             tabuleiro[lin - 1][col] = Tiro;
+    // Cria um novo thread para desenhar o rastro do tiro em segundo plano
+    new Thread(() =>
+    {
+        for (int i = lin; i < tabuleiro.Length; i++)
+        {
+            // Preenche a linha com o caractere do rastro
+            tabuleiro[i][col] = "!";
+
+            // Aguarda um tempo antes de apagar a linha
+            Thread.Sleep(50);
+
+            // Apaga a linha
+            tabuleiro[i][col] = "";
+        }
+
+        for (int i = lin - 1; i >= 0; i--)
+        {
+            // Preenche a linha com o caractere do rastro
+            tabuleiro[i][col] = "!";
+
+            // Aguarda um tempo antes de apagar a linha
+            Thread.Sleep(50);
+
+            // Apaga a linha
+            tabuleiro[i][col] = "";
+        }
+    }).Start();
+
             break;
     }
 
@@ -116,3 +145,84 @@ while (!fim)
     Thread.Sleep(50);
 }
 
+/*
+//Solução 1:
+case ConsoleKey.Spacebar:
+    posTiro[0] = lin - 1;
+    posTiro[1] = col;
+    tabuleiro[lin - 1][col] = Tiro;
+
+    // Cria uma cópia do tabuleiro para desenhar a linha
+    var tabuleiroCopia = (string[][])tabuleiro.Clone();
+
+    // Cria um novo thread para desenhar o rastro do tiro em segundo plano
+    new Thread(() =>
+    {
+        for (int i = lin; i < tabuleiro.Length; i++)
+        {
+            // Preenche a linha com o caractere do rastro
+            tabuleiroCopia[i][col] = Rastro;
+
+            // Aguarda um tempo antes de apagar a linha
+            Thread.Sleep(50);
+
+            // Apaga a linha
+            tabuleiroCopia[i][col] = "";
+        }
+
+        for (int i = lin - 1; i >= 0; i--)
+        {
+            // Preenche a linha com o caractere do rastro
+            tabuleiroCopia[i][col] = Rastro;
+
+            // Aguarda um tempo antes de apagar a linha
+            Thread.Sleep(50);
+
+            // Apaga a linha
+            tabuleiroCopia[i][col] = "";
+        }
+    }).Start();
+
+    break;
+
+//Solução 2:
+int[] gerarAlvoAleatorio(string[][] tabuleiro)
+{
+    Random random = new Random();
+    int lin, col;
+    do
+    {
+        lin = random.Next(tabuleiro.Length);
+        col = random.Next(tabuleiro[0].Length);
+    } while (tabuleiro[lin][col] != null);
+    return new int[] { lin, col };
+}
+ 
+ 
+Solução 3:
+ int[] posAlvo = gerarAlvoAleatorio(Tabuleiro);
+tabuleiro[posAlvo[0]][posAlvo[1]] = "|X|"; // ou outro símbolo para representar o alvo
+
+SOlução 4:
+void atualizarTabuleiro(String[][] tabuleiro, String Base, int[] posBase, string Tiro, int[] posTiro, int[] posAlvo)
+{
+    int linTiro = posTiro[0];
+    int colTiro = posTiro[1];
+    int linAlvo = posAlvo[0];
+    int colAlvo = posAlvo[1];
+    if (linTiro == linAlvo && colTiro == colAlvo)
+    {
+        tabuleiro[linTiro][colTiro] = "|*|"; // ou outro símbolo para representar o alvo atingido
+        posAlvo = gerarAlvoAleatorio(tabuleiro); // gera um novo alvo aleatório
+        tabuleiro[posAlvo[0]][posAlvo[1]] = "|X|"; // ou outro símbolo para representar o novo alvo
+    }
+    else if (linTiro > 0)
+    {
+        tabuleiro[linTiro][colTiro] = "";
+        linTiro--;
+        tabuleiro[linTiro][colTiro] = Tiro;
+        posTiro[0] = linTiro;
+    }
+}
+
+*/
