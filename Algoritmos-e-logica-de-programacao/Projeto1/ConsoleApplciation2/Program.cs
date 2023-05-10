@@ -1,4 +1,4 @@
-﻿String[][] Tabuleiro = null;
+﻿String[][]? Tabuleiro = null;
 String Base = "|O|";
 int[] posBase = { 9, 0 };
 String Tiro = " ! ";
