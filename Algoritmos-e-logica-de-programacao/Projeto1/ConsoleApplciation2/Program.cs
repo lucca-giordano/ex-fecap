@@ -66,6 +66,10 @@ void executarJogada(ConsoleKeyInfo key, string[][] tabuleiro, String Base, int[]
             }
             catch (System.IndexOutOfRangeException)
             {
+                tabuleiro[lin][col] = "";
+                col++;
+                tabuleiro[lin][col] = Base;
+                posBase[1] = col;
                 break;
             }
         case ConsoleKey.LeftArrow:
