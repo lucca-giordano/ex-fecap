@@ -21,7 +21,7 @@ String[][] iniciarTabuleiro()
 void imprimirTabuleiro(string[][] Tab)
 {
     Console.Clear();
-    Console.WriteLine("*** SPACE INVADERS - FECAP ***");
+    Console.WriteLine("*** EcoPescaria - FECAP ***");
     for (int lin = 0; lin < Tab.Length; lin++)
     {
         for (int col = 0; col < Tab[lin].Length; col++)
