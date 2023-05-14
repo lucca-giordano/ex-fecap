@@ -8,29 +8,31 @@
     "net7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\lucca\\.nuget\\packages\\": {},
-    "C:\\Users\\lucca\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder": {}
+    "C:\\Users\\23024522\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projetos\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\ConsoleApplciation2.csproj",
+      "projectUniqueName": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\ConsoleApplciation2.csproj",
       "projectName": "ConsoleApplciation2",
-      "projectPath": "C:\\Projetos\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\ConsoleApplciation2.csproj",
-      "packagesPath": "C:\\Users\\lucca\\.nuget\\packages\\",
-      "outputPath": "C:\\Projetos\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\obj\\",
+      "projectPath": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\ConsoleApplciation2.csproj",
+      "packagesPath": "C:\\Users\\23024522\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\23024522\\Documents\\GitHub\\ex.-fecap\\Algoritmos-e-logica-de-programacao\\Projeto1\\ConsoleApplciation2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Users\\lucca\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\lucca\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Users\\lucca\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config"
+        "C:\\Users\\23024522\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -54,8 +56,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -64,7 +65,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
