@@ -1,0 +1,15 @@
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\bin\Debug\net6.0\Aula-15.exe
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\bin\Debug\net6.0\Aula-15.deps.json
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\bin\Debug\net6.0\Aula-15.runtimeconfig.json
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\bin\Debug\net6.0\Aula-15.dll
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\bin\Debug\net6.0\Aula-15.pdb
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.csproj.AssemblyReference.cache
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.AssemblyInfoInputs.cache
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.AssemblyInfo.cs
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.csproj.CoreCompileInputs.cache
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.dll
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\refint\Aula-15.dll
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.pdb
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\Aula-15.genruntimeconfig.cache
+C:\Users\23024522\Documents\GitHub\ex.-fecap\Algoritmos-e-logica-de-programacao\Aula-15\Aula-15\Aula-15\obj\Debug\net6.0\ref\Aula-15.dll
