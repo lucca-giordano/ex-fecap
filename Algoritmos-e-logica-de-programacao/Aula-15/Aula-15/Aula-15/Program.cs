@@ -38,6 +38,58 @@ else if(escolha == 1)
     }
 }
 
+else if(escolha == 2)
+{
+
+    Double menorColuna(Double [][] matriz, int col)
+    {
+        double menor = matriz[col][0];
+        for(int j = 0; j < matriz[col].Length; j++)
+        {
+            if(matriz[col][j] < menor)
+            {
+            menor = matriz[col][j];
+            }
+        }
+
+        return menor;
+    }
+
+    Double[][] matriz;
+    String[] insumos = new String[4];
+
+    insumos[0] = "Farinha";
+    insumos[1] = "Ovo";
+    insumos[2] = "Leite condensado";
+    insumos[3] = "Chocolate";
+
+    matriz = new Double[4][];
+    for (int i = 0; i < 4; i++)
+    {
+        matriz[i] = new Double[5];
+    }
+
+    for(int col = 0; col < 4; col++)
+    {
+        for(int row = 0; row < 4; row++)
+        {
+            Console.Write("Entre com o preço do " + insumos[col] + ": ");
+            matriz[row][col] = Convert.ToDouble(Console.ReadLine());
+        }
+    }
+
+    Double menorFarinha = menorColuna(matriz, 0);
+    Double menorOvo = menorColuna(matriz, 1);
+    Double menorLeite = menorColuna(matriz, 2);
+    Double menorChocolate = menorColuna(matriz, 3);
+
+    Console.WriteLine(menorFarinha);
+    Console.WriteLine(menorOvo);
+    Console.WriteLine(menorLeite);
+    Console.WriteLine(menorChocolate);
+
+}
+
 else
 {
     Console.WriteLine("Programa inválido!");
