@@ -1,0 +1,15 @@
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\ConsoleApp1.exe
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\ConsoleApp1.deps.json
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\ConsoleApp1.runtimeconfig.json
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\ConsoleApp1.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\ConsoleApp1.pdb
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.csproj.AssemblyReference.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.AssemblyInfoInputs.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.AssemblyInfo.cs
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\refint\ConsoleApp1.dll
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.pdb
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ConsoleApp1.genruntimeconfig.cache
+C:\Projetos\ex.-fecap\Algoritmos-e-logica-de-programacao\Estudo-1\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ref\ConsoleApp1.dll
