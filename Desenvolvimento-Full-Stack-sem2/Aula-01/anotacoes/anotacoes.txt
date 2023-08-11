@@ -1,0 +1,16 @@
+principais recursos do JS:
+    1. Manipulação do DOM
+    2. Validação de formulário
+    3. Criação de animações
+
+Frameworks a serem vistos em sala de aula:
+    1. Bootstrap
+    2. React
+
+estrutura padrão:
+    Nome do arquivo html é sempre index.html, isso por padrão de mercado.
+    Nome do arquivo js é sempre script.js, também por padrão de mercado.
+    E por fim, o arquivo css é sempre style.css.
+
+    Esses nomes tem relação com a maneira que os motores de busca indexam os sites nas paginas dos usuarios.
+    Lembrando que essa regra vale apenas para o arquivo HTML, os outros dois são apenas por costume dos profissionais.
