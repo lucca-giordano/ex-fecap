@@ -1,8 +1,24 @@
 body{
-    background-color: #f5f5f5;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url(img/dia.png);
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    font-size: 30px;
+    color: rgb(0, 0, 0);
 }
 
+body.darkTheme{
+    background-image: url(img/noite.png);
+    color: rgb(255, 255, 255);
+}
+
+header, main, footer{
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.329);
+}
+
+.themeStatus{
+    font-size: 35px;
+}
