@@ -1,0 +1,7 @@
+Ideia inicial do projeto:
+    Loja de produtos naturais, inspirada no site da Naturitas.
+    Relação com as ODSs, 3, 9, 12, 14, 15, 17.
+
+    Tecnologias:
+        front - react e bootstrap
+        back - node js
