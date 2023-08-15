@@ -5,3 +5,7 @@ Ideia inicial do projeto:
     Tecnologias:
         front - react e bootstrap
         back - node js
+
+    EURISTICA - apresentação breve do FIGMA
+
+    Figma, o que é? Quais suas funções?
