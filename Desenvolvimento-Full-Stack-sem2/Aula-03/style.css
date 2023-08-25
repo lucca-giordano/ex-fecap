@@ -1,0 +1,62 @@
+header,
+aside,
+main,
+#c1,
+#c2,
+#c3,
+footer {
+    background-color: #cfcfcf;
+    padding: 10px;
+    transition: .2s;
+    border-radius: 9px;
+}
+
+.container :hover {
+    box-shadow: 0 0 10px #000;
+}
+
+body{
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.container {
+    display: grid;
+    height: 100vh;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.5fr, 1fr, 1fr, 1fr;
+    grid-template-areas:
+        "h h h h"
+        "a m m m"
+        "a c1 c2 c3"
+        "f f f f";
+}
+
+header {
+    grid-area: h;
+}
+
+aside {
+    grid-area: a;
+}
+
+main {
+    grid-area: m;
+}
+
+#c1 {
+    grid-area: c1;
+}
+
+#c2 {
+    grid-area: c2;
+}
+
+#c3 {
+    grid-area: c3;
+}
+
+footer {
+    grid-area: f;
+}
