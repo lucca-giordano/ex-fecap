@@ -11,21 +11,18 @@ footer {
     border-radius: 9px;
 }
 
-.container :hover {
-    box-shadow: 0 0 10px #000;
-}
-
 body{
     max-width: 1000px;
     margin: 0 auto;
+    font-family: 'Bricolage Grotesque', sans-serif;
 }
 
 .container {
     display: grid;
-    height: 100vh;
+    /* height: 100vh; */
     gap: 12px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr, 1fr, 1fr, 1fr;
+    grid-template-rows: 1fr, 1fr, 1fr, 1fr;
     grid-template-areas:
         "h h h h"
         "a m m m"
@@ -59,4 +56,59 @@ main {
 
 footer {
     grid-area: f;
+}
+
+.author-name{
+    font-size: 20px;
+}
+.author-email{
+    font-size: 15px;
+    color: #3838f7;
+    text-decoration: underline;
+}
+.author-email :hover{
+    color: #1d0b85;
+}
+
+.author-bio{
+    font-size: 12px;
+    text-align: justify;
+    font-weight: normal;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    text-align: center;
+    display: block;
+    margin: auto;
+}
+
+.social-links{
+    font: 14px;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+
+.social-icon{
+    font-size: 32px;
+    color: #2d2e2e;
+    margin-right: 10px;
+}
+
+.social-icon:hover{
+    color: #1d0b85;
+}
+
+.author-thumbnail{
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+
+#c1 img, #c2 img, #c3 img{
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+    border-radius: 9px;
 }
