@@ -133,3 +133,40 @@ footer{grid-area: f;}
 .menu-itens li a:hover{
     background-color: #2e2d2d;
 }
+
+/* Estilos Footer */
+
+footer{
+    padding: 5px 0px;
+    text-align: center;
+}
+
+footer ul{
+    list-style: none;
+    padding: 0;
+}
+
+footer ul li a{
+    text-decoration: none;
+    color: #2e2d2d;
+}
+
+.footer-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0px;
+    margin: 0px;
+}
+
+.footer-section{
+    padding: 5px;
+    max-width: 300px;
+    flex: 1;
+}
+
+.footer-botton{
+    padding-left: 12px;
+}
+
