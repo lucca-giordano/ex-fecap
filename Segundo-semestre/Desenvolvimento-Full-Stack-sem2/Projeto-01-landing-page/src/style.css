@@ -1,0 +1,158 @@
+body{
+    font-family: 'Mooli', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #253540;
+}
+
+header{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.logo{
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    flex: 1; /* A logo ocupa o espaço disponível */
+    background-color: #402B24;
+    margin-right: 10px;
+    color: #D9D8D7;
+    border-radius: 9px;
+
+}
+
+.header-button{
+    border: 2px solid #ccc; /* Bordas iguais entre os botões */
+    padding: 20px 40px;
+    margin-right: 10px;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: 9px;
+    background-color: #D9D8D7;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.15s ease;
+  }
+  
+.header-button:last-child {
+    margin-right: 0; /* Remove a margem do último botão para evitar espaçamento extra */
+  }
+
+.header-button:hover{
+    background-color: #402B24;
+    color: #D9D8D7;
+    
+}
+
+.primeiro-conteudo{
+    display: flex;
+}
+
+.titulo-descricao{
+    font-size: 30px;
+    color: #402B24;
+}
+
+.descricao{
+    flex: 1;
+    padding: 10px;
+    margin: 10px;
+    background-color: #D9D8D7;
+    border-radius: 9px;
+}
+
+.planos{
+    display: flex;
+}
+
+.plano{
+    background-color: #D9D8D7;
+    margin: 5px;
+    padding: 3px;
+    border-radius: 9px;
+    max-width: 366px;
+    align-items: center;
+}
+
+.titulo-planos{
+    text-align: center;
+    font-size: 23px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: #D9D8D7;
+}
+
+.regra-planos{
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: #D9D8D7;
+}
+
+.container-button{
+    display: flex;
+    justify-content: center;
+}
+
+.assinar{
+    font-size: 20px;
+    padding: 20px;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    background-color: #402B24;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    color: #D9D8D7;
+    transition: background-color 0.25s ease, color 0.15s ease;
+    border: 2px solid #00000000; /*gambiarra du caraio*/
+}
+
+.assinar:hover{
+    background-color: #D9D8D7;
+    border: 2px solid #402B24;
+    box-sizing: border-box;
+    color: #402B24;
+}
+
+.nome{
+    font-weight: 700;
+    transform: translateX(40%);
+}
+
+.preco{
+    font-weight: 700;
+    transform: translateX(40%);
+}
+
+.segundo-conteudo{
+    margin-top: 50px;
+    display: flex;
+}
+
+.segundo-conteudo img{
+    width: 50%;
+    height: 50%;
+    border-radius: 9px;
+    margin-right: 10px;
+}
+
+.formulario{
+}
+
+.nome-completo{
+}
+
+.email{
+
+}
+
+.enviar{
+
+}
