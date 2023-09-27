@@ -147,4 +147,25 @@ SELECT ename, job, sal, comm FROM emp WHERE sak <= comm;
 -- Selecionar os funcionarios que o salario esta entre 2500 e 3000
 SELECT ename FROM emp WHERE sal BETWEEN 2500 and 3000;
 
-SELECT deptno, ename, sal FROM 
+-- EXERCICIOS -- 
+
+-- 1. Exibir os dados do funcionário James --
+SELECT empno, ename, hiredate FROM emp WHERE ename = "James";
+
+-- 2. Selecionar o nome, cargo e salário dos empregados, com exceção dos que tenham "job" = "manager" --
+SELECT ename, job, sal FROM emp WHERE job != "manager";
+
+-- 3. Listar todos os empregados com salários entre 1000 e 2000 --
+
+SELECT ename, sal FROM emp WHERE sal BETWEEN 1000 and 2000;
+
+-- 4. Listar o nome, salário e departamento dos empregados com o cargo de "PRESIDENT e "ANALYST" --
+SELECT ename, sal, deptno FROM emp WHERE job="president" or job="analyst";
+SELECT ename, sal, deptno FROM emp WHERE job in ("president", "analyst");
+
+-- 5. Listar o nome, salario e departamento dos empregados com os cargos diferentes de "PRESIDENT" e "ANALYST" --
+SELECT ename, job, sal, deptno FROM emp WHERE job NOT IN ("president", "analyst"); 
+
+
+-- FIM DOS EXERCICIOS --
+
