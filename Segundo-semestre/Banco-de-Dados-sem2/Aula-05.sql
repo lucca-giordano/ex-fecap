@@ -169,3 +169,13 @@ SELECT ename, job, sal, deptno FROM emp WHERE job NOT IN ("president", "analyst"
 
 -- FIM DOS EXERCICIOS --
 
+-- OPERADOR LIKE --
+
+SELECT * FROM emp WHERE ename LIKE 'K%';
+-- retorna "KING"
+
+SELECT * FROM emp WHERE ename LIKE '__L%';
+-- retorna "ALLEN" e "MILLER"
+
+-- o operador LIKE faz uma busca dentro de uma string. O "_" corta uma letra e o "%" 
+-- ignora todas a frente ou atrás da letra, depende da posição que você coloca-lo.
