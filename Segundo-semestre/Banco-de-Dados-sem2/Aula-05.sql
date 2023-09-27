@@ -131,3 +131,20 @@ SELECT ename,job from emp;
 
 -- Trazer valores distintos --
 SELECT distinct job from emp;
+
+-- Selecionar todos os empregados que tem o salario maior que 300 --
+SELECT * from emp WHERE sal > 300;
+
+-- Selecionar todos os empregados que tem o salario menor que 1000 --
+SELECT * from emp WHERE sal < 1000;
+
+-- Selecionar nas tabelas ename, job e deptno os funcionaros que tem como cargo clerk 
+SELECT ename,job,deptno FROM emp WHERE jobs="clerk";
+
+-- Selecionar nas tabelas ename, job os funcionarios que tem como o salario menor ou igual a comissão
+SELECT ename, job, sal, comm FROM emp WHERE sak <= comm;
+
+-- Selecionar os funcionarios que o salario esta entre 2500 e 3000
+SELECT ename FROM emp WHERE sal BETWEEN 2500 and 3000;
+
+SELECT deptno, ename, sal FROM 
