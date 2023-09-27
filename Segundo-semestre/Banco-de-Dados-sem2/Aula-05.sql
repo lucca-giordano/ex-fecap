@@ -166,6 +166,14 @@ SELECT ename, sal, deptno FROM emp WHERE job in ("president", "analyst");
 -- 5. Listar o nome, salario e departamento dos empregados com os cargos diferentes de "PRESIDENT" e "ANALYST" --
 SELECT ename, job, sal, deptno FROM emp WHERE job NOT IN ("president", "analyst"); 
 
+-- 6. Selecionar todos os empregados que ganhem mais de 2500 e trabalhem no depto 30 --
+SELECT ename, job, sal, deptno FROM emp WHERE deptno=30 and sal >=2500;
+
+-- 7. Selecionar todos os empregados que ganhem menos de 1000 e mais de 3000 --
+SELECT ename, job, sal FROM emp WHERE sal <= 1000 or sal >= 3000;
+
+-- 8. Exibir todos os funcionários que ganhem mais de 2500 e traballhem nos departamentos 10 ou 30 --
+SELECT ename, job, sal, deptno FROM emp WHERE sal >= 2500 and (deptno = 10 or deptno = 30);
 
 -- FIM DOS EXERCICIOS --
 
