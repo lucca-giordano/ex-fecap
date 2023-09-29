@@ -175,6 +175,9 @@ SELECT ename, job, sal FROM emp WHERE sal <= 1000 or sal >= 3000;
 -- 8. Exibir todos os funcionários que ganhem mais de 2500 e traballhem nos departamentos 10 ou 30 --
 SELECT ename, job, sal, deptno FROM emp WHERE sal >= 2500 and (deptno = 10 or deptno = 30);
 
+-- 9. Exibir tudo da empresa --
+SELECT * FROM emp;
+
 -- FIM DOS EXERCICIOS --
 
 -- OPERADOR LIKE --
