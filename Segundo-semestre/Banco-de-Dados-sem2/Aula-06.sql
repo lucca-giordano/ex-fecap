@@ -29,7 +29,8 @@ SELECT COUNT(empno) FROM emp WHERE job="SALESMAN";
 
 -- Cláusula GROUP BY
 -- Ao utiliza-lo, dividimos os registros que serão agregados em grupos de valores
-SELECT job, MAX(sal) FROM emp GROUP BY job;
+SELECT job, MAX(sal) FROM emp GROUP BY job;	
+SELECT deptno, MIN(sal), MAX(sal), SUM(sal) FROM emp GROUP BY deptno;
 
 -- -- -- -- EXERCÍCIOS -- -- -- --
 
