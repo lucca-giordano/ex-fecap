@@ -32,6 +32,22 @@ SELECT COUNT(empno) FROM emp WHERE job="SALESMAN";
 SELECT job, MAX(sal) FROM emp GROUP BY job;	
 SELECT deptno, MIN(sal), MAX(sal), SUM(sal) FROM emp GROUP BY deptno;
 
+-- Função HAVING
+-- É usado para filtrar os resultados que serão submetidos a agregação
+SELECT job, MAX(sal) FROM emp GROUP BY job HAVING MAX(sal) > 1000;
+
+-- Função ALIAS (AS)
+-- Da um apelido a uma ou mais categorias selecionadas
+SELECT job, MAX(sal) AS maximo_salario FROM emp GROUP BY job HAVING MAX(sal) > 1000;
+
+-- Função UPPER --
+-- Converte todos os caracteres para maiscula
+SELECT UPPER(job), MAX(sal) FROM emp GROUP BY job;
+
+-- Função LOWER --
+-- Converte todos os caracteres para minuscula
+SELECT LOWER(job), MAX(sal) FROM emp GROUP BY job;
+
 -- -- -- -- EXERCÍCIOS -- -- -- --
 
 -- 1. Selecioar de forma ordenada o conteúdo da tabela dept de acordo com o conteúdo da coluna dname em ordem crescente
