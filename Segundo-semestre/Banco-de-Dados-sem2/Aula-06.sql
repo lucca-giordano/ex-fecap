@@ -48,6 +48,30 @@ SELECT UPPER(job), MAX(sal) FROM emp GROUP BY job;
 -- Converte todos os caracteres para minuscula
 SELECT LOWER(job), MAX(sal) FROM emp GROUP BY job;
 
+-- Função LENGTH --
+-- Retorna a quantidade de caracteres
+SELECT ename, LENGTH(ename) FROM emp;
+
+-- Operador CONCAT --
+-- Concatena as colunas
+SELECT CONCAT(ename, ' trabalha como ', job) AS concatenando FROM emp;
+
+-- Trabalhando com DARA/HORA --
+-- É possível armazenar a hora atual em uma coluna de uma tabela:
+
+CREATE TABLE minha_tabela(
+id INT AUTO_INCREMENT PRIMARY KEY,
+data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') AS data_formatada;
+
+SELECT TIMESTAMPDIFF(MINUTE, '2023-09-20 10:00:00', NOW()) AS diferenca_minuto;
+
+SELECT * FROM minha_tabela WHERE DATE(data_registro) = CURDATE();
+
+SELECT DATE_FORMAT("2017-06-15","%d %M %Y");
+
 -- -- -- -- EXERCÍCIOS -- -- -- --
 
 -- 1. Selecioar de forma ordenada o conteúdo da tabela dept de acordo com o conteúdo da coluna dname em ordem crescente
