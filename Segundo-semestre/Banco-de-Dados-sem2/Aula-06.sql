@@ -82,3 +82,12 @@ SELECT * FROM dept ORDER BY dname DESC;
 
 -- 3. Selecionar de forma ordenada os campos ename e job da tabela emp de acordo com o conteúdo da coluna job e ename em ordem crescente
 SELECT ename, job FROM emp ORDER BY job, ename;
+
+-- 4. Selecionar todos os empregados com salário entre 1000 e 1500
+SELECT * FROM emp WHERE sal >= 1000 and sal <= 1500;
+
+-- 5. Apresente todos os nomes de empregados que tenham TH ou LL
+SELECT ename FROM emp WHERE ename LIKE '%TH%' OR ename LIKE '%LL%';
+
+-- 6. Selecionar os emprgados que tenham o mesmo cargo do empregado 7369 e que tenham um salário maior que o empregado 7876
+SELECT ename, job FROM emp WHERE job=(SELECT job FROM emp WHERE empno=7369) AND sal > (SELECT sal FROM emp WHERE empno=7876);
