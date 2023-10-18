@@ -32,14 +32,14 @@ INSERT INTO livro VALUES(4, "Harry Potter e a Câmara Secreta", 3);
 
 INSERT INTO autor VALUES(1, "Antoie de Saint-Exupéry", "(11)94002-8922");
 INSERT INTO autor VALUES(2, "Daniel Defoe", "(11)95825-8258");
-INSERT INTO autor VALUES(3, "J.K. Rowling", "(11)94206-3169");
+INSERT INTO autor VALUES(3, "J.K. Rowling", "(11)96914-2023");
 
 SELECT * FROM editora;
 SELECT * FROM livro;
 SELECT * FROM autor;
 
 -- Questão 3 --
-UPDATE livro SET titulo="Harry Potter 3" WHERE titulo="Harry Potter e a Câmara Secreta"; 
+UPDATE livro SET titulo="Harry Potter e a Câmara Secreta (NOME NOVO)" WHERE ibsn=4; 
 
 
 -- SEGUNDA SEÇÃO DA PROVA -- 
