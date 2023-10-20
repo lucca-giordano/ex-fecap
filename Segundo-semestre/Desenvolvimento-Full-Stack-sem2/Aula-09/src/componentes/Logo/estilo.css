@@ -1,0 +1,16 @@
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+    background-color: #fff;
+    display: flex;
+}
+li{
+    list-style: none;
+}
+
+.opcoes{
+    display: flex;
+}
