@@ -1,0 +1,163 @@
+body{ 
+    padding-top: 25px;
+} /*Estilo para a página inteira*/
+
+/*-----------------------------------*/
+
+header{
+    padding-left: 25px;
+    padding-right: 25px;
+} /*Estilo para o cabeçalho*/
+
+.header-top{
+    display: flex;
+    align-items: center;
+} /*Estilo para o cabeçalho superior*/
+
+.header-top__logo{
+    margin-right: 50px;
+} /*Estilo para o logo*/
+
+.header-top__logo-text{
+    font-size: 25px;
+    font-weight: bold;
+} /*Estilo para o texto do logo*/
+
+nav{
+    
+} /*Estilo para a barra de navegação*/
+
+.nav-content{
+    margin-top: 25px;
+    display: flex;
+} /*Estilo para o conteúdo da barra de navegação*/
+
+.nav-buttons{
+    display: flex;
+    
+} /*Estilo para a div que carrega os botões na barra de navegação*/
+
+.nav-buttons__button{
+    margin-right: 25px;
+    font-size: 18px;
+    border: 2px solid black;
+    padding: 5px;
+    text-decoration: none;
+} /*Estilo para os botões da barra de navegação*/
+
+.nav-search{
+    margin-left: auto;
+    align-self: center;
+} /*Estilo para a div que carrega a barra de pesquisa*/
+
+/*-----------------------------------*/
+
+main{
+    margin-top: 100px;
+} /*Estilo para o conteúdo principal*/
+
+.container{
+    
+} /*Estilo para o container do conteúdo principal*/
+
+/*-----------------------------------*/
+
+.top-content{
+    
+} /*Estilo para o conteúdo superior*/
+
+.top-content__container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 100px;
+} /*Estilo para o container do conteúdo superior*/
+
+.top-content__img{
+
+} /*Estilo para a imagem do conteúdo superior*/
+
+/*-----------------------------------*/
+
+.midle-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 100px;
+} /*Estilo para o conteúdo do meio*/
+
+.midle-content__container{
+    display: flex;
+} /*Estilo para o container do conteúdo do meio*/
+
+.midle-content__item{
+    padding: 20px;
+    margin-right: 75px;
+} /*Estilo para os itens do conteúdo do meio*/
+
+.item-title{
+    margin-bottom: 50px;
+    width: 300px;
+} /*Estilo para o título dos itens do conteúdo do meio*/
+
+.item-title__text{
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+} /*Estilo para o texto do título dos itens do conteúdo do meio*/
+
+.item-img{
+
+} /*Estilo para a imagem dos itens do conteúdo do meio*/
+
+.item-desc{
+    width: 300px;
+} /*Estilo para a descrição dos itens do conteúdo do meio*/
+
+.item-desc__text{ 
+    text-align: center;
+    
+} /*Estilo para o texto da descrição dos itens do conteúdo do meio*/
+
+/*-----------------------------------*/
+
+.bottom-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 100px;
+} /*Estilo para o conteúdo inferior*/
+
+.bottom-content__container{
+    padding-left: 50px;
+} /*Estilo para o container do conteúdo inferior*/
+
+.bottom-content__title{
+    padding-left: 50px;
+    margin-bottom: 50px;
+} /*Estilo para o título do conteúdo inferior*/
+
+.bottom-content__desc{
+    padding-right: 250px;
+} /*Estilo para a descrição do conteúdo inferior*/
+
+/*-----------------------------------*/
+
+footer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 100px;
+} /*Estilo para o footer*/
+
+.footer-buttons{
+    display: flex;
+} /*Estilo para a div que carrega os botões do footer*/
+
+.footer-buttons__button{
+    margin-right: 100px;
+    border: 2px solid black;
+    padding: 5px;
+} /*Estilo para os botões do footer*/
