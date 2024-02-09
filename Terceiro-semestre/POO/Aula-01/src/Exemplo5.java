@@ -6,7 +6,7 @@ public class Exemplo5 {
 		int idade;
 		System.out.println("Informe a idade: ");
 		idade = ler.nextInt();
-		if(idade > 0 && idade < 15) {
+		if(idade > 0 && idade <= 15) {
 			System.out.println("Não eleitor.");
 		}
 		else if(idade>=16&&idade<=65) {
