@@ -9,7 +9,7 @@ public class Exemplo5 {
 		if(idade > 0 && idade <= 15) {
 			System.out.println("Não eleitor.");
 		}
-		else if(idade>=16&&idade<=65) {
+		else if(idade>=16 && idade<=65) {
 			System.out.println("Eleitor!");
 		}
 		else if(idade>65) {
