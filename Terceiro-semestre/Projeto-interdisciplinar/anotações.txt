@@ -1,5 +1,6 @@
 App será conectado com um servidor em node, será visto em aula a conexão do app com o servidor, assim com um banco de dados.
 
 https://wiki.python.org.br/ListaDeExercicios
-
 tópico 3, ex 3, 12, 15, 32
+
+https://maratona.sbc.org.br/hist/2019/resultados19/warmup/pdf-warmup/warmup_onesided.pdf
