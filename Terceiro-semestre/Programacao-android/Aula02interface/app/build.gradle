@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'br.edu.fecap.aula02_interface'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "br.edu.fecap.aula02_interface"
