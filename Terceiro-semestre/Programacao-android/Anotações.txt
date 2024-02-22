@@ -1,0 +1,27 @@
+Programação orientada a objetos
+
+POO é basicamente um paradigma de programação que utiliza objetos como elementos fundamentais para representar e processar dados e informações.
+
+Objetos do mundo real possuem estados e comportamentos.
+Estados são representados por atributos, como cor, peso, tamanho, etc.
+Comportamentos são representados por métodos, como acelerar, frear, ligar, desligar, etc.
+Mensagem é a comunicação entre objetos, onde um objeto solicita a outro objeto que execute um de seus métodos.
+
+Classes são modelos que definem os atributos e métodos de um objeto.
+Objetos são instâncias de uma classe.
+Atributos são variáveis que representam o estado do objeto.
+Métodos são funções que representam o comportamento do objeto.
+
+Herança é um mecanismo que permite a criação de uma nova classe a partir de uma classe já existente.
+
+Por exemplo:
+
+Classe: Animal
+Estados: cor, peso, tamanho
+Comportamentos: correr, pular, dormir
+
+Elementos views
+
+Views são elementos que representam a interface gráfica de um aplicativo.
+Representa um comando básico de interface com o usuário.
+Muitas classes derivam de View, como TextView, EditText, Button, etc.
