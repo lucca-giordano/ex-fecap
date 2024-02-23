@@ -5,4 +5,13 @@ public class Carro {
     String marca, modelo;
     int ano;
 
+    //Alterar o construtor
+    public Carro(){
+        modelo = "Desconhecido";
+    }
+
+    public Carro(String marca){
+        this.marca = marca;
+    }
+
 }
