@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,11 +28,19 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                for(int i = 0; i>6; i++){
-                    textResult.setText("Numero: " + i);
+                ArrayList<Integer> numbers = new ArrayList<>();
+                while (numbers.size() < 6) {
+                    int number = random.nextInt(60) + 1;
+                    if (!numbers.contains(number)) {
+                        numbers.add(number);
+                    }
+                    Collections.sort(numbers);
+                    String result = "";
+                    for (int num : numbers) {
+                        result += num + " ";
+                    }
+                    textResult.setText(result);
                 }
-
             }
         });
 
