@@ -46,7 +46,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Método para sortear 6 números diferentes entre 1 e 60
-
 
 }
