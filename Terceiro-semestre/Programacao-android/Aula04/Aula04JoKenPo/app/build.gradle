@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'br.edu.fecap.aula04jokenpo'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "br.edu.fecap.aula04jokenpo"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 

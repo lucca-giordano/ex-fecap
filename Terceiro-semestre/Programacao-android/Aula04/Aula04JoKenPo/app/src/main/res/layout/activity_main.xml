@@ -7,12 +7,84 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textEscolhaApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Escolha do App"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.100000024" />
 
+    <ImageView
+        android:id="@+id/imgDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textEscolhaApp"
+        app:layout_constraintVertical_bias="0.100000024"
+        app:srcCompat="@drawable/padrao" />
+
+    <TextView
+        android:id="@+id/textEscolhaPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Escolha sua jogada!"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgDefault"
+        app:layout_constraintVertical_bias="0.88" />
+
+    <ImageView
+        android:id="@+id/imgPlayerPapel"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        android:onClick="selectPapel"
+        app:layout_constraintBottom_toTopOf="@+id/textEscolhaPlayer"
+        app:layout_constraintEnd_toStartOf="@+id/imgPlayerPedra"
+        app:layout_constraintTop_toBottomOf="@+id/imgPlayerPedra"
+        app:srcCompat="@drawable/papel" />
+
+    <ImageView
+        android:id="@+id/imgPlayerPedra"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        android:onClick="selectPedra"
+        app:layout_constraintBottom_toTopOf="@+id/textEscolhaPlayer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgDefault"
+        app:srcCompat="@drawable/pedra" />
+
+    <ImageView
+        android:id="@+id/imgPlayerTesoura"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        android:onClick="selectTesoura"
+        app:layout_constraintBottom_toTopOf="@+id/textEscolhaPlayer"
+        app:layout_constraintStart_toEndOf="@+id/imgPlayerPedra"
+        app:layout_constraintTop_toBottomOf="@+id/imgPlayerPedra"
+        app:srcCompat="@drawable/tesoura" />
+
+    <TextView
+        android:id="@+id/textResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/imgPlayerPedra"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgDefault" />
 </androidx.constraintlayout.widget.ConstraintLayout>
