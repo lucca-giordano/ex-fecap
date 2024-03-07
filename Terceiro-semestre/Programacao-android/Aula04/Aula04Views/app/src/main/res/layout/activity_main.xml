@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="411dp"
+        android:layout_height="21dp"
+        android:text="Cores"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textResultado"
+        android:layout_width="400dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="8dp"
+        android:text="Cor:" />
+
+    <Button
+        android:id="@+id/btnLimpar"
+        android:layout_width="400dp"
+        android:layout_height="55dp"
+        android:onClick="limpar"
+        android:text="Limpar" />
+
+    <Button
+        android:id="@+id/btnEnviar"
+        android:layout_width="400dp"
+        android:layout_height="55dp"
+        android:onClick="enviar"
+        android:text="Enviar" />
+
+    <CheckBox
+        android:id="@+id/checkAzul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Azul" />
+
+    <CheckBox
+        android:id="@+id/checkVerde"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Verde" />
+
+    <CheckBox
+        android:id="@+id/checkVermelho"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Vermelho" />
+
+</LinearLayout>
