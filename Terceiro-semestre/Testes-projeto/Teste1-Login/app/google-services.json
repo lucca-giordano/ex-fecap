@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "383471112302",
+    "project_id": "login-teste-fd9ad",
+    "storage_bucket": "login-teste-fd9ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383471112302:android:938cb91a83d223f571167f",
+        "android_client_info": {
+          "package_name": "com.example.teste_login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB33AnXbhM5mwZ5wOx5MVWAC5hvmM0EJg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

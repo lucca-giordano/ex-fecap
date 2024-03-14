@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Teste-login</string>
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="email">Email</string>
+    <string name="registro">Registro</string>
+    <string name="faca_login_agora">Já tem conta? Faça login aqui!</string>
+    <string name="faca_registro_agora">Ainda não tem conta? Faça uma aqui!</string>
+    <string name="logout">Sair da conta</string>
+</resources>
