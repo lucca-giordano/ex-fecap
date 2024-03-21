@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Aula06-switch</string>
+    <string name="switch_selecao">Chave Switch de Seleção</string>
+    <string name="ligado">Ligado</string>
+    <string name="desligado">Desligado</string>
+    <string name="SwitchSenha">Lembrar senha</string>
+    <string name="botao_selecao">Botão de seleção</string>
+    <string name="resultado">Resultado</string>
+    <string name="enviar">Enviar</string>
+    <string name="quao_feliz">Quão feliz você está hoje?</string>
+    <string name="escala">Em uma escala de 0 a 10</string>
+    <string name="recuperar_progresso">Recuperar progresso</string>
+</resources>
