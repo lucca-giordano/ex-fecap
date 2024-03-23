@@ -1,15 +1,38 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        // Criando um objeto da classe Analista
+        System.out.println("**Dados do Analista:**");
+        System.out.print("Nome: ");
+        String nomeAnalista = scanner.nextLine();
+        System.out.print("Matrícula: ");
+        String matriculaAnalista = scanner.nextLine();
+        System.out.print("Quantidade de projetos: ");
+        int numProjetos = scanner.nextInt();
+        float[] valorPorProjetoAnalista = new float[numProjetos];
+        for (int i = 0; i < numProjetos; i++) {
+            System.out.print("Valor do projeto " + (i + 1) + ": ");
+            valorPorProjetoAnalista[i] = scanner.nextFloat();
         }
+        Analista analista = new Analista(nomeAnalista, matriculaAnalista, valorPorProjetoAnalista);
+
+        // Criando um objeto da classe Programador
+        System.out.println("\n**Dados do Programador:**");
+        System.out.print("Nome: ");
+        String nomeProgramador = scanner.nextLine();
+        System.out.print("Matrícula: ");
+        String matriculaProgramador = scanner.nextLine();
+        System.out.print("Valor da hora: ");
+        float valorHoraProgramador = scanner.nextFloat();
+        System.out.print("Quantidade de horas trabalhadas: ");
+        float qtdeHorasProgramador = scanner.nextFloat();
+        Programador programador = new Programador(nomeProgramador, matriculaProgramador, valorHoraProgramador, qtdeHorasProgramador);
+
+        // Exibindo os dados dos funcionários
+        System.out.println("\n**Salário do Analista " + analista.getNome() + " (" + analista.getMatricula() + "): R$" + analista.calculaSalario());
+        System.out.println("**Salário do Programador " + programador.getNome() + " (" + programador.getMatricula() + "): R$" + programador.calculaSalario());
     }
 }
