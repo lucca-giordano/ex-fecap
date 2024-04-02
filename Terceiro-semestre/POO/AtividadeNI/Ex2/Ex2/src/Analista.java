@@ -1,8 +1,9 @@
 
 
-public class Analista {
+public class Analista extends Empregado{
 
     private float[] valorPorProjeto;
+
 
     public Analista(String nome, String matricula, float[] valorPorProjeto) {
         super(nome, matricula);
@@ -16,5 +17,6 @@ public class Analista {
         }
         return salario;
     }
+
 
 }

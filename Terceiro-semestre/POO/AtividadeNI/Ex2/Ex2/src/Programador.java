@@ -1,4 +1,4 @@
-public class Programador {
+public class Programador extends Empregado{
 
     private float valorHora;
     private float qtdeHoras;
