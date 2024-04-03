@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/txt_tituloApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Pontos turísticos de São Paulo"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="22dp"/>
+
+    <ImageView
+        android:id="@+id/img_Foto"
+        android:layout_width="wrap_content"
+        android:layout_height="149dp"
+        android:layout_marginTop="22dp"
+        app:srcCompat="@drawable/liberdade" />
+
+    <TextView
+        android:id="@+id/txt_tituloFoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bairro Liberdade"
+        android:gravity="center"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:id="@+id/rg_group"
+        android:layout_height="241dp">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Já fui"/>
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Penso em ir" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ainda não sei" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Provavelmente não vou" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Não iria" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/txt_satisfacao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="Nível de satisfação"
+        android:textColor="#6200ED" />
+
+    <SeekBar
+        android:id="@+id/sb_satisfacao"
+        style="@style/Widget.AppCompat.SeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="5"
+        android:min="0" />
+
+    <Button
+        android:layout_marginTop="15dp"
+        android:id="@+id/btn_proximo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="proximaImagem"
+        android:text="Próximo" />
+
+    <Button
+        android:id="@+id/btn_concluir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="concluir"
+        android:text="Concluir" />
+
+
+</LinearLayout>

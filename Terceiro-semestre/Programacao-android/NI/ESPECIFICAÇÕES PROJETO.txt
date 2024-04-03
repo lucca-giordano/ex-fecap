@@ -1,0 +1,16 @@
+ESPECIFICAÇÕES PROJETO
+
+03/04 até as 18:59 - Projeto App NI:
+
+- Projeto pode ser feito em até 2 pessoas;
+- Entrega obrigatoriamente em github;
+- Entrega via Moodle - Print das telas;
+- Escopo do Projeto:
+	- Desenvolver um app no qual contenha (min):
+		- 2 Button;
+		- 2 Text (escolher o tipo);
+		- 1 Checkbox ou 1 RadioGroup;
+			- Pelo menos 5 opções;
+		- 3 Imagens - Mudando de acordo com o contexto do projeto;
+		- 1 Switch, Toggle ou Seekbar;
+		- 1 AlertDialog;
