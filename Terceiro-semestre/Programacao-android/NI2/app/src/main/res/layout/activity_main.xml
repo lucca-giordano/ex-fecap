@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:id="@+id/txt_Nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pizza Tradicional"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.050000012" />
+
+    <ImageView
+        android:id="@+id/img_Sabor"
+        android:layout_width="350dp"
+        android:layout_height="251dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Nome"
+        app:layout_constraintVertical_bias="0.00999999"
+        app:srcCompat="@drawable/tradicional" />
+
+    <ScrollView
+        android:id="@+id/sc_Scroll"
+        android:layout_width="349dp"
+        android:layout_height="282dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_Sabor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_Proximo"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="Próximo sabor"
+                android:onClick="proximoSabor"/>
+
+            <Button
+                android:id="@+id/btn_Concluir"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:onClick="concluir"
+                android:text="Concluir pedido" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adcionar ingredientes: "
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"
+                />
+
+            <RadioGroup
+                android:id="@+id/rg_GroupAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <RadioButton
+                    android:id="@+id/rb_Add1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bacon" />
+
+                <RadioButton
+                    android:id="@+id/rb_Add2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Catupiry" />
+
+                <RadioButton
+                    android:id="@+id/rb_Add3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cheddar" />
+
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remover ingredientes: "
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"
+                />
+
+            <RadioGroup
+                android:id="@+id/rg_GroupRem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <RadioButton
+                    android:id="@+id/rb_Rem1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Molho" />
+
+                <RadioButton
+                    android:id="@+id/rb_Rem2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Queijo" />
+
+                <RadioButton
+                    android:id="@+id/rb_Rem3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Azeitona" />
+
+            </RadioGroup>
+
+            <Switch
+                android:id="@+id/sw_Talher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Incluir talher?"
+                android:visibility="visible" />
+
+            <Switch
+                android:id="@+id/sw_Guardanapo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Incluir guardanapo?"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/txt_Seek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quantidade de pizzas: "
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:min="1"
+                android:max="10"/>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_Obs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Observações" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_Adr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="100dp">>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Endereço de entrega" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
