@@ -316,3 +316,142 @@ A notação assintótica é uma forma de descrever o comportamento de uma funç�
 ![Big O Notation](https://paper-attachments.dropbox.com/s_2D428973624E7FC84C7D69D11421DE762BEA6B6F3361231FCDCAE0425D14526F_1664885448372_Untitled.drawio+17.png)
 
 ### Algoritmos de Ordenação
+
+Algortimos de ordenação são algoritmos que organizam os elementos de uma lista em uma ordem específica, como crescente ou decrescente. Existem vários algoritmos de ordenação, cada um com suas próprias características e complexidades. Alguns exemplos desses algoritmos são:
+
+- **Insertion Sort**: Algoritmo de ordenação simples que percorre a lista e insere cada elemento na posição correta. Tem complexidade de tempo O(n^2) no pior caso.
+
+```java
+public static void insertionSort(int[] array) {
+    for (int i = 1; i < array.length; i++) {
+        int key = array[i];
+        int j = i - 1;
+        while (j >= 0 && array[j] > key) {
+            array[j + 1] = array[j];
+            j--;
+        }
+        array[j + 1] = key;
+    }
+}
+```
+
+- **Selection Sort**: Algoritmo de ordenação que seleciona o menor elemento da lista e o coloca na primeira posição, repetindo o processo para os elementos restantes. Tem complexidade de tempo O(n^2) no pior caso.
+  
+```java
+public static void selectionSort(int[] array) {
+    for (int i = 0; i < array.length - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < array.length; j++) {
+            if (array[j] < array[minIndex]) {
+                minIndex = j;
+            }
+        }
+        int temp = array[i];
+        array[i] = array[minIndex];
+        array[minIndex] = temp;
+    }
+}
+```
+
+- **Bubble Sort**: Algoritmo de ordenação que compara pares de elementos adjacentes e os troca se estiverem na ordem errada. Tem complexidade de tempo O(n^2) no pior caso.
+
+```java
+public static void bubbleSort(int[] array) {
+    boolean swapped;
+    for (int i = 0; i < array.length - 1; i++) {
+        swapped = false;
+        for (int j = 0; j < array.length - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        if (!swapped) {
+            break;
+        }
+    }
+}
+```
+
+- **Merge Sort**: Algoritmo de ordenação que divide a lista em duas metades, ordena cada metade e depois combina as duas metades ordenadas. Tem complexidade de tempo O(n log n) no pior caso.
+
+- **Quick Sort**: Algoritmo de ordenação que escolhe um elemento como pivô, divide a lista em duas partes e ordena recursivamente as duas partes. Tem complexidade de tempo O(n^2) no pior caso, mas O(n log n) em média.
+
+### Algoritmos de Busca
+
+Algoritmos de busca são algoritmos que procuram por um elemento específico em uma lista. Existem vários algoritmos de busca, cada um com suas próprias características e complexidades. Alguns exemplos desses algoritmos são:
+
+- **Linear Search**: Algoritmo de busca que percorre a lista sequencialmente até encontrar o elemento desejado. Tem complexidade de tempo O(n) no pior caso.
+
+```java
+public static int linearSearch(int[] array, int target) {
+    for (int i = 0; i < array.length; i++) {
+        if (array[i] == target) {
+            return i;
+        }
+    }
+    return -1;
+}
+```
+
+- **Binary Search**: Algoritmo de busca que divide a lista ao meio e verifica se o elemento desejado está na metade esquerda ou direita, repetindo o processo até encontrar o elemento. Tem complexidade de tempo O(log n) no pior caso, mas requer que a lista esteja ordenada.
+
+```java
+public static int binarySearch(int[] array, int target) {
+    int left = 0;
+    int right = array.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (array[mid] == target) {
+            return mid;
+        }
+        if (array[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+- **Binary Search Tree**: Estrutura de dados que organiza os elementos em uma árvore binária de busca, onde cada nó tem no máximo dois filhos e o filho da esquerda é menor que o pai e o filho da direita é maior que o pai. Permite busca, inserção e remoção eficientes, com complexidade de tempo O(log n) em média.
+
+- **Busca em Grafos**: Algoritmos de busca em grafos, como busca em largura (BFS) e busca em profundidade (DFS), são usados para encontrar caminhos em grafos. Eles têm complexidade de tempo O(V + E), onde V é o número de vértices e E é o número de arestas.
+
+### ArrayList vs Collections
+
+O ArrayList é uma implementação da interface List em Java que armazena elementos em uma lista dinâmica de tamanho variável. Ele permite adicionar, remover e acessar elementos por índice. O Collections é uma classe utilitária em Java que fornece métodos estáticos para operações com coleções, como ordenação, inversão e busca.
+
+```java
+ArrayList<String> list = new ArrayList<>();
+list.add("A");
+list.add("B");
+list.add("C");
+
+System.out.println(list.get(1));
+Collections.sort(list);
+```
+
+### Pilha
+
+Uma pilha é uma estrutura de dados que segue o princípio LIFO (Last In, First Out), onde o último elemento inserido é o primeiro a ser removido. Ela suporta operações como push (inserir um elemento), pop (remover um elemento) e peek (verificar o elemento do topo).
+
+```java
+Stack<Integer> stack = new Stack<>();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+```
+
+Existem alguns métodos úteis para manipular pilhas em Java, como:
+
+- `push()`: Insere um elemento no topo da pilha.
+- `pop()`: Remove e retorna o elemento do topo da pilha.
+- `peek()`: Retorna o elemento do topo da pilha sem removê-lo.
+- `isEmpty()`: Verifica se a pilha está vazia.
+- `isFull()`: Verifica se a pilha está cheia.
+
+
