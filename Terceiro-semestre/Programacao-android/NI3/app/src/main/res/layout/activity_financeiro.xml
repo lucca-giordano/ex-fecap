@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="50dp"
+    tools:context=".Financeiro">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Financeiro"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/edit_FinancSal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Insira seu salário"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/txt_FinancBruto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Salário bruto: "
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_FinancINSS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Desconto INSS: "
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_FinancFGTS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Desconto FGTS: "
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_FinancFinal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Salário final: "
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btn_FinancLimpar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="Limpar"/>
+
+    <Button
+        android:id="@+id/btn_FinancEncerrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Encerrar"/>
+
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="50dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecione uma opção:"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <Button
+        android:id="@+id/btn_startFinanc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Financeiro"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="115dp" />
+
+    <Button
+        android:id="@+id/btn_startEdu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Educação"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="115dp" />
+
+    <Button
+        android:id="@+id/btn_startSaude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Saúde"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="115dp" />
+
+    <Button
+        android:id="@+id/btn_startInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Informações do aluno"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="115dp" />
+</LinearLayout>

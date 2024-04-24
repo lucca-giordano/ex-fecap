@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp"
+
+    tools:context=".Saude">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Saúde"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/edit_SaudeAltura"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Insira sua altura"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="number"/>
+
+    <EditText
+        android:id="@+id/edit_SaudePeso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Insira seu peso"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:id="@+id/txt_SaudeAltura"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Altura: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_SaudePeso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Peso: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_SaudeIMC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="IMC: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_SaudeStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text=""
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btn_SaudeLimpar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="Limpar"/>
+
+    <Button
+        android:id="@+id/btn_SaudeEncerrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Encerrar"/>
+
+</LinearLayout>

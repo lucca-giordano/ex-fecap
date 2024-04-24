@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="50dp"
+    tools:context=".Educacao">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Educação"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/edit_EduNI"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nota da NI"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="numberDecimal"/>
+
+    <EditText
+        android:id="@+id/edit_EduProj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nota do projeto"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="numberDecimal"/>
+
+    <EditText
+        android:id="@+id/edit_EduPO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nota da PO"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:id="@+id/txt_EduNITotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="NI Total: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_EduNIParcial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="NI Parcial: -"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/txt_EduProjTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Projeto Total: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_EduProjParcial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Projeto Parcial: -"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/txt_EduPOTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="PO Total: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_EduPOParcial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="PO Parcial: -"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/txt_EduNotaTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Nota total: -"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/txt_EduStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Status: -"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btn_EduLimpar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Limpar"/>
+
+    <Button
+        android:id="@+id/btn_EduEncerrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Encerrar"/>
+
+
+</LinearLayout>
