@@ -21,7 +21,7 @@ public class Livro extends Publicacao{
 	}
 
 	public void imprimir() {
-		
+		System.out.println("Impressão de livro");
 	}
 	
 	

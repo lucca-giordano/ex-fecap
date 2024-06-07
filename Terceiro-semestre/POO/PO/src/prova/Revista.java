@@ -28,11 +28,11 @@ public class Revista extends Publicacao{
 	}
 	
 	public void leitura() {
-		
+		System.out.println("Leitura de revista");
 	}
 
 	public void imprimir() {
-		
+		System.out.println("Impressão de revista");
 	}
 
 }

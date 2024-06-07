@@ -28,7 +28,7 @@ public class Publicacao {
 	}
 	
 	public void imprimir() {
-		
+		System.out.println("Impressão de publicação");
 	}
 
 }
