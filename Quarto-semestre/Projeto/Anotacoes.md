@@ -1,5 +1,7 @@
 # Projeto: Ciencia de dados
 
+## Introdução
+
 ### Cluster computing
 
 Cluster computing é uma forma de computação distribuída, onde um grupo de computadores é conectado para trabalhar em conjunto, de modo a resolver problemas complexos.
@@ -21,3 +23,8 @@ O conceito de `SaaS` (Software as a Service) é um modelo de cloud computing que
 O conceito de `PaaS` (Platform as a Service) é um modelo de cloud computing que fornece uma plataforma de desenvolvimento de software pela internet, permitindo que os desenvolvedores criem, testem e implantem aplicativos de software sem a necessidade de configurar ou gerenciar a infraestrutura de hardware e software subjacente.
 
 O conceito de `IaaS` (Infrastructure as a Service) é um modelo de cloud computing que fornece recursos de computação, como servidores, armazenamento e redes, pela internet, permitindo que os usuários criem, testem e implantem aplicativos de software sem a necessidade de configurar ou gerenciar a infraestrutura de hardware e software subjacente.
+
+---
+
+## Introdução ao Python e ao Jupyter Notebook
+
