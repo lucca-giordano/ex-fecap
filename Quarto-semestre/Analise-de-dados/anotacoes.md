@@ -142,3 +142,134 @@ $$a = \bar{Y} - b\bar{X}$$
 
 $$b = \frac{\sum_{i=1}^{n} X_iY_i-n \bar{X}\bar{Y}}{(n-1)S_x^2}$$
 
+---
+
+## Probabilidade
+
+O estudo da probabilidade é uma parte fundamental da estatística e é utilizada para modelar a incerteza e a aleatoriedade dos fenômenos. A probabilidade é uma medida numérica que varia de 0 a 1, ou 0% e 100% e é utilizada para quantificar a chance de um evento ocorrer.
+
+A fórmula mais básica para calcular a probabilidade de um evento é:
+
+$$P(A) = \frac{\text{Casos de interesse}}{\text{Casos possíveis}}$$
+
+Vamos começar com os seguintes exemplos:
+
+1. Uma moeda é lançada, qual a probabilidade de obter cara?
+
+> Resposta: $1/2$ ou $50\%$
+
+2. Um dado de seis faces é lançado, qual a probabilidade de sair o número 4?
+
+> Resposta: $1/6$ ou $16.67\%$
+
+3. Em um baralho padrão de 52 cartas, qual a probabilidade de tirar um ás?
+
+> Resposta: $4/52 = 1/13$ ou $7.69\%$
+
+4. Uma urna contém 5 bolas vermelhas e 3 bolas azuis, qual a probabilidade de tirar uma bola azul?
+
+> Resposta: $3/8 = 37.5\%$
+
+Esss exemplos acima são simples de entender, é basicamente a quantidade de eventos favoráveis dividido pela quantidade de eventos possíveis. Vamos ver alguns exemplos mais complexos:
+
+5. Duas moedas justas são lançadas, qual a probabilidade de obter duas caras?
+
+> Resposta: $1/4$ ou $25\%$
+
+6. Dois dados de seis faces são lançados, qual a probabilidade de obter a soma dos números igual a 7?
+
+> Resposta: $6/36 = 1/6$ ou $16.67\%$
+
+7. Um dado de seis faces é lançado duas vezes, qual a probabilidade de obter o número 4 ou o número 6?
+
+> Resposta: $2/6 = 1/3$ ou $33.33\%$
+
+8. Em um baralho padrão de 52 cartas, uma carta é retirada e devolvida ao baralho. Se outra carta é retirada, qual a probabilidade de ambas serem ás?
+
+> Resposta: $(4/52) \times (4/52) = 1/169$ ou $0.59\%$
+
+9. Dois dados são lançados simultaneamente, qual a probabilidade de obter a soma dos números maior que 9?
+
+> Resposta: $6/36 = 1/6$ ou $16.67\%$
+
+10. Uma urna contém 4 bolas vermelhas, 5 bolas verdes e 6 bolas azuis. Duas bolas são escolhidas aleatoriamente sem reposição, Qual a probabilidade que ambas sejam da mesma cor?
+
+> Resposta: $(4/15) \times (3/14) + (5/15) \times (4/14) + (6/15) \times (5/14) = 0.38$
+
+Observando os exercícios acima, é possível perceber dois termos muito importantes, "`e`" e "`ou`". Quando o problema diz "`e`", é necessário multiplicar as probabilidades, e quando o problema diz "`ou`", é necessário somar as probabilidades.
+
+O nome tecnico para esses termos é `interseção` e `união`, respectivamente. A probabilidade da interseção de dois eventos é dada por:
+
+$$P(A \cap B) = P(A) \times P(B)$$
+
+E a probabilidade da união de dois eventos é dada por:
+
+$$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+
+### Causalidade e correlação
+
+É importante ressaltar que a probabilidade **não implica causalidade**. Ou seja, apenas porque dois eventos são independentes, não significa que um causa o outro. A causalidade é uma relação mais complexa e envolve a relação de causa e efeito entre dois eventos.
+
+![Grafico causalidade e correlação](Documentos/Correlacao-causalidade.png)
+
+O gráfico acima fala sobre as vendas de alimentos organicos e o diagnóstico de autismo. É possível perceber que existe uma correlação entre as duas variáveis, ou seja, quando as vendas de alimentos organicos aumentam, o diagnóstico de autismo também aumenta. Porém, isso não significa que um causa o outro, é **apenas uma relação de correlação**.
+
+### Espaço amostral e eventos
+
+O `espaço amostral` é o conjunto de todos os resultados possíveis de um experimento aleatório. Ele é representado pela letra $\Omega$ e é utilizado para calcular a probabilidade de um evento ocorrer.
+
+Por exemplo, no lançamento de um dado de seis faces, o espaço amostral é:
+
+$$\Omega = \{1, 2, 3, 4, 5, 6\}$$
+
+Um `evento` é um subconjunto do espaço amostral e é representado pela letra $E$. A probabilidade de um evento ocorrer é dada por:
+
+$$P(E) = \frac{\text{Casos favoráveis}}{\text{Casos possíveis}}$$
+
+Por exemplo, no lançamento de um dado de seis faces, o evento de sair um número par é:
+
+$$E = \{2, 4, 6\}$$
+
+### Composição de Eventos
+
+Na teoria das probabilidades, a composição de eventos é uma técnica utilizada para calcular a probabilidade de dois ou mais eventos ocorrerem simultaneamente. A composição de eventos é representada por operadores lógicos, como a interseção e a união.
+
+- A `interseção` de dois eventos, denotada por $A \cap B$, representa o conjunto de resultados que pertencem tanto ao evento A quanto ao evento B. A probabilidade da interseção de dois eventos é calculada multiplicando as probabilidades individuais de cada evento.
+
+$$P(A \cap B) = P(A) \times P(B)$$
+
+- A `união` de dois eventos, denotada por $A \cup B$, representa o conjunto de resultados que pertencem a pelo menos um dos eventos A ou B. A probabilidade da união de dois eventos é calculada somando as probabilidades individuais de cada evento e subtraindo a probabilidade da interseção.
+
+$$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+
+A composição de eventos é uma ferramenta **poderosa** para calcular a probabilidade de eventos complexos. Ela permite analisar a ocorrência conjunta de eventos e entender a relação entre eles. É importante ressaltar que a composição de eventos depende da **independência** dos eventos, ou seja, a ocorrência de um evento não afeta a probabilidade do outro evento ocorrer.
+
+Além da **interseção** e da **união**, existem outros operadores lógicos utilizados na composição de eventos, como a **diferença** e o **complemento**. Esses operadores permitem calcular a probabilidade de eventos complementares ou eventos que não ocorrem simultaneamente.
+
+A composição de eventos é uma ferramenta fundamental na teoria das probabilidades e é amplamente utilizada em diversas áreas, como estatística, ciência de dados e engenharia. Ela permite analisar e quantificar a incerteza e a aleatoriedade de fenômenos complexos, auxiliando na tomada de decisões e na compreensão de padrões e relações entre variáveis.
+
+### Atribuição de Probabilidades
+
+A atribuição de probabilidades é uma técnica utilizada para quantificar a incerteza e a aleatoriedade de eventos. Ela é baseada na teoria das probabilidades e é utilizada para calcular a probabilidade de um evento ocorrer.
+
+Existem três abordagens principais para atribuir probabilidades a eventos:
+
+1. `Abordagem clássica`: é utilizada quando todos os resultados possíveis de um experimento são igualmente prováveis. Nesse caso, a probabilidade de um evento é calculada dividindo o número de resultados favoráveis pelo número total de resultados possíveis.
+
+2. `Abordagem frequentista`: é utilizada quando a probabilidade de um evento é calculada com base na frequência com que o evento ocorre em um grande número de experimentos. Nesse caso, a probabilidade de um evento é calculada dividindo o número de vezes que o evento ocorre pelo número total de experimentos.
+
+3. `Abordagem subjetiva`: é utilizada quando a probabilidade de um evento é baseada no julgamento subjetivo de um especialista. Nesse caso, a probabilidade de um evento é atribuída com base na experiência, no conhecimento e na intuição do especialista.
+
+### Probabilidade condicional
+
+A probabilidade condicional é uma medida estatística que quantifica a probabilidade de um evento ocorrer, dado que outro evento já ocorreu. Ela é representada por $P(A|B)$ e é calculada pela fórmula:
+
+$$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
+
+Onde:
+
+- $P(A|B)$ é a probabilidade de A ocorrer dado que B ocorreu
+
+- $P(A \cap B)$ é a probabilidade da interseção de A e B
+
+- $P(B)$ é a probabilidade de B ocorrer
