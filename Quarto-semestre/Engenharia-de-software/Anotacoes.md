@@ -87,3 +87,53 @@ Extreme Programming (XP) é uma metodologia ágil que enfatiza a **qualidade do 
 - `Testes frequentes`: Realiza testes contínuos para garantir que novas funcionalidades não quebrem o código existente.
 
 - `Comunicação aberta`: Promove uma comunicação clara e frequente entre todos os membros da equipe e com os stakeholders.
+
+## Padrões de Projeto
+
+Padrões de projeto são soluções para problemas comuns no desenvolvimento de software, que foram identificados e documentados por especialistas na área. Eles fornecem uma abordagem testada e comprovada para resolver problemas recorrentes, promovendo a reutilização de soluções eficazes.
+
+Dentre os principais benefícios dos padrões de projeto estão:
+
+- `Reutilização de soluções eficazes`: Evita a necessidade de reinventar a roda ao enfrentar problemas comuns.
+
+- `Melhoria da qualidade do software`: Promove a utilização de soluções testadas e comprovadas.
+
+- `Facilitação da comunicação entre desenvolvedores`: Fornece uma linguagem comum para discutir e documentar soluções.
+
+- `Promoção da manutenibilidade e escalabilidade do software`: Facilita a manutenção e evolução do software ao longo do tempo.
+
+Os padrões de projeto são classificados em três categorias principais:
+
+### Padrões de Criação
+
+A padronização de criação é um padrão de projeto que lida com a criação de objetos. Ele fornece mecanismos para criar objetos de forma mais flexível e eficiente.
+
+Ela garante que uma classe tenha apenas uma instância e fornece um ponto de acesso global para essa instância.
+
+Exemplo: Gerenciador de configuração que deve existir apenas uma instância em todo o sistema.
+
+Dentro dos padrões de criação, alguns dos mais comuns são:
+
+- `Factory Method` é um padrão de projeto que define uma - interface para criar um objeto, mas permite que as subclasses decidam qual classe instanciar. Ele permite que uma classe delegue a responsabilidade de instanciar um objeto para suas subclasses.
+
+- `Builder` é um padrão de projeto que separa a construção de um objeto complexo de sua representação, permitindo a criação de diferentes representações do mesmo objeto.
+
+### Padrões Estruturais
+
+Padrões estruturais são padrões de projeto que lidam com a composição de classes e objetos para formar estruturas maiores. Eles ajudam a definir como os objetos são organizados e como se comunicam entre si.
+
+Dentro dos padrões estruturais, alguns dos mais comuns são:
+
+- `Adapter` é um padrão de projeto que permite que objetos com interfaces incompatíveis trabalhem juntos. Ele converte a interface de uma classe em outra interface que o cliente espera.
+
+- `Decorator` é um padrão de projeto que permite adicionar comportamentos a objetos individuais de forma dinâmica. Ele fornece uma maneira flexível de estender a funcionalidade de um objeto sem usar subclasses.
+
+### Padrões Comportamentais
+
+Padrões comportamentais são padrões de projeto que lidam com a comunicação entre objetos e a responsabilidade de tarefas. Eles ajudam a definir como os objetos interagem entre si e como as responsabilidades são distribuídas entre eles.
+
+Dentro dos padrões comportamentais, alguns dos mais comuns são:
+
+- `Observer` é um padrão de projeto que define uma dependência um-para-muitos entre objetos, de modo que quando um objeto muda de estado, todos os seus dependentes são notificados e atualizados automaticamente.
+
+- `Strategy` é um padrão de projeto que define uma família de algoritmos, encapsula cada um deles e os torna intercambiáveis. Ele permite que o algoritmo varie independentemente dos clientes que o utilizam.
