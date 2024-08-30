@@ -273,3 +273,49 @@ Onde:
 - $P(A \cap B)$ é a probabilidade da interseção de A e B
 
 - $P(B)$ é a probabilidade de B ocorrer
+
+### Variáveis aleatórias
+
+Variáveis aleatórias são variáveis que assumem valores numéricos em um experimento aleatório. Elas são utilizadas para modelar a incerteza e a aleatoriedade de fenômenos e são fundamentais na teoria das probabilidades. **Variável aleatória é uma função**, que associa um número real a cada resultado de um experimento aleatório.
+
+Em um lançamento de um dado, nosso espaço amostral é $\Omega = \{1, 2, 3, 4, 5, 6\}$. Se definirmos a variável aleatória $X$ como o número que sai no dado, então $X$ é uma função que associa um número real a cada resultado do experimento. Por exemplo, se nosso evento é sair um número par, então $X = \{2, 4, 6\}$.
+
+Uma variável aleatória pode ser:
+
+- `Discreta`: assume um número finito ou infinito contável de valores.
+
+> Por exemplo, o número de caras em 10 lançamentos de uma moeda.
+
+- `Contínua`: assume um número infinito não contável de valores.
+
+> Por exemplo, a altura de uma pessoa.
+
+### Valor esperado
+
+O valor esperado de uma variável aleatória é a média ponderada dos valores que a variável pode assumir, onde os pesos são as probabilidades associadas a cada valor. Ele é uma medida de centralidade e é utilizado para calcular a média de uma distribuição de probabilidade.
+
+$$E(X) = \sum_{i=1}^{n} x_i \times P(X=x_i)$$
+
+### Variância e desvio padrão
+
+Variância é o valor esperado do quadrado dos desvios em relação a média. Ela é uma medida de dispersão e é utilizada para quantificar a variabilidade de uma distribuição de probabilidade.
+
+$$Var(X) = \sum_{i=1}^{n}[x_i - E(X)]^2 \times P(X=x_i)$$
+
+Desvio padrão é a raiz quadrada da variância. Ele é uma medida de dispersão e é utilizado para quantificar a variabilidade de uma distribuição de probabilidade.
+
+$$SD(X) = \sqrt{Var(X)}$$
+
+### Modelo de Bernoulli
+
+Em situações onde um experimento aleatório tem apenas dois resultados possíveis, sucesso ou fracasso, o modelo de Bernoulli é utilizado para modelar a probabilidade de sucesso. Ele é uma distribuição de probabilidade discreta e é utilizada para calcular a probabilidade de um evento binário.
+
+O modelo de Bernoulli é caracterizado por dois parâmetros:
+
+- $p$: a probabilidade de sucesso
+
+- $q=1-p$: a probabilidade de fracasso
+
+A função de probabilidade do modelo de Bernoulli é dada por:
+
+$$P(X=k) = \begin{pmatrix} n \\ k \end{pmatrix} \times p^k \times (1-p)^{n-k}$$
