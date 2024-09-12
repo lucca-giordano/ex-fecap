@@ -319,3 +319,42 @@ O modelo de Bernoulli é caracterizado por dois parâmetros:
 A função de probabilidade do modelo de Bernoulli é dada por:
 
 $$P(X=k) = \begin{pmatrix} n \\ k \end{pmatrix} \times p^k \times (1-p)^{n-k}$$
+
+### Distribuição binomial
+
+A distribuição binomial é uma distribuição de probabilidade discreta que modela o número de sucessos em um número fixo de tentativas independentes. Ela é utilizada para calcular a probabilidade de um evento binário ocorrer em um número fixo de tentativas.
+
+Sua função de probabilidade é dada por:
+
+$$P(X=k) = \begin{pmatrix} n \\ k \end{pmatrix} \times p^k \times (1-p)^{n-k}$$
+
+Onde:
+
+- $n$: o número de tentativas
+  
+- $k$: o número de sucessos
+  
+- $p$: a probabilidade de sucesso
+  
+- $q=1-p$: a probabilidade de fracasso
+
+### Distribuição normal (Gaussiana)
+
+A distribuição normal é uma distribuição de probabilidade contínua que é utilizada para modelar a distribuição de variáveis aleatórias. Ela é caracterizada por sua forma de sino e é uma das distribuições mais importantes na teoria das probabilidades.
+
+Uma Variável aleatória $X$ é dita ter uma distribuição normal com média $\mu$ e desvio padrão $\sigma$ se sua função de densidade de probabilidade é dada por:
+
+$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
+
+Onde:
+
+- $\mu$: a média da distribuição
+  
+- $\sigma$: o desvio padrão da distribuição
+  
+- $\pi$: a constante matemática $\pi$
+  
+- $e$: a constante matemática $e$
+  
+- $x$: o valor da variável aleatória
+
