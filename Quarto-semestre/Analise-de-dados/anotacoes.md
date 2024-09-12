@@ -358,3 +358,18 @@ Onde:
   
 - $x$: o valor da variável aleatória
 
+### Tabela Z
+
+A tabela Z é uma tabela de valores padronizados da distribuição normal padrão. Ela é utilizada para calcular a probabilidade de um valor ocorrer em uma distribuição normal padrão.
+
+A tabela Z é dividida em duas partes:
+
+- A parte superior da tabela Z contém os valores da variável aleatória $Z$.
+
+- A parte inferior da tabela Z contém as probabilidades associadas a cada valor de $Z$.
+
+Para utilizar a tabela Z, é necessário encontrar o valor de $Z$ correspondente ao valor da variável aleatória $X$ e, em seguida, encontrar a probabilidade associada a esse valor de $Z$.
+
+A tabela Z é uma ferramenta muito útil para calcular a probabilidade de um valor ocorrer em uma distribuição normal padrão e é amplamente utilizada em diversas áreas, como estatística, ciência de dados e engenharia.
+
+$$Z = \frac{X - \mu}{\sigma}$$
