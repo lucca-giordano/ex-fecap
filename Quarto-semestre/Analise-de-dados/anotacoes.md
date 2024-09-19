@@ -319,3 +319,57 @@ O modelo de Bernoulli é caracterizado por dois parâmetros:
 A função de probabilidade do modelo de Bernoulli é dada por:
 
 $$P(X=k) = \begin{pmatrix} n \\ k \end{pmatrix} \times p^k \times (1-p)^{n-k}$$
+
+### Distribuição binomial
+
+A distribuição binomial é uma distribuição de probabilidade discreta que modela o número de sucessos em um número fixo de tentativas independentes. Ela é utilizada para calcular a probabilidade de um evento binário ocorrer em um número fixo de tentativas.
+
+Sua função de probabilidade é dada por:
+
+$$P(X=k) = \begin{pmatrix} n \\ k \end{pmatrix} \times p^k \times (1-p)^{n-k}$$
+
+Onde:
+
+- $n$: o número de tentativas
+  
+- $k$: o número de sucessos
+  
+- $p$: a probabilidade de sucesso
+  
+- $q=1-p$: a probabilidade de fracasso
+
+### Distribuição normal (Gaussiana)
+
+A distribuição normal é uma distribuição de probabilidade contínua que é utilizada para modelar a distribuição de variáveis aleatórias. Ela é caracterizada por sua forma de sino e é uma das distribuições mais importantes na teoria das probabilidades.
+
+Uma Variável aleatória $X$ é dita ter uma distribuição normal com média $\mu$ e desvio padrão $\sigma$ se sua função de densidade de probabilidade é dada por:
+
+$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
+
+Onde:
+
+- $\mu$: a média da distribuição
+  
+- $\sigma$: o desvio padrão da distribuição
+  
+- $\pi$: a constante matemática $\pi$
+  
+- $e$: a constante matemática $e$
+  
+- $x$: o valor da variável aleatória
+
+### Tabela Z
+
+A tabela Z é uma tabela de valores padronizados da distribuição normal padrão. Ela é utilizada para calcular a probabilidade de um valor ocorrer em uma distribuição normal padrão.
+
+A tabela Z é dividida em duas partes:
+
+- A parte superior da tabela Z contém os valores da variável aleatória $Z$.
+
+- A parte inferior da tabela Z contém as probabilidades associadas a cada valor de $Z$.
+
+Para utilizar a tabela Z, é necessário encontrar o valor de $Z$ correspondente ao valor da variável aleatória $X$ e, em seguida, encontrar a probabilidade associada a esse valor de $Z$.
+
+A tabela Z é uma ferramenta muito útil para calcular a probabilidade de um valor ocorrer em uma distribuição normal padrão e é amplamente utilizada em diversas áreas, como estatística, ciência de dados e engenharia.
+
+$$Z = \frac{X - \mu}{\sigma}$$
