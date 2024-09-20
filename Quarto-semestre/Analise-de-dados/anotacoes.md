@@ -373,3 +373,18 @@ Para utilizar a tabela Z, é necessário encontrar o valor de $Z$ correspondente
 A tabela Z é uma ferramenta muito útil para calcular a probabilidade de um valor ocorrer em uma distribuição normal padrão e é amplamente utilizada em diversas áreas, como estatística, ciência de dados e engenharia.
 
 $$Z = \frac{X - \mu}{\sigma}$$
+
+### Estimação de média populacional
+
+
+A estimação de média populacional é uma técnica estatística utilizada para estimar a média de uma população a partir de uma amostra. Ela é utilizada para calcular a média de uma população com base em uma amostra representativa. 
+
+Teorema do limite central: A média de uma amostra aleatória de uma população tem uma distribuição normal com média igual a média da população e desvio padrão igual ao desvio padrão da população dividido pela raiz quadrada do tamanho da amostra.
+
+Erro na estimativa intervalar:
+
+$$\varepsilon = Z {\sigma \over \sqrt{n}}$$
+
+Fixar o errom maximo:
+
+$$n = ({Z \over \varepsilon}) ^2 \sigma ^2 $$
