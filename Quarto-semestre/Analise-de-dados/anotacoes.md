@@ -385,6 +385,30 @@ Erro na estimativa intervalar:
 
 $$\varepsilon = Z {\sigma \over \sqrt{n}}$$
 
-Fixar o errom maximo:
+Fixar o erro maximo:
 
 $$n = ({Z \over \varepsilon}) ^2 \sigma ^2 $$
+
+### Estimação da proporção populacional $p$
+
+A estimação da proporção populacional é uma técnica estatística utilizada para estimar a proporção de uma população a partir de uma amostra. Ela é utilizada para calcular a proporção de uma população com base em uma amostra representativa.
+
+É impossível saber a proporção real da população, por isso é necessário estimar a proporção com base em uma amostra ($\^{p}$). A estimação da proporção populacional é uma técnica estatística que permite calcular a proporção de uma população com base em uma amostra representativa.
+
+Proposção populacional é usada para variáveis qualitativas, como por exemplo, a proporção de pessoas que gostam de um determinado produto, a proporção de eleitores que votam em um determinado candidato, etc.
+
+O estimador pontual para $p$, tamém denomidado de proporção amostral, é dado por:
+
+$$\^{p} = \frac{X_i + ... + X_n}{n}$$
+
+O estimador intervalar, que é a estimativa da proporção populacional com um intervalo de confiança, é dado por:
+
+$$[\^{p} - \varepsilon; \^{p} + \varepsilon]$$
+
+Onde $\varepsilon$ é o erro na estimativa intervalar, que é calculado pela fórmula:
+
+$$\varepsilon = Z \sqrt{\frac{\^{p}(1-\^{p})}{n}}$$
+
+O dimensionamento amostral é dado por:
+
+$$n = ({z \over \varepsilon})^2 p(1-p) $$
