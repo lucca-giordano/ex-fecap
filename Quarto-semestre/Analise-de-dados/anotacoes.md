@@ -412,3 +412,39 @@ $$\varepsilon = Z \sqrt{\frac{\^{p}(1-\^{p})}{n}}$$
 O dimensionamento amostral é dado por:
 
 $$n = ({z \over \varepsilon})^2 p(1-p) $$
+
+### Teste de hipóteses
+
+O teste de hipóteses é uma técnica estatística utilizada para avaliar a validade de uma afirmação sobre uma população. Ele é utilizado para testar se uma afirmação é verdadeira ou falsa com base em uma amostra representativa.
+
+O teste de hipóteses é composto por duas hipóteses:
+
+- `Hipótese nula (H0)`: é a hipótese que está sendo testada. Ela é a afirmação que queremos rejeitar com base nos dados.
+
+- `Hipótese alternativa (H1)`: é a hipótese que queremos provar. Ela é a afirmação que queremos aceitar com base nos dados.
+
+O teste de hipóteses é composto por quatro etapas:
+
+1. `Formular as hipóteses`: formular a hipótese nula e a hipótese alternativa com base na afirmação que queremos testar.
+
+2. `Definir o nível de significância`: definir o nível de significância do teste, que é a probabilidade de rejeitar a hipótese nula quando ela é verdadeira.
+
+3. `Calcular a estatística de teste`: calcular a estatística de teste com base nos dados da amostra.
+
+4. `Tomar a decisão`: comparar a estatística de teste com o valor crítico e tomar a decisão de rejeitar ou não a hipótese nula.
+
+### Valor-P
+
+O valor-p é uma medida estatística que quantifica a probabilidade de obter um resultado igual ou mais extremo do que o observado, assumindo que a hipótese nula é verdadeira. Ele é utilizado para avaliar a significância estatística de um teste de hipóteses e é uma medida de quão improvável é o resultado observado.
+
+O valor-p é calculado pela fórmula:
+
+$$P = P(X \geq x | H0)$$
+
+porcentagem de referencia = ho
+Estimativa pontual = valor total / valor de interesse
+formula variancia:
+$$\sigma^2 = \frac{p(1-p)}{n}$$
+desviu padrão:
+$$\sigma = \sqrt{\frac{p(1-p)}{n}}$$
+valor-p faz no rcmdr
