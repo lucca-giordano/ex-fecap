@@ -448,3 +448,103 @@ $$\sigma^2 = \frac{p(1-p)}{n}$$
 desviu padrão:
 $$\sigma = \sqrt{\frac{p(1-p)}{n}}$$
 valor-p faz no rcmdr
+
+--- 
+
+$$Z = \frac{X - \mu}{\sigma}$$
+
+---
+
+## Estudo para NI2
+
+Materias:
+
+- Estimativa da média populacional
+- Estimativa da proporção populacional
+- Teste de hipóteses da proporção
+- Valor-p
+- Teste de hipóteses da média populacional (via Valor-p)
+
+---
+
+### Estimativa da média populacional
+
+Quando falamos de dados populacionais, é impossível analisar todos os dados, por isso, utilizamos uma amostra para estimar a média populacional. Por exemplo, é impossível saber com certeza e precisão a média de altura de todas as pessoas do Brasil, por isso, utilizamos uma amostra com um número de pessoas para estimar essa média.
+
+A estimativa da média populacional é medida através do IC (Intervalo de Confiança), que é composto pela média da amostra e pela margem de erro:
+
+$$IC (\mu, \gamma) = [\bar{x} + \epsilon, \bar{x} - \epsilon]$$
+
+Onde:
+
+- $\mu$: média populacional
+- $\gamma$: nível de confiança
+- $\bar{x}$: média da amostra
+- $\epsilon$: margem de erro
+
+A margem de erro é calculada pela fórmula:
+
+$$\epsilon = Z \times \frac{\sigma}{\sqrt{n}}$$
+
+Onde:
+
+- $Z$: valor crítico da distribuição normal padrão (dado pelo nível de confiança, será dado no enunciado)
+- $\sigma$: desvio padrão da população
+- $n$: tamanho da amostra
+
+Caso o desvio padrão da população não seja conhecido, é possível utilizar o desvio padrão da amostra para calcular a margem de erro, utilizando a distribuição t de Student:
+
+$$\epsilon = t^c_{n-1} \times \frac{s}{\sqrt{n}}$$
+
+Onde:
+
+- $t^c_{n-1}$: valor crítico da distribuição t de Student (dado pelo nível de confiança e pelo grau de liberdade, será dado no enunciado)
+- $s$: desvio padrão da amostra
+- $n$: tamanho da amostra
+
+Quando falamos de Estimativa Pontual, estamos falando da média da amostra, quando o enunciado pedir para calcular a estimativa pontual, é a média da amostra.
+
+---
+
+### EStimativa da proporção
+
+A estimativa da proporção populacional é medida através do IC (Intervalo de Confiança), que é composto pela proporção da amostra e pela margem de erro:
+
+$$IC (p, \gamma) = [\hat{p} + \epsilon, \hat{p} - \epsilon]$$
+
+Onde:
+
+- $p$: proporção populacional
+- $\gamma$: nível de confiança
+- $\hat{p}$: proporção da amostra
+- $\epsilon$: margem de erro
+
+A margem de erro é calculada pela fórmula:
+
+$$\epsilon = Z \times \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
+
+Onde:
+
+- $Z$: valor crítico da distribuição normal padrão (dado pelo nível de confiança, será dado no enunciado)
+- $n$: tamanho da amostra
+- $\hat{p}$: proporção da amostra
+
+Para calcular o tamanho da amostra, é necessário utilizar a fórmula:
+
+$$n = \left( \frac{Z}{\epsilon} \right)^2 \times p(1-p)$$
+
+Onde:
+
+- $Z$: valor crítico da distribuição normal padrão (dado pelo nível de confiança, será dado no enunciado)
+- $\epsilon$: margem de erro
+- $p$: proporção da amostra
+
+Quando não se sabe o valor de $p$, é possível utilizar o valor de 0.5, que é o valor que maximiza o tamanho da amostra, ou seja, $p(1-p)$ é substituido por 0.25.
+
+Lembrando também a diferença entre $\hat{p}$ e $p$, $\hat{p}$ é a proporção da amostra e $p$ é a proporção populacional.
+
+### Teste de hipóteses da proporção
+
+Passo a passo para realizar um teste de hipóteses da proporção:
+
+1. **Formulação das hipóteses**: formular a hipótese nula ($H_0$) e a hipótese alternativa ($H_1$). A hipótese nula é a hipótese que queremos testar e a hipótese alternativa é a hipótese que queremos verificar.
