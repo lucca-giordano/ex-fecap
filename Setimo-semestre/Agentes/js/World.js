@@ -6,14 +6,16 @@ export const BLOCK_TYPES = {
     EMPTY: 0,
     DIRT: 1,
     WOOD: 2,
-    STONE: 3
+    STONE: 3,
+    LEAVES: 4
 };
 
 // Colors for the placeholders
 export const BLOCK_COLORS = {
-    [BLOCK_TYPES.DIRT]: 0x8b4513, // SaddleBrown
-    [BLOCK_TYPES.WOOD]: 0x228b22, // ForestGreen
-    [BLOCK_TYPES.STONE]: 0x808080  // Gray
+    [BLOCK_TYPES.DIRT]: 0x8b4513,  // SaddleBrown
+    [BLOCK_TYPES.WOOD]: 0x5c4033,  // Dark Wood
+    [BLOCK_TYPES.STONE]: 0x808080, // Gray
+    [BLOCK_TYPES.LEAVES]: 0x228b22 // ForestGreen
 };
 
 export class World {
@@ -36,27 +38,74 @@ export class World {
             this.grid[y] = [];
             this.blockSprites[y] = [];
             for (let x = 0; x < WORLD_COLS; x++) {
-                // Initialize as empty
                 this.grid[y][x] = BLOCK_TYPES.EMPTY;
                 this.blockSprites[y][x] = null;
+            }
+        }
 
-                // Base ground level (e.g., lower 5 rows)
-                if (y >= WORLD_ROWS - 5) {
-                    this.grid[y][x] = BLOCK_TYPES.DIRT;
-                } else if (y === WORLD_ROWS - 6) {
-                    // Surface layer - chance to spawn trees or stones
-                    const random = Math.random();
-                    if (random < 0.1) {
-                        this.grid[y][x] = BLOCK_TYPES.WOOD;
-                        // Build a simple tree column (2 blocks high)
-                        if (y - 1 >= 0) {
-                            this.grid[y - 1][x] = BLOCK_TYPES.WOOD;
-                        }
-                    } else if (random < 0.2) {
-                        this.grid[y][x] = BLOCK_TYPES.STONE;
-                    }
+        for (let x = 0; x < WORLD_COLS; x++) {
+            // Camada 1 (Superfície - Y: 0)
+            this.grid[WORLD_ROWS - 5][x] = BLOCK_TYPES.DIRT;
+            // Camada 2 (Y: 1)
+            this.grid[WORLD_ROWS - 4][x] = Math.random() < 0.75 ? BLOCK_TYPES.DIRT : BLOCK_TYPES.STONE;
+            // Camada 3 (Y: 2)
+            this.grid[WORLD_ROWS - 3][x] = Math.random() < 0.25 ? BLOCK_TYPES.DIRT : BLOCK_TYPES.STONE;
+            // Camadas 4 e 5 (Fundo do mapa)
+            this.grid[WORLD_ROWS - 2][x] = BLOCK_TYPES.STONE;
+            this.grid[WORLD_ROWS - 1][x] = BLOCK_TYPES.STONE;
+
+            // Chance de árvore
+            if (Math.random() < 0.1) {
+                this.spawnTree(x, WORLD_ROWS - 6);
+            }
+        }
+    }
+
+    spawnTree(x, baseY) {
+        const isLarge = Math.random() < 0.5;
+        const canopyWidth = isLarge ? 5 : 3;
+        const halfCanopy = Math.floor(canopyWidth / 2);
+
+        // Regra: Verifica limites do mapa para não desenhar folhas pra fora
+        if (x < halfCanopy || x > WORLD_COLS - 1 - halfCanopy) {
+            return;
+        }
+
+        if (isLarge) {
+            // Modelo 2: Árvore Grande
+            const trunkHeight = Math.floor(Math.random() * 2) + 3; // 3 ou 4
+            for (let i = 0; i < trunkHeight; i++) {
+                if (this.grid[baseY - i][x] === BLOCK_TYPES.EMPTY) {
+                    this.grid[baseY - i][x] = BLOCK_TYPES.WOOD;
                 }
             }
+
+            const topY = baseY - trunkHeight;
+
+            // Base da copa (5 de largura)
+            for (let i = -2; i <= 2; i++) {
+                if (this.grid[topY + 1][x + i] === BLOCK_TYPES.EMPTY) this.grid[topY + 1][x + i] = BLOCK_TYPES.LEAVES;
+            }
+            // Meio da copa (3 de largura)
+            for (let i = -1; i <= 1; i++) {
+                if (this.grid[topY][x + i] === BLOCK_TYPES.EMPTY) this.grid[topY][x + i] = BLOCK_TYPES.LEAVES;
+            }
+            // Topo (1 de largura)
+            if (this.grid[topY - 1][x] === BLOCK_TYPES.EMPTY) this.grid[topY - 1][x] = BLOCK_TYPES.LEAVES;
+
+        } else {
+            // Modelo 1: Árvore Pequena
+            if (this.grid[baseY][x] === BLOCK_TYPES.EMPTY) this.grid[baseY][x] = BLOCK_TYPES.WOOD;
+            if (this.grid[baseY - 1][x] === BLOCK_TYPES.EMPTY) this.grid[baseY - 1][x] = BLOCK_TYPES.WOOD;
+
+            const topY = baseY - 2;
+
+            // Base da copa (3 de largura)
+            for (let i = -1; i <= 1; i++) {
+                if (this.grid[topY + 1][x + i] === BLOCK_TYPES.EMPTY) this.grid[topY + 1][x + i] = BLOCK_TYPES.LEAVES;
+            }
+            // Topo (1 de largura)
+            if (this.grid[topY][x] === BLOCK_TYPES.EMPTY) this.grid[topY][x] = BLOCK_TYPES.LEAVES;
         }
     }
 
