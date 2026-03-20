@@ -1,0 +1,46 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #f4f7f6; /* Claro / Off-white academico */
+  color: #2d3436; /* Typography limpa */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+ul { list-style: none; padding: 0; margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* Custom Scrollbar - Vibe Elegante */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2ed573; } /* Verde pastel ativo */
+
+/* React Quill Overrides - Light Mode */
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid #dfe6e9 !important;
+  background-color: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 15px !important;
+}
+.ql-container.ql-snow {
+  border: none !important;
+  font-size: 1.05rem !important;
+  font-family: 'Inter', sans-serif !important;
+  background-color: #ffffff;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.ql-editor { min-height: 90px; color: #2d3436; padding: 20px !important; }
+.ql-editor.ql-blank::before { color: #b2bec3 !important; font-style: normal !important; }
+.ql-snow .ql-stroke { stroke: #636e72 !important; }
+.ql-snow .ql-fill { fill: #636e72 !important; }
+.ql-snow .ql-picker { color: #636e72 !important; }
