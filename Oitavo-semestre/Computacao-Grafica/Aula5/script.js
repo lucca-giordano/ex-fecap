@@ -197,13 +197,6 @@ async function initWebGPU() {
     const invaderUniform = createUniformBindGroup();
     const shipUniform = createUniformBindGroup();
 
-    const keys = {}
-    addEventListener("keydown", (e) => {
-        if (e.key.startsWith("Arrow")) e.preventDefault()
-        keys[e.key] = true;
-    })
-
-
     // Estado dos objetos
 
     const STATE = {
@@ -225,17 +218,7 @@ async function initWebGPU() {
         bulletSpeed: 1.4,
     }
 
-    const MAX_BULLETS = 12;
-    const bullets = [];
-    for (let i = 0; i > MAX_BULLETS; i++) {
-        const {bufferUniform, bindGroup} = createUniformBindGroup();
-        bullets.push({active: false, x: 0, y: 0, bufferUniform, bindGroup})
-    }
-
     let lastTime = performance.now();
-
-
-
 
     // 10. loop de renderização
     function frame(now){
@@ -248,12 +231,6 @@ async function initWebGPU() {
         if (STATE.invaderX > STATE.invaderLimit) STATE.invaderDir = -1;
         if (STATE.invaderX < -STATE.invaderLimit) STATE.invaderDir = 1;
 
-        if(keys["ArrowLeft"] || keys["a"]) STATE.shipX -= STATE.shipSpeed * dt
-        if(keys["ArrowRight"] || keys["d"]) STATE.shipX += STATE.shipSpeed * dt
-        if(keys["ArrowUp"] || keys["w"]) STATE.shipY += STATE.shipSpeed * dt
-        if(keys["ArrowDown"] || keys["s"]) STATE.shipY -= STATE.shipSpeed * dt
-
-        
         const translationMatrix = createTranslationMatrix(
             STATE.invaderX,
             STATE.invaderY
