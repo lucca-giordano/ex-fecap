@@ -27,6 +27,9 @@ const SCHEMA = {
   // Etapa 18: IA dos monstros e "sem alvo" (os monstros ignoram o jogador), só na sessão.
   monsterAI: { type: 'bool', default: true, persist: false },
   noTarget: { type: 'bool', default: false, persist: false },
+  // Etapa 19: flashes de tela (dano e coleta), persistido; modo deus só na sessão.
+  screenFlashes: { type: 'bool', default: true, persist: true },
+  godMode: { type: 'bool', default: false, persist: false },
 };
 
 function isValid(key, value) {

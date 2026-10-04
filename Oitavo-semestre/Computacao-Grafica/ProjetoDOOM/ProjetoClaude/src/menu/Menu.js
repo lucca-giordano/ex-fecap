@@ -39,6 +39,7 @@ export const SCREENS = {
       { id: 'particles', type: 'toggle', setting: 'particles' },
       { id: 'sprites', type: 'toggle', setting: 'sprites' },
       { id: 'moveMode', type: 'toggle', setting: 'moveMode' },
+      { id: 'screenFlashes', type: 'toggle', setting: 'screenFlashes' }, // etapa 19
       { id: 'particleTuning', type: 'action' },
     ],
   },
@@ -60,7 +61,11 @@ export const SCREENS = {
     parent: 'debug',
     items: [
       { id: 'healthUp', type: 'action', stats: true },
-      { id: 'healthDown', type: 'action', stats: true },
+      // Etapa 19: dano pela regra do jogo (armadura incluída), modo deus e morte.
+      { id: 'damage10', type: 'action', stats: true },
+      { id: 'damage25', type: 'action', stats: true },
+      { id: 'godMode', type: 'toggle', setting: 'godMode' },
+      { id: 'killPlayer', type: 'action', stats: true },
       { id: 'armorUp', type: 'action', stats: true },
       { id: 'ammoUp', type: 'action', stats: true },
       { id: 'resetStats', type: 'action', stats: true },
@@ -276,6 +281,8 @@ export class Menu {
         moveMode: s.get('moveMode'),
         monsterAI: s.get('monsterAI'),
         noTarget: s.get('noTarget'),
+        screenFlashes: s.get('screenFlashes'),
+        godMode: s.get('godMode'),
       },
     };
   }

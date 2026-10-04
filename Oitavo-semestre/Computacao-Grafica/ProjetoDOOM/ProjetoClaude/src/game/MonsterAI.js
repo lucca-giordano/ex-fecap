@@ -121,7 +121,7 @@ export function monsterShots(pellets, baseYaw, rng) {
 export class MonsterAI {
   // ctx: { world: { map, lines, sectors }, rng, player() -> { x, y, z (pés), alive },
   //   noTarget() -> boolean, staticSolids: [{ x, y, radius }],
-  //   onSound(nome, monstro), onPlayerDamaged(valor, origem, tipo) }.
+  //   onSound(nome, monstro), onPlayerDamaged(valor, origem, tipo, atacante { x, y }) }.
   constructor(ctx) {
     this.ctx = ctx;
     this.world = ctx.world;
@@ -321,13 +321,15 @@ export class MonsterAI {
     const target = { shootable: true, x: p.x, y: p.y, floorZ: p.z, entry: { radius: PLAYER_RADIUS, height: PLAYER_HEIGHT } };
     const r = shoot(this.world, origin, yaw, pitch, MISSILE_RANGE, [target]);
     if (r.kind !== 'monster') return false;
-    this.damagePlayer(damage, source, 'hitscan');
+    this.damagePlayer(m, damage, source, 'hitscan');
     return true;
   }
 
-  damagePlayer(amount, source, kind) {
-    this.ctx.onPlayerDamaged?.(amount, source, kind);
-    this.event({ type: 'playerDamaged', amount, source, kind });
+  // Etapa 19: o atacante ({ x, y } do monstro) vai junto, para o rosto e a câmera na morte.
+  damagePlayer(m, amount, source, kind) {
+    const attacker = { x: m.x, y: m.y };
+    this.ctx.onPlayerDamaged?.(amount, source, kind, attacker);
+    this.event({ type: 'playerDamaged', amount, source, kind, x: m.x, y: m.y, thingIndex: m.thingIndex });
   }
 
   // A_PosAttack (1 projétil) e A_SPosAttack (3): desvio (P_Random - P_Random) << 20 e dano (%5 + 1) * 3.
@@ -344,6 +346,6 @@ export class MonsterAI {
     this.faceTarget(m);
     if (!this.checkMeleeRange(m)) return;
     if (sound) this.ctx.onSound?.(sound, m);
-    this.damagePlayer(rollDamage(), source, 'melee');
+    this.damagePlayer(m, rollDamage(), source, 'melee');
   }
 }

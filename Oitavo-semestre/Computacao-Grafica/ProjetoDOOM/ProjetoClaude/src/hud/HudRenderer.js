@@ -23,6 +23,7 @@ export const LAYOUT = {
 // Chaves (etapa 16): azul, amarela e vermelha em (239, 171), (239, 181) e (239, 191).
 export const KEY_SLOTS = { x: 239, y: [171, 181, 191], colors: ['blue', 'yellow', 'red'] };
 export const MESSAGE_POS = { x: 0, y: 0 };
+export const RESTART_Y = 90; // etapa 19: texto "PRESS USE (E) OR CLICK TO RESTART"
 const MESSAGE_MAX_WIDTH = 320; // largura da tela do Doom
 
 // Mensagem de coleta: se passar de 320 pixels, quebra em duas linhas (o drawText avança 12 pixels).
@@ -108,7 +109,7 @@ function paletteRow(litPalette, level) {
 }
 
 // state: { stats, weapon: { prefix, frame, sx, sy, flash: { prefix, letter } | null, ammo } | null, weaponLevel,
-// message? }; tics: relógio de jogo (rosto). weapon.prefix ausente: pistola (PISG); flash true: PISF A.
+// message?, face? (lump do rosto, etapa 19), restartText? }; tics: relógio de jogo (rosto). weapon.prefix ausente: pistola (PISG); flash true: PISF A.
 // O campo grande de munição mostra o tipo weapon.ammo (padrão: balas); null (soco) deixa em branco.
 // Devolve Uint8ClampedArray 320x200x4; transparente onde não há desenho. `report` (opcional) recebe
 // { name, x, y, w, h } de cada elemento desenhado, para verificação.
@@ -155,7 +156,7 @@ export function composeHud(state, assets, tics, report) {
   // Munição da arma atual; com o soco (ammo null), o campo fica em branco.
   const ammoType = state.weapon?.ammo === undefined ? 'clip' : state.weapon.ammo;
   if (ammoType) bigNumber('ammo', stats.ammo[ammoType], L.ammo);
-  bigNumber('health', stats.health, L.health);
+  bigNumber('health', Math.max(0, stats.health), L.health); // etapa 19: a vida negativa aparece como 0
   if (patches.STTPRCNT) drawPatch(buffer, patches.STTPRCNT, L.health.right, L.health.y);
   bigNumber('armor', stats.armor, L.armor);
   if (patches.STTPRCNT) drawPatch(buffer, patches.STTPRCNT, L.armor.right, L.armor.y);
@@ -168,7 +169,8 @@ export function composeHud(state, assets, tics, report) {
   }
 
   // Rosto.
-  const faceName = faceLumpName(stats.health, faceLookAt(tics), patches);
+  // Etapa 19: state.face (FaceState, já conferido contra os lumps); sem ele, a regra da etapa 13.
+  const faceName = state.face ?? faceLumpName(stats.health, faceLookAt(tics), patches);
   if (patches[faceName]) {
     drawPatch(buffer, patches[faceName], L.face.x, L.face.y);
     report?.push({ name: faceName, x: L.face.x, y: L.face.y, w: patches[faceName].width, h: patches[faceName].height });
@@ -194,6 +196,14 @@ export function composeHud(state, assets, tics, report) {
       drawPatch(buffer, patches[name], KEY_SLOTS.x, KEY_SLOTS.y[i]);
       report?.push({ name, x: KEY_SLOTS.x, y: KEY_SLOTS.y[i], w: patches[name].width, h: patches[name].height });
     }
+  }
+
+  // Texto de reinício (etapa 19), centralizado em y = 90.
+  if (state.restartText && assets.font?.some(Boolean)) {
+    const w = measureText(assets.font, state.restartText);
+    const x = Math.max(0, Math.floor((HUD_WIDTH - w) / 2));
+    drawText(buffer, assets.font, state.restartText, x, RESTART_Y);
+    report?.push({ name: 'restart', x, y: RESTART_Y, w, h: 12 });
   }
 
   // Mensagem de coleta (etapa 16) no canto superior esquerdo, na fonte do menu.

@@ -21,11 +21,11 @@ import { ITEM_TEXT } from './game/itemText.js';
 import { staticSolids, getSolids } from './physics/solids.js';
 import {
   WEAPONS, PISTOL, USABLE_SLOTS, createWeapons, startRaise, updateWeapons, updateSwayAmplitude, weaponLightLevel,
-  requestWeapon, cycleWeapon, autoSwitchOnPickup, weaponView,
+  requestWeapon, cycleWeapon, autoSwitchOnPickup, weaponView, killWeapons,
 } from './game/weapons.js';
 import { fireWeapon } from './game/fireWeapon.js';
 import { loadHudAssets } from './hud/HudAssets.js';
-import { composeHud, faceLookAt, faceLumpName } from './hud/HudRenderer.js';
+import { composeHud } from './hud/HudRenderer.js';
 import { loadSounds } from './audio/dmx.js';
 import { AudioEngine } from './audio/AudioEngine.js';
 import { MAX_CHANNELS } from './audio/channels.js';
@@ -38,6 +38,11 @@ import { MonsterSystem } from './game/MonsterSystem.js';
 import { MonsterAI } from './game/MonsterAI.js';
 import { aproxDist } from './game/aiTable.js';
 import { PlayerDamageSink } from './game/PlayerDamageSink.js';
+import { applyDamage, deathSound } from './game/PlayerDamage.js';
+import { deathEyeHeight, turnTowards, canRestart } from './game/PlayerDeath.js';
+import { FaceState } from './hud/face.js';
+import { computeTintTable, flashPalette, tintFor } from './gpu/palettesTint.js';
+import { angleTo } from './game/MonsterAI.js';
 import { radiusAttack, BARREL_DAMAGE } from './game/radiusAttack.js';
 import { EffectList, effectFrame, MAX_EFFECTS } from './game/effects.js';
 import { CombatStats } from './game/stats.js';
@@ -48,7 +53,7 @@ import { installErrorOverlay, reportError } from './ui/errorOverlay.js';
 import { loadMenuAssets } from './menu/MenuAssets.js';
 import { Menu } from './menu/Menu.js';
 import { composeMenu, skullFrame } from './menu/MenuRenderer.js';
-import { MENU_LANG } from './menu/menuText.js';
+import { MENU_LANG, MENU_TEXT } from './menu/menuText.js';
 import { buildWalls } from './map/buildWalls.js';
 import { VERTEX_STRIDE, VERTEX_ATTRIBUTES } from './map/vertexLayout.js';
 import { buildFlats, distanceInside } from './map/buildFlats.js';
@@ -297,6 +302,26 @@ async function main() {
   ]);
   const display = new Display(device, canvas, context, format, blitModule, settings);
 
+  // Etapa 19: variante do blit com flash de tela, em arquivos próprios (o blit acima não muda). Só é
+  // usada se o módulo e a pipeline forem validados; senão, o jogo segue com o blit original.
+  const tintTable = computeTintTable(wad.getLumpBytes(wad.findLump('PLAYPAL')));
+  console.log('Flashes: mistura ajustada a cada paleta do PLAYPAL (t e erro médio por canal, em níveis de 0 a 255)');
+  console.table(tintTable.map((e) => ({ paleta: e.palette, t: e.t.toFixed(3), erro: e.error.toFixed(2) })));
+  if (tintTable.some((e) => e.error > 6)) console.warn('Flashes: alguma paleta difere mais de 6 níveis da mistura');
+  display.onTintError = (err) => { console.error(err.message); reportError(err); };
+  try {
+    const blitTintCode = await fetchText(new URL('./shaders/blitTint.wgsl', import.meta.url));
+    const crtTintCode = await fetchText(new URL('./shaders/crtTint.wgsl', import.meta.url));
+    const tintModule = await createCheckedShaderModule(device, 'blit + CRT com flash', [
+      { name: 'blitTint.wgsl', code: blitTintCode },
+      { name: 'crtTint.wgsl', code: crtTintCode },
+    ]);
+    await display.attachTint(tintModule, format);
+  } catch (err) {
+    console.error('Flashes desligados nesta sessão:', err.message);
+    reportError(err);
+  }
+
   // Estado inicial do CRT; MASK_ENABLED e WARP_ENABLED são lidos do próprio crt.wgsl.
   const crtConst = (name) => new RegExp(`const ${name}\\s*=\\s*(true|false)`).exec(crtCode)?.[1] ?? '?';
   console.log(`CRT inicial: ${settings.get('crt') ? 'ligado' : 'desligado'}; ` +
@@ -359,7 +384,8 @@ async function main() {
   // Física do modo andar (etapa 12), em coordenadas do Doom; a câmera fica no olho (pés + EYE_HEIGHT).
   const physicsWorld = { map, lines: buildCollisionLines(map), sectors: map.sectors, spawn: { x: spawn.x, y: spawn.y } };
   let walker = createPlayerState(physicsWorld, spawn.x, spawn.y);
-  const syncCameraToWalker = () => { camera.pos = doomToWorld(walker.x, walker.y, walker.z + EYE_HEIGHT); };
+  let eyeOffset = EYE_HEIGHT; // etapa 19: desce até 6 na morte
+  const syncCameraToWalker = () => { camera.pos = doomToWorld(walker.x, walker.y, walker.z + eyeOffset); };
   console.log(`Física: ${physicsWorld.lines.length} linhas de colisão; modo inicial ${settings.get('moveMode')}`);
 
   function resetToSpawn() {
@@ -367,6 +393,7 @@ async function main() {
     camera.yaw = doomAngleToYaw(spawn.angle);
     camera.pitch = 0;
     walker = createPlayerState(physicsWorld, spawn.x, spawn.y); // pés no chão do ponto de início
+    eyeOffset = EYE_HEIGHT;
   }
   resetToSpawn();
 
@@ -480,7 +507,27 @@ async function main() {
 
   // --- Monstros, efeitos e contadores (etapa 15) ---
   const effects = new EffectList();
-  const playerDamage = new PlayerDamageSink(); // etapa 18: dano ao jogador só contado, não aplicado
+  // --- Jogador: estado, dano, morte e rosto (etapa 19) ---
+  const stats = new PlayerStats();
+  const playerDamage = new PlayerDamageSink(); // contadores por origem para o HUD de texto
+  const face = new FaceState();
+  let deathFeet = 0;             // altura dos pés na morte (modo voar)
+  let fireReleasedSinceDeath = false;
+  // Todo dano ao jogador passa por aqui (monstros, barris e depuração). attacker: { x, y } ou null.
+  function damagePlayer(amount, source, kind, attacker) {
+    const r = applyDamage(stats, amount, attacker, source, rng, settings.get('godMode'));
+    if (r.applied <= 0 && r.savedByArmor <= 0) return r;
+    playerDamage.onPlayerDamaged(r.applied, source, kind, r.savedByArmor);
+    face.onDamage(r.applied, attacker);
+    for (const ev of r.events) {
+      if (ev.type === 'playerPain') audio.play('plpain', { origin: 'player' });
+      if (ev.type === 'playerDied') {
+        audio.play(deathSound(ev.overkill, (n) => soundData.sounds.has(n)), { origin: 'player' });
+        console.log(`Jogador morto por ${source} (vida final ${ev.overkill})`);
+      }
+    }
+    return r;
+  }
   const lightAt = (x, y) => {
     const sec = map.sectors[findSector(map, x, y)];
     return sec ? Math.min(15, Math.max(0, Math.floor(sec.lightLevel / 16))) : 15;
@@ -497,7 +544,7 @@ async function main() {
       // Barril no quadro C: dano em raio a partir do centro dele (reação em cadeia acontece sozinha).
       onExplode: (m) => radiusAttack(physicsWorld, m, BARREL_DAMAGE, m, monsters.monsters, rng, {
         damage: (target, amount) => monsters.damage(target, amount),
-        onPlayerDamaged: (amount) => playerDamage.onPlayerDamaged(amount, 'BAR1', 'explosion'),
+        onPlayerDamaged: (amount) => damagePlayer(amount, 'BAR1', 'explosion', null),
         player: playerTarget(),
       }),
     });
@@ -518,13 +565,15 @@ async function main() {
   // Pés do jogador: no modo andar, a física; voando, olho - 41.
   const playerFeet = () => {
     const [px, py, eyeZ] = worldToDoom(...camera.pos);
-    return { x: px, y: py, z: settings.get('moveMode') === 'walk' ? walker.z : eyeZ - EYE_HEIGHT, alive: true };
+    // Andando, a física (o corpo ainda cai); voando, os pés guardados na morte ou olho - 41.
+    const z = settings.get('moveMode') === 'walk' ? walker.z : stats.isDead ? deathFeet : eyeZ - EYE_HEIGHT;
+    return { x: px, y: py, z, alive: !stats.isDead };
   };
   const monsterAI = new MonsterAI({
     world: physicsWorld, rng, player: playerFeet,
     noTarget: () => settings.get('noTarget'), staticSolids: fixedSolids,
     onSound: (name, m) => audio.play(name, { origin: `thing:${m.thingIndex}`, x: m.x, y: m.y }),
-    onPlayerDamaged: (amount, source, kind) => playerDamage.onPlayerDamaged(amount, source, kind),
+    onPlayerDamaged: (amount, source, kind, attacker) => damagePlayer(amount, source, kind, attacker),
   }).attach(monsters);
   monsters.setAIEnabled(settings.get('monsterAI'));
   settings.subscribe('monsterAI', (on) => monsters.setAIEnabled(on));
@@ -597,7 +646,6 @@ async function main() {
   }
 
   // --- Pistola e barra de status (etapa 13); se faltar algo ou a GPU recusar, desliga só na sessão ---
-  const stats = new PlayerStats();
   let hudAssets = null;
   let hudPass = null;
   let hudAvailable = false; // só fica true depois da validação da pipeline
@@ -668,30 +716,48 @@ async function main() {
   }
   const TURN_RATE = Math.PI / 2; // setas no modo de calibragem: 90 graus por segundo
 
+  // NEW GAME (menu) e reinício depois da morte (etapa 19): jogador, monstros, itens, largados, efeitos,
+  // alertas de som, contadores, rosto e arma subindo.
+  function newGame() {
+    lockReason = 'newGame';
+    resetToSpawn();
+    stats.reset();
+    face.reset();
+    resetCombat();
+    resetItems();
+    startRaise(weapons, PISTOL);
+    controls.clear(); // estado de disparo (e de movimento) limpo
+    controls.requestLock();
+  }
+  // Reinício: só morto, depois de 35 tics.
+  const tryRestart = () => {
+    if (!menu.started || !stats.isDead || !canRestart(stats.deathTics)) return false;
+    newGame();
+    return true;
+  };
+
   menu = new Menu(settings, {
     // Chamados dentro do handler do teclado ou do clique: o pedido de pointer lock é um gesto válido.
     onSound: (name) => audio.play(name),
-    newGame: () => {
-      lockReason = 'newGame';
-      resetToSpawn();
-      stats.reset();
-      resetCombat();
-      resetItems();
-      startRaise(weapons, PISTOL);
-      controls.clear(); // estado de disparo (e de movimento) limpo
-      controls.requestLock();
-    },
+    newGame,
     resume: () => { controls.requestLock(); },
     toggleFullscreen,
     isFullscreen: () => Boolean(document.fullscreenElement),
     openTuning: () => openTuning(),
     statsAction: (id) => {
       switch (id) {
-        case 'healthUp': stats.addHealth(10); break;
-        case 'healthDown': stats.addHealth(-10); break;
+        case 'healthUp': if (!stats.isDead) stats.addHealth(10); break;
+        // Etapa 19: dano de teste pela regra do jogo (armadura incluída), sem atacante.
+        case 'damage10': damagePlayer(10, 'debug', 'debug', null); break;
+        case 'damage25': damagePlayer(25, 'debug', 'debug', null); break;
+        case 'killPlayer': damagePlayer(1000, 'debug', 'debug', null); break;
         case 'armorUp': stats.addArmor(25); break;
         case 'ammoUp': stats.addAmmo(10); break;
-        case 'resetStats': stats.reset(); break;
+        case 'resetStats':
+          stats.reset();
+          face.reset();
+          if (weapons.state === 'dead') startRaise(weapons, PISTOL); // reviver levanta a pistola
+          break;
         case 'resetMonsters': resetCombat(); resetItems(); break;
         case 'killAll': monsters.killAll(); break; // conta como morte, não como acerto
         case 'giveKeys': for (const k of KEY_NAMES) stats.keys[k] = true; break;
@@ -714,10 +780,14 @@ async function main() {
       return;
     }
     if (menuVisible() && menu.handleKey(e)) e.preventDefault();
+    else if (!menuVisible() && e.code === 'Enter' && !e.repeat && tryRestart()) e.preventDefault(); // etapa 19
   });
 
   controls = new Controls(canvas, {
-    onLook: (dx, dy) => camera.look(dx, dy, BASE_MOUSE_SENS * levelScale(settings.get('mouseSensitivityLevel'))),
+    onLook: (dx, dy) => {
+      if (stats.isDead) return; // etapa 19: morto, a câmera só vira para o assassino
+      camera.look(dx, dy, BASE_MOUSE_SENS * levelScale(settings.get('mouseSensitivityLevel')));
+    },
     isBlocked: menuVisible,
     // Clique no canvas: antes do jogo começar equivale a NEW GAME; depois, retoma sem reposicionar.
     onClick: () => {
@@ -753,6 +823,7 @@ async function main() {
         case 'sensUp': stepLevel('mouseSensitivityLevel', +1); break;
         case 'speedDown': stepLevel('flySpeedLevel', -1); break;
         case 'speedUp': stepLevel('flySpeedLevel', +1); break;
+        case 'use': tryRestart(); break; // etapa 19: fora da morte, "usar" ainda não faz nada
         case 'weaponNext': if (menu.started) cycleWeapon(weapons, stats, +1); break;
         case 'weaponPrev': if (menu.started) cycleWeapon(weapons, stats, -1); break;
         case 'weapon1': case 'weapon2': case 'weapon3': case 'weapon4':
@@ -786,7 +857,8 @@ async function main() {
     return `IA ${settings.get('monsterAI') ? 'on' : 'off'}${settings.get('noTarget') ? ' (sem alvo)' : ''}  ` +
       `acordados ${awake.length}/${monsters.monsters.filter((m) => m.aiDef).length}  ` +
       `mais próximo ${nearest === null ? '-' : nearest.toFixed(0)}  alertados ${monsterAI.alertedSectors().length}\n` +
-      `dano ao jogador (ainda não aplicado): hitscan ${d.hitscan}, melee ${d.melee}, explosão ${d.explosion}\n`;
+      `dano recebido: hitscan ${d.hitscan}, corpo a corpo ${d.melee}, explosão ${d.explosion}, ` +
+      `teste ${d.debug ?? 0}; absorvido pela armadura ${playerDamage.absorbed}\n`;
   }
   function updateHud(fps) {
     if (!settings.get('hud') || menuVisible()) return;
@@ -811,6 +883,9 @@ async function main() {
       (tuningPanel.isOpen ? `  calibragem(${key('tuning')})` : '') + '\n' +
       movementHud(z, sec) +
       `vida ${stats.health}  armadura ${stats.armor} (tipo ${stats.armorType})  ` +
+      `${stats.isDead ? `MORTO há ${stats.deathTics} tics` : 'vivo'}${settings.get('godMode') ? '  GOD MODE' : ''}\n` +
+      `damageCount ${stats.damageCount}  bonusCount ${stats.bonusCount}  ` +
+      `paleta de flash ${flashPalette(stats.damageCount, stats.bonusCount)}${settings.get('screenFlashes') ? '' : ' (flashes off)'}  ` +
       (hudAvailable
         ? `arma ${WEAPONS[weapons.current].name}  pendente ${weapons.pending ? WEAPONS[weapons.pending].name : '-'}  ` +
           `fase ${WEAPON_STATE_LABEL[weapons.state]}  tics ${weapons.state === 'fire' ? weapons.stateTics : '-'}`
@@ -853,7 +928,7 @@ async function main() {
         // Andar: WASD no plano horizontal (Space e C ignorados), com colisão e gravidade.
         // A física só roda com o jogo iniciado (o menu fechado já é garantido por showMenu).
         if (menu.started) {
-          const mv = controls.moveVector();
+          const mv = stats.isDead ? { f: 0, s: 0, u: 0 } : controls.moveVector(); // morto: só gravidade
           const sinY = Math.sin(camera.yaw), cosY = Math.cos(camera.yaw);
           // No Doom: frente = (sin yaw, cos yaw), direita = (cos yaw, -sin yaw) (inverso de doomToWorld).
           const wish = { vx: (mv.f * sinY + mv.s * cosY) * speed, vy: (mv.f * cosY - mv.s * sinY) * speed };
@@ -864,7 +939,7 @@ async function main() {
           syncCameraToWalker();
         }
       } else {
-        camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
+        if (!stats.isDead) camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
       }
     }
     const tics = gameTics(gameTime);
@@ -884,7 +959,24 @@ async function main() {
         monsters.tick();
         effects.tick();
         for (const ev of monsters.takeEvents()) if (ev.type === 'died') itemSystem.onMonsterDied(ev);
+        // Etapa 19: morreu neste tic (monstro ou barril): a arma desce e os pés ficam onde estavam.
+        if (stats.isDead && weapons.state !== 'dead') {
+          killWeapons(weapons);
+          deathFeet = feet.z;
+          fireReleasedSinceDeath = false;
+        }
+        if (stats.isDead) {
+          stats.deathTics++;
+          // Gira até 5 graus por tic para o assassino (P_DeathThink).
+          if (stats.lastAttacker) {
+            const target = angleTo(px, py, stats.lastAttacker.x, stats.lastAttacker.y);
+            camera.yaw = doomAngleToYaw(turnTowards(yawToDoomAngle(camera.yaw), target).angle);
+          }
+        }
+        stats.tickDamage();
+        face.tick();
         for (const ev of itemSystem.update(feet, stats)) {
+          if (ev.weaponGained) face.onWeaponGained(); // sorriso por 70 tics
           audio.play(ev.sound, { origin: 'player' });
           pickupMessage = ITEM_TEXT[MENU_LANG][ev.messageKey] ?? ev.messageKey;
           messageTics = MESSAGE_TICS;
@@ -895,6 +987,21 @@ async function main() {
       }
     }
     lastPistolTic = tics;
+    // Etapa 19: olho caindo na morte; clique (disparo solto e apertado de novo) reinicia.
+    if (menu.started && !showMenu) {
+      eyeOffset = stats.isDead ? deathEyeHeight(stats.deathTics, EYE_HEIGHT) : EYE_HEIGHT;
+      if (stats.isDead) {
+        if (settings.get('moveMode') === 'walk') syncCameraToWalker();
+        else {
+          const [cx, cy] = worldToDoom(...camera.pos);
+          camera.pos = doomToWorld(cx, cy, deathFeet + eyeOffset);
+        }
+        if (!controls.firing) fireReleasedSinceDeath = true;
+        else if (fireReleasedSinceDeath) tryRestart();
+      }
+    }
+    // Flash de tela: dano tem prioridade sobre o bônus; desligado com FLASHES OFF.
+    display.setTint(tintFor(tintTable, flashPalette(stats.damageCount, stats.bonusCount), settings.get('screenFlashes')));
     for (const ev of monsters.takeEvents()) if (ev.type === 'died') itemSystem.onMonsterDied(ev); // ex.: KILL ALL
     // Ouvinte do som: posição e ângulo da câmera em coordenadas do Doom (0 = leste, 90 = norte).
     const [listenerX, listenerY] = worldToDoom(...camera.pos);
@@ -995,13 +1102,15 @@ async function main() {
       const weapon = weaponView(weapons);
       const weaponLevel = weaponLightLevel(lightnum, settings.get('lighting'));
       // Recompõe só quando algo visível muda (números, quadro e posição da arma, luz, rosto).
-      const hudKey = [stats.health, stats.armor, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
+      const [fx, fy] = worldToDoom(...camera.pos);
+      const faceName = face.lump(stats, { x: fx, y: fy, angle: yawToDoomAngle(camera.yaw) }, settings.get('godMode'), hudAssets.patches);
+      const restartText = stats.isDead && canRestart(stats.deathTics) ? MENU_TEXT[MENU_LANG].restartPrompt : '';
+      const hudKey = [Math.max(0, stats.health), stats.armor, faceName, restartText, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
         KEY_NAMES.map((k) => (stats.keys[k] ? 1 : 0)).join(''), [...stats.weaponsOwned].join(','), pickupMessage,
         weapon.prefix, weapon.frame, weapon.flash ? weapon.flash.prefix + weapon.flash.letter : '',
-        weapon.sx.toFixed(2), weapon.sy.toFixed(2), weaponLevel,
-        faceLumpName(stats.health, faceLookAt(tics), hudAssets.patches)].join('|');
+        weapon.sx.toFixed(2), weapon.sy.toFixed(2), weaponLevel].join('|');
       if (hudKey !== lastHudKey) {
-        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage }, hudAssets, tics));
+        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage, face: faceName, restartText }, hudAssets, tics));
         lastHudKey = hudKey;
       }
       hudPass.draw(encoder, display.colorView, display.internal.width, display.internal.height);

@@ -73,7 +73,8 @@ export const attackTics = (slot) => WEAPONS[slot].attack.reduce((sum, fr) => sum
 export function createWeapons({ available = USABLE_SLOTS, current = PISTOL } = {}) {
   const w = {
     available: new Set(available), current, pending: null,
-    state: 'raise', // 'lower' (descendo), 'raise' (subindo), 'ready' (parada), 'fire' (atacando)
+    // 'lower' (descendo), 'raise' (subindo), 'ready' (parada), 'fire' (atacando), 'dead' (etapa 19)
+    state: 'raise',
     frame: WEAPONS[current].ready, sx: READY_SX, sy: WEAPONBOTTOM,
     fireIndex: 0, stateTics: 0, amplitude: 0,
     refire: 0, // disparos consecutivos sem soltar desde o último tiro preciso
@@ -86,6 +87,11 @@ export function createWeapons({ available = USABLE_SLOTS, current = PISTOL } = {
 export function startRaise(w, slot = w.current) {
   Object.assign(w, { current: slot, pending: null, state: 'raise', frame: WEAPONS[slot].ready, sx: READY_SX,
     sy: WEAPONBOTTOM, fireIndex: 0, stateTics: 0, refire: 0, flash: null, flashTics: 0 });
+}
+
+// Jogador morto (etapa 19): a arma desce até WEAPONBOTTOM e fica lá, sem subir nem disparar.
+export function killWeapons(w) {
+  Object.assign(w, { state: 'dead', pending: null, refire: 0, flash: null, flashTics: 0, frame: WEAPONS[w.current].ready });
 }
 
 export const owns = (slot, stats) => stats.weaponsOwned.has(slot);
@@ -106,6 +112,7 @@ function startLower(w) {
 // Pedido de troca: devolve true se aceito. Ignorado para a arma ativa, não possuída, não utilizável ou
 // sem lumps. Parada: começa a descer na hora; atacando: espera o fim do ataque.
 export function requestWeapon(w, slot, stats) {
+  if (w.state === 'dead') return false;
   if (slot === w.current || !canSelect(w, slot, stats)) return false;
   w.pending = slot;
   if (w.state === 'ready') startLower(w);
@@ -230,6 +237,11 @@ function finishFrame(w, ctx) {
 export function tickWeapons(w, input, stats, tic, events = []) {
   tickFlash(w);
   const ctx = { input, stats, events };
+
+  if (w.state === 'dead') {
+    w.sy = Math.min(WEAPONBOTTOM, w.sy + LOWERSPEED);
+    return events;
+  }
 
   if (w.state === 'lower') {
     w.sy += LOWERSPEED;

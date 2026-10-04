@@ -44,6 +44,8 @@ export const ACTION_KEYS = {
   // Entrada de mouse: o código 'Mouse0' nunca vem do teclado; o botão é tratado em mousedown/mouseup.
   fireMouse: { code: 'Mouse0', label: 'Mouse esquerdo', desc: 'atirar', kind: 'hold', mouseButton: 0 },
   toggleMute: { code: 'KeyM', label: 'M', desc: 'som ligado / mudo', kind: 'toggle' },
+  // Etapa 19: "usar"; por enquanto só reinicia depois da morte (portas ainda não existem).
+  use: { code: 'KeyE', label: 'E', desc: 'usar / reiniciar', kind: 'press' },
   // Setas: giram a câmera só no modo de calibragem (o mouse fica livre para o painel).
   // group 'tuning': a tela READ THIS! mostra as quatro numa linha só.
   lookLeft: { code: 'ArrowLeft', label: '←', desc: 'girar à esquerda (calibragem)', kind: 'hold', group: 'tuning' },

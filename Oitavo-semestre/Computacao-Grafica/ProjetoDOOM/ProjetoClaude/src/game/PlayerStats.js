@@ -5,6 +5,8 @@
 export const INITIAL_HEALTH = 100;  // vida ao começar (Doom: player->health = 100)
 export const MAX_HEALTH = 200;      // limite com as esferas (Doom: soulsphere e bônus até 200)
 export const MAX_ARMOR = 200;       // armadura máxima (Doom: megaarmor = 200)
+export const MIN_HEALTH = -1000;    // etapa 19: a vida pode ficar negativa (overkill decide o som de morte)
+export const MAX_DAMAGE_COUNT = 100; // Doom: damagecount limitado a 100
 export const PISTOL_SLOT = 2;       // slot da pistola no painel de armas
 export const FIST_SLOT = 1;         // soco/motosserra
 
@@ -44,6 +46,11 @@ export class PlayerStats {
     this.hasChainsaw = false;
     this.keys = Object.fromEntries(KEY_NAMES.map((k) => [k, false]));
     this.bonusCount = 0;
+    // Etapa 19: contador do flash vermelho (dano pós-armadura, até 100, -1 por tic), último atacante
+    // ({ x, y } ou null) e tics desde a morte.
+    this.damageCount = 0;
+    this.lastAttacker = null;
+    this.deathTics = 0;
   }
 
   get isDead() {
@@ -60,7 +67,7 @@ export class PlayerStats {
   set ammoClip(v) { this.ammo.clip = clampInt(v, 0, this.maxAmmoOf('clip')); }
   get maxClip() { return this.maxAmmoOf('clip'); }
 
-  addHealth(n, limit = MAX_HEALTH) { this.health = clampInt(this.health + n, 0, Math.max(limit, 0)); }
+  addHealth(n, limit = MAX_HEALTH) { this.health = clampInt(this.health + n, MIN_HEALTH, Math.max(limit, 0)); }
 
   addArmor(n) {
     this.armor = clampInt(this.armor + n, 0, MAX_ARMOR);
@@ -78,8 +85,12 @@ export class PlayerStats {
     return true;
   }
 
-  // Um tic de jogo: o contador de bônus decai (gancho para um efeito visual futuro).
+  // Um tic de jogo: os contadores de bônus (flash dourado) e de dano (flash vermelho) decaem.
   tickBonus() {
     if (this.bonusCount > 0) this.bonusCount--;
+  }
+
+  tickDamage() {
+    if (this.damageCount > 0) this.damageCount--;
   }
 }

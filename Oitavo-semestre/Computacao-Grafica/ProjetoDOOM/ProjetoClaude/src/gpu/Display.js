@@ -16,6 +16,9 @@ const MODERN_MAX_WIDTH = 1400;
 // Uniform de pós-processamento (struct PostUniforms em blit.wgsl): internalSize vec2, rectSize vec2,
 // time f32, crt f32 e 8 bytes de padding = 8 floats = 32 bytes.
 const POST_UNIFORM_FLOATS = 8;
+// Etapa 19: uniform da variante com flash (struct PostUniforms em blitTint.wgsl): os 32 bytes acima +
+// tint vec4<f32> no offset 32 (alinhamento 16) = 48 bytes, que também é o minBindingSize.
+export const TINT_POST_UNIFORM = { bytes: 48, tintOffset: 32, floats: 12 };
 
 export class Display {
   // blitModule: módulo com blit.wgsl + crt.wgsl (ver createCheckedShaderModule).
@@ -30,6 +33,8 @@ export class Display {
     this.colorTexture = null;
     this.depthTexture = null;
     this.logPending = true; // imprime a configuração no primeiro update e a cada troca de modo
+    this.tint = null;       // variante com flash (etapa 19): { pipeline, postBuffer, postData, bindGroup }
+    this.tintValue = [0, 0, 0, 0];
 
     const module = blitModule;
     this.pipeline = device.createRenderPipeline({
@@ -51,6 +56,71 @@ export class Display {
     console.log(`Uniform de pós-processamento: ${this.postData.byteLength} bytes ` +
       `(struct WGSL: 32 bytes), buffer de ${this.postBuffer.size} bytes: ` +
       `${this.postData.byteLength <= this.postBuffer.size ? 'cabe' : 'NÃO cabe'}`);
+  }
+
+  // Etapa 19: cria e valida a variante do blit com flash (blitTint.wgsl + crtTint.wgsl). Só passa a ser
+  // usada se a pipeline, o buffer e o bind group forem válidos; senão, fica o blit original e o erro é
+  // devolvido para o console e o quadro vermelho. Devolve true se ativou.
+  async attachTint(module, canvasFormat) {
+    const device = this.device;
+    device.pushErrorScope('validation');
+    let pipeline = null, failure = null;
+    try {
+      pipeline = await device.createRenderPipelineAsync({
+        label: 'blit com flash (pipeline)',
+        layout: 'auto',
+        vertex: { module, entryPoint: 'vs_main' },
+        fragment: { module, entryPoint: 'fs_main', targets: [{ format: canvasFormat }] },
+        primitive: { topology: 'triangle-list' },
+      });
+    } catch (err) {
+      failure = err;
+    }
+    const postData = new Float32Array(TINT_POST_UNIFORM.floats);
+    const postBuffer = device.createBuffer({
+      label: 'uniform de pós-processamento com flash',
+      size: TINT_POST_UNIFORM.bytes,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+    const error = await device.popErrorScope();
+    if (failure || error) {
+      postBuffer.destroy();
+      throw new Error(`Blit com flash: variante recusada (${(failure ?? error).message})`);
+    }
+    this.tint = { pipeline, postBuffer, postData, bindGroup: null };
+    if (this.colorView) await this.createTintBindGroup();
+    console.log(`Blit com flash: uniform de ${postData.byteLength} bytes (tint no offset ${TINT_POST_UNIFORM.tintOffset}), ` +
+      `buffer de ${postBuffer.size} bytes, minBindingSize ${TINT_POST_UNIFORM.bytes}`);
+    return true;
+  }
+
+  // Bind group da variante (recriado com as texturas). Validado; se falhar, a variante é desligada.
+  async createTintBindGroup() {
+    const t = this.tint;
+    const view = this.colorView; // se as texturas forem recriadas durante a validação, descarta este
+    this.device.pushErrorScope('validation');
+    const bindGroup = this.device.createBindGroup({
+      label: 'blit com flash (bind group)',
+      layout: t.pipeline.getBindGroupLayout(0),
+      entries: [
+        { binding: 0, resource: view },
+        { binding: 1, resource: { buffer: this.uniformBuffer } },
+        { binding: 2, resource: { buffer: t.postBuffer } },
+      ],
+    });
+    const error = await this.device.popErrorScope();
+    if (this.tint !== t || this.colorView !== view) return;
+    if (error) {
+      this.tint = null;
+      this.onTintError?.(new Error(`Blit com flash: bind group inválido (${error.message}); flashes desligados`));
+      return;
+    }
+    t.bindGroup = bindGroup;
+  }
+
+  // Cor do flash: [r, g, b, a] (0..1); a = 0 deixa a imagem igual à do blit original.
+  setTint(value) {
+    this.tintValue = value;
   }
 
   get retro() {
@@ -108,6 +178,11 @@ export class Display {
       iw, INTERNAL_HEIGHT, rect.width, rect.height, performance.now() / 1000, this.settings.get('crt') ? 1 : 0, 0, 0,
     ]);
     this.device.queue.writeBuffer(this.postBuffer, 0, this.postData);
+    if (this.tint) {
+      this.tint.postData.set(this.postData, 0);
+      this.tint.postData.set(this.tintValue, TINT_POST_UNIFORM.tintOffset / 4);
+      this.device.queue.writeBuffer(this.tint.postBuffer, 0, this.tint.postData);
+    }
   }
 
   createTargets() {
@@ -136,6 +211,11 @@ export class Display {
         { binding: 2, resource: { buffer: this.postBuffer } },
       ],
     });
+    if (this.tint) {
+      // Até o bind group novo ficar pronto (validação assíncrona), usa o blit original.
+      this.tint.bindGroup = null;
+      this.createTintBindGroup();
+    }
   }
 
   // Segunda passada: limpa o canvas de preto (barras) e desenha a cena no retângulo.
@@ -150,8 +230,14 @@ export class Display {
     });
     const r = this.rect;
     pass.setViewport(r.x, r.y, r.width, r.height, 0, 1);
-    pass.setPipeline(this.pipeline);
-    pass.setBindGroup(0, this.bindGroup);
+    // Variante com flash só quando validada e com bind group pronto; senão, o blit original.
+    if (this.tint?.bindGroup) {
+      pass.setPipeline(this.tint.pipeline);
+      pass.setBindGroup(0, this.tint.bindGroup);
+    } else {
+      pass.setPipeline(this.pipeline);
+      pass.setBindGroup(0, this.bindGroup);
+    }
     pass.draw(3);
     pass.end();
   }
