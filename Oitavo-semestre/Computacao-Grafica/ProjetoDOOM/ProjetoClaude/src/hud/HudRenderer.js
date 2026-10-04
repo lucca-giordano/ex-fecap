@@ -95,6 +95,32 @@ export function faceLookAt(tic, seed = FACE_SEED) {
   }
 }
 
+// Tela de estatísticas (etapa 20): opaca, com INTERPIC (ou preto), título, subtítulo, linhas
+// [rótulo, valor] e rodapé, na fonte STCFN. info: { title, subtitle, rows: [[rótulo, valor]], footer }.
+export const INTERMISSION_LAYOUT = { titleY: 20, subtitleY: 34, rowsY: 70, rowStep: 20, labelX: 60, valueRight: 260, footerY: 180 };
+function composeIntermission(buffer, info, assets, report) {
+  const d = buffer.data;
+  for (let i = 0; i < d.length; i += 4) { d[i] = 0; d[i + 1] = 0; d[i + 2] = 0; d[i + 3] = 255; }
+  if (assets.patches.INTERPIC) drawPatch(buffer, assets.patches.INTERPIC, 0, 0);
+  const font = assets.font;
+  if (!font?.some(Boolean)) return buffer.data;
+  const L = INTERMISSION_LAYOUT;
+  const text = (s, x, y, name) => {
+    drawText(buffer, font, s, x, y);
+    report?.push({ name, x, y, w: measureText(font, s), h: 12, text: s });
+  };
+  const centered = (s, y, name) => text(s, Math.max(0, Math.floor((HUD_WIDTH - measureText(font, s)) / 2)), y, name);
+  centered(info.title, L.titleY, 'title');
+  centered(info.subtitle, L.subtitleY, 'subtitle');
+  info.rows.forEach(([label, value], i) => {
+    const y = L.rowsY + i * L.rowStep;
+    text(label, L.labelX, y, `label${i}`);
+    text(value, L.valueRight - measureText(font, value), y, `value${i}`);
+  });
+  centered(info.footer, L.footerY, 'footer');
+  return buffer.data;
+}
+
 // Linha da paleta iluminada (256 x RGB) para um nível de luz (litPalette: 256 x 32 RGBA).
 const litRows = new WeakMap();
 function paletteRow(litPalette, level) {
@@ -116,6 +142,7 @@ function paletteRow(litPalette, level) {
 export function composeHud(state, assets, tics, report) {
   const buffer = createBuffer(assets.palette);
   const { patches, sprites } = assets;
+  if (state.intermission) return composeIntermission(buffer, state.intermission, assets, report);
   const box = (name, x, y, p) => report?.push({ name, x, y, w: p.width, h: p.height });
 
   // 1. Arma (iluminada pelo setor) e clarão (brilho máximo), antes da barra.

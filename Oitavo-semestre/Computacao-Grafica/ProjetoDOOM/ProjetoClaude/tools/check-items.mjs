@@ -113,10 +113,20 @@ const missingText = Object.values(ITEM_TABLE).flatMap((d) => ['en', 'pt'].filter
 check(missingText.length === 0, `mensagem em en e pt para todo item (faltando: ${missingText.join(', ')})`);
 const hudAssets = loadHudAssets(wad);
 check(hudAssets.font.filter(Boolean).length > 50, 'HUD: fonte STCFN carregada');
-const longest = Object.values(ITEM_TEXT).flatMap((t) => Object.values(t)).sort((a, b) => measureText(hudAssets.font, b) - measureText(hudAssets.font, a))[0];
+// Só as mensagens de coleta (etapa 20: as de chave negada, mais longas, são conferidas logo abaixo).
+const pickupKeys = new Set(Object.values(ITEM_TABLE).map((d) => d.messageKey));
+const longest = Object.values(ITEM_TEXT).flatMap((t) => Object.entries(t).filter(([k]) => pickupKeys.has(k)).map(([, v]) => v))
+  .sort((a, b) => measureText(hudAssets.font, b) - measureText(hudAssets.font, a))[0];
 const longMessage = `${longest} ${longest}`;
 const wrapped = wrapMessage(hudAssets.font, longMessage).split('\n');
 check(wrapped.length === 2 && wrapped.every((l) => measureText(hudAssets.font, l) <= 320), 'mensagem larga quebra em duas linhas de até 320');
+// Etapa 20: mensagens de chave negada, sozinhas, em até duas linhas de até 320.
+for (const key of ['needBlueKey', 'needYellowKey', 'needRedKey']) {
+  for (const lang of ['en', 'pt']) {
+    const lines = wrapMessage(hudAssets.font, ITEM_TEXT[lang][key]).split('\n');
+    check(lines.length <= 2 && lines.every((l) => measureText(hudAssets.font, l) <= 320), `${lang} ${key}: até duas linhas de até 320`);
+  }
+}
 const report = [];
 composeHud({ stats: s, weapon: null, weaponLevel: 0, message: longMessage }, hudAssets, 0, report);
 for (const name of ['STKEYS3', 'STKEYS4', 'STKEYS2', 'message']) check(report.some((e) => e.name === name), `HUD desenha ${name}`);

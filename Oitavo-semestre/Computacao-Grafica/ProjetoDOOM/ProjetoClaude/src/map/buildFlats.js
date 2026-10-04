@@ -101,10 +101,52 @@ function hashColor(key) {
 
 const dim = (c, k) => c.map((v) => v * k);
 
+// Vértices do chão e do teto de um polígono de subsector, nas alturas correntes do setor (etapa 20:
+// reutilizada pela geometria dinâmica). Devolve { floor, ceiling }, cada um { flat, sector }: as mesmas
+// posições com a cor por flat ou por setor. O chão segue o polígono (anti-horário, face para cima) e
+// o teto, a ordem inversa.
+export function flatVertices(sector, sectorIndex, poly, flatLayers = new Map()) {
+  const isSky = sector.ceilingTexture === SKY;
+  const floorFlatColor = hashColor(sector.floorTexture);
+  const ceilFlatColor = isSky ? SKY_COLOR : dim(hashColor(sector.ceilingTexture), CEIL_DIM);
+  const secColor = hashColor(`sector${sectorIndex}`);
+  const ceilSecColor = isSky ? SKY_COLOR : dim(secColor, CEIL_DIM);
+
+  // A conversão para o mundo é uma rotação (det = +1), então o anti-horário do Doom visto de
+  // cima continua anti-horário visto de +Y: o chão usa essa ordem (face para cima) e o teto a
+  // inversa (face para baixo).
+  //
+  // UV dos flats: u = x e v = -y do Doom, calculados na posição ORIGINAL do vértice (antes de
+  // doomToWorld). O shader faz floor() e módulo 64, então o flat fica ancorado ao mundo e o
+  // padrão é contínuo entre subsectors vizinhos. O -y deixa a linha 0 do flat ao norte, como no Doom.
+  // lightnum dos flats: luz do setor / 16, sem o contraste das paredes.
+  const light = Math.min(15, Math.max(0, Math.floor(sector.lightLevel / 16)));
+  const emit = (z, normal, flatColor, sectorColor, order, layer, kind) => {
+    const flat = [], sec = [];
+    for (const p of order) {
+      const pos = doomToWorld(p[0], p[1], z);
+      const uv = [p[0], -p[1]];
+      flat.push({ pos, normal, color: flatColor, uv, layer, kind, light });
+      sec.push({ pos, normal, color: sectorColor, uv, layer, kind, light });
+    }
+    return { flat, sector: sec };
+  };
+
+  const flatLayer = (name) => flatLayers.get(name)?.layer ?? 0; // 0 = fallback
+  return {
+    floor: emit(sector.floorHeight, [0, 1, 0], floorFlatColor, secColor, poly,
+      flatLayer(sector.floorTexture), KIND.flat),
+    ceiling: emit(sector.ceilingHeight, isSky ? NO_SHADE : [0, -1, 0], ceilFlatColor, ceilSecColor,
+      poly.slice().reverse(), isSky ? 0 : flatLayer(sector.ceilingTexture), isSky ? KIND.sky : KIND.flat),
+  };
+}
+
 // ---------- Construção ----------
 
 // flatLayers: Map nome -> { layer } (vem de TextureSet). Flat ausente usa a camada 0 (fallback).
-export function buildFlats(map, flatLayers = new Map()) {
+// exclude (etapa 20): { sectors: Set } de setores desenhados pela geometria dinâmica (padrão: nenhum).
+// subsectorInfo continua com todos os subsectors (inclusive os excluídos).
+export function buildFlats(map, flatLayers = new Map(), exclude = { sectors: new Set() }) {
   const { nodes, ssectors, segs, linedefs, sidedefs, sectors, vertexes } = map;
 
   // Retângulo inicial: limites do mapa com margem.
@@ -178,38 +220,16 @@ export function buildFlats(map, flatLayers = new Map()) {
     stats.polygons++;
     stats.totalArea += area;
 
-    const floorFlatColor = hashColor(sector.floorTexture);
-    const ceilFlatColor = isSky ? SKY_COLOR : dim(hashColor(sector.ceilingTexture), CEIL_DIM);
-    const secColor = hashColor(`sector${sectorIndex}`);
-    const ceilSecColor = isSky ? SKY_COLOR : dim(secColor, CEIL_DIM);
-
-    // A conversão para o mundo é uma rotação (det = +1), então o anti-horário do Doom visto de
-    // cima continua anti-horário visto de +Y: o chão usa essa ordem (face para cima) e o teto a
-    // inversa (face para baixo).
-    //
-    // UV dos flats: u = x e v = -y do Doom, calculados na posição ORIGINAL do vértice (antes de
-    // doomToWorld). O shader faz floor() e módulo 64, então o flat fica ancorado ao mundo e o
-    // padrão é contínuo entre subsectors vizinhos. O -y deixa a linha 0 do flat ao norte, como no Doom.
-    // lightnum dos flats: luz do setor / 16, sem o contraste das paredes.
-    const light = Math.min(15, Math.max(0, Math.floor(sector.lightLevel / 16)));
-    const emit = (z, normal, flatColor, sectorColor, order, layer, kind) => {
+    if (exclude.sectors?.has(sectorIndex)) return; // etapa 20: desenhado pela geometria dinâmica
+    const fv = flatVertices(sector, sectorIndex, poly, flatLayers);
+    // Leque: (v0, vi, vi+1), válido porque o polígono é convexo.
+    for (const plane of [fv.floor, fv.ceiling]) {
       const base = flatVerts.length;
-      for (const p of order) {
-        const pos = doomToWorld(p[0], p[1], z);
-        const uv = [p[0], -p[1]];
-        flatVerts.push({ pos, normal, color: flatColor, uv, layer, kind, light });
-        sectorVerts.push({ pos, normal, color: sectorColor, uv, layer, kind, light });
-      }
-      // Leque: (v0, vi, vi+1), válido porque o polígono é convexo.
-      for (let k = 1; k < order.length - 1; k++) indices.push(base, base + k, base + k + 1);
-      stats.triangles += order.length - 2;
-    };
-
-    const flatLayer = (name) => flatLayers.get(name)?.layer ?? 0; // 0 = fallback
-    emit(sector.floorHeight, [0, 1, 0], floorFlatColor, secColor, poly,
-      flatLayer(sector.floorTexture), KIND.flat);
-    emit(sector.ceilingHeight, isSky ? NO_SHADE : [0, -1, 0], ceilFlatColor, ceilSecColor,
-      poly.slice().reverse(), isSky ? 0 : flatLayer(sector.ceilingTexture), isSky ? KIND.sky : KIND.flat);
+      flatVerts.push(...plane.flat);
+      sectorVerts.push(...plane.sector);
+      for (let k = 1; k < plane.flat.length - 1; k++) indices.push(base, base + k, base + k + 1);
+      stats.triangles += plane.flat.length - 2;
+    }
   });
 
   return {

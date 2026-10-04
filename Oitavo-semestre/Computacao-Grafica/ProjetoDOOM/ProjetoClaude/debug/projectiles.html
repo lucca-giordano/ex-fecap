@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projéteis (debug)</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; color: #ddd; font: 12px monospace; overflow: hidden; }
+    #wrap { display: flex; height: 100%; }
+    canvas { flex: 1; display: block; min-width: 0; cursor: crosshair; }
+    #side { width: 380px; padding: 8px; overflow-y: auto; border-left: 1px solid #333; }
+    #side button, #side select, #side input { font: 12px monospace; margin: 2px 0; }
+    #side label { display: block; margin: 4px 0; }
+    #list, #log, #counters { white-space: pre; margin: 6px 0; }
+    #counters { color: #9c9; }
+    .legend span { display: inline-block; width: 10px; height: 10px; margin: 0 4px 0 8px; border-radius: 5px; }
+    #msg { color: #f44; padding: 8px; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="map"></canvas>
+    <div id="side">
+      <div id="msg"></div>
+      <div class="legend">
+        <span style="background:#f80"></span>bola do diabrete<span style="background:#4f4"></span>bola do barão<span style="background:#ff4"></span>foguete<br>
+        <span style="background:#38f"></span>jogador<span style="background:#888"></span>monstro<span style="background:#2a6"></span>barril
+      </div>
+      <div>
+        <button id="imp">Diabrete atira no jogador</button>
+        <button id="baron">Barão atira</button>
+      </div>
+      <label>Ângulo do foguete <input id="angle" type="range" min="0" max="359" value="90"> <span id="angleV">90</span>°</label>
+      <label>Inclinação <input id="pitch" type="range" min="-45" max="45" value="0"> <span id="pitchV">0</span>°</label>
+      <button id="rocket">Jogador dispara foguete</button>
+      <div>
+        <button id="play">Play</button>
+        <button id="step">+1 tic</button>
+        <select id="speed"><option value="1">1x</option><option value="4">4x</option><option value="16">16x</option></select>
+        <button id="reset">Reiniciar</button>
+        <label>Semente <input id="seed" type="number" value="1" style="width: 80px"></label>
+      </div>
+      <p>Clique ou arraste no mapa para posicionar o jogador.</p>
+      <div id="counters"></div>
+      <b>Projéteis ativos</b>
+      <div id="list"></div>
+      <b>Últimos eventos</b>
+      <div id="log"></div>
+    </div>
+  </div>
+  <script type="module" src="projectiles.js"></script>
+</body>
+</html>

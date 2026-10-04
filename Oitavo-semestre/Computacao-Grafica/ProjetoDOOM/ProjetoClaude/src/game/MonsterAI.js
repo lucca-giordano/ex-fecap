@@ -36,31 +36,37 @@ function lineCrossesBox(l, x0, y0, x1, y1) {
 }
 
 // Posição (x, y) para uma caixa de meia-largura `radius`. solids: [{ x, y, radius, ref }] (o próprio,
-// ref === self, é ignorado). Devolve { ok, floor, ceiling, dropoff }.
+// ref === self, é ignorado). Devolve { ok, floor, ceiling, dropoff, spechit }; spechit (etapa 20):
+// linedefs de dois lados cruzadas pela caixa com especial diferente de 0 (world.lineSpecial), como o
+// spechit do Doom (usado pelos monstros para abrir portas).
 export function checkPosition(world, x, y, radius, solids = [], self = null) {
   const sec = world.sectors[sectorAt(world, x, y)];
-  if (!sec) return { ok: false, floor: 0, ceiling: 0, dropoff: 0 };
+  const spechit = [];
+  if (!sec) return { ok: false, floor: 0, ceiling: 0, dropoff: 0, spechit };
   let floor = sec.floorHeight, ceiling = sec.ceilingHeight, dropoff = sec.floorHeight;
   const x0 = x - radius, x1 = x + radius, y0 = y - radius, y1 = y + radius;
   for (const l of world.lines) {
     if (!lineCrossesBox(l, x0, y0, x1, y1)) continue;
-    if (l.oneSided || (l.flags & (ML_BLOCKING | ML_BLOCKMONSTERS))) return { ok: false, floor, ceiling, dropoff };
+    if (l.oneSided || (l.flags & (ML_BLOCKING | ML_BLOCKMONSTERS))) return { ok: false, floor, ceiling, dropoff, spechit };
     const f = world.sectors[l.front], b = world.sectors[l.back];
     ceiling = Math.min(ceiling, Math.min(f.ceilingHeight, b.ceilingHeight));
     floor = Math.max(floor, Math.max(f.floorHeight, b.floorHeight));
     dropoff = Math.min(dropoff, Math.min(f.floorHeight, b.floorHeight));
+    if (world.lineSpecial?.[l.index]) spechit.push(l.index);
   }
   for (const s of solids) {
     if (s.ref === self && self !== null) continue;
     const r = s.radius + radius;
-    if (Math.abs(s.x - x) < r && Math.abs(s.y - y) < r) return { ok: false, floor, ceiling, dropoff };
+    if (Math.abs(s.x - x) < r && Math.abs(s.y - y) < r) return { ok: false, floor, ceiling, dropoff, spechit };
   }
-  return { ok: true, floor, ceiling, dropoff };
+  return { ok: true, floor, ceiling, dropoff, spechit };
 }
 
 // P_TryMove para um monstro { x, y, floorZ } com raio e altura. Move e devolve true se puder.
-export function tryMove(world, m, nx, ny, radius, height, solids = []) {
+// out (opcional) recebe spechit (linhas com especial que a caixa cruzou), para abrir portas.
+export function tryMove(world, m, nx, ny, radius, height, solids = [], out = null) {
   const p = checkPosition(world, nx, ny, radius, solids, m);
+  if (out) out.spechit = p.spechit;
   if (!p.ok) return false;
   if (p.ceiling - p.floor < height) return false;          // não cabe
   if (p.ceiling - m.floorZ < height) return false;         // bate a cabeça
@@ -120,7 +126,8 @@ export function monsterShots(pellets, baseYaw, rng) {
 
 export class MonsterAI {
   // ctx: { world: { map, lines, sectors }, rng, player() -> { x, y, z (pés), alive },
-  //   noTarget() -> boolean, staticSolids: [{ x, y, radius }],
+  //   noTarget() -> boolean, staticSolids: [{ x, y, radius }], useDoor(monstro, linedef) (etapa 20),
+  //   spawnMissile(monstro, tipo) (etapa 21),
   //   onSound(nome, monstro), onPlayerDamaged(valor, origem, tipo, atacante { x, y }) }.
   constructor(ctx) {
     this.ctx = ctx;
@@ -217,10 +224,18 @@ export class MonsterAI {
   move(m) {
     if (m.movedir === NODIR) return false;
     const speed = m.aiDef.speed;
+    const out = {};
     const ok = tryMove(this.world, m, m.x + speed * XSPEED[m.movedir], m.y + speed * YSPEED[m.movedir],
-      m.entry.radius, m.entry.height, this.solidsFor());
-    if (ok) m.sector = sectorAt(this.world, m.x, m.y);
-    return ok;
+      m.entry.radius, m.entry.height, this.solidsFor(), out);
+    if (ok) {
+      m.sector = sectorAt(this.world, m.x, m.y);
+      return true;
+    }
+    // Etapa 20: encostou numa porta comum (especial 1)? Tenta abrir; acionada ou já abrindo, o passo
+    // conta como feito sem andar, e o monstro tenta de novo (P_Move com spechit do Doom).
+    let good = false;
+    for (const li of out.spechit ?? []) if (this.ctx.useDoor?.(m, li)) good = true;
+    return good;
   }
 
   // P_TryWalk: anda e sorteia movecount.
@@ -244,7 +259,8 @@ export class MonsterAI {
       case 'faceTarget': return this.faceTarget(m);
       case 'posAttack': return this.posAttack(m, 1, 'POSS', 'pistol');
       case 'sPosAttack': return this.posAttack(m, 3, 'SPOS', 'shotgn');
-      case 'troopAttack': return this.meleeAttack(m, 'TROO', () => ((this.rng.next255() % 8) + 1) * 3, 'claw');
+      case 'troopAttack': return this.meleeAttack(m, 'TROO', () => ((this.rng.next255() % 8) + 1) * 3, 'claw', 'troopShot');
+      case 'bruisAttack': return this.meleeAttack(m, 'BOSS', () => ((this.rng.next255() % 8) + 1) * 10, 'claw', 'bruiserShot');
       case 'sargAttack': return this.meleeAttack(m, 'SARG', () => ((this.rng.next255() % 10) + 1) * 4, null);
       default: return undefined;
     }
@@ -340,11 +356,17 @@ export class MonsterAI {
     for (const shot of monsterShots(pellets, m.angle, this.rng)) this.monsterShot(m, shot.yaw, shot.damage, source);
   }
 
-  // A_TroopAttack e A_SargAttack: só de perto (sem projétil nesta etapa).
-  meleeAttack(m, source, rollDamage, sound) {
+  // A_TroopAttack, A_BruisAttack e A_SargAttack: de perto, golpe; de longe (etapa 21), projétil
+  // (missileType; o demônio não tem). O projétil é criado pelo MissileSystem via ctx.spawnMissile.
+  meleeAttack(m, source, rollDamage, sound, missileType = null) {
     if (m.target !== 'player') return;
     this.faceTarget(m);
-    if (!this.checkMeleeRange(m)) return;
+    if (!this.checkMeleeRange(m)) {
+      if (!missileType) return;
+      this.ctx.spawnMissile?.(m, missileType);
+      this.event({ type: 'monsterMissileFired', thingIndex: m.thingIndex, missile: missileType, source });
+      return;
+    }
     if (sound) this.ctx.onSound?.(sound, m);
     this.damagePlayer(m, rollDamage(), source, 'melee');
   }

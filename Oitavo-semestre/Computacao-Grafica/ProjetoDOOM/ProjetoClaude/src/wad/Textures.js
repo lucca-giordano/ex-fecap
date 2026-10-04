@@ -76,7 +76,8 @@ function readPnames(wad) {
 
 // TEXTURE1/TEXTURE2: definições de texturas compostas por patches.
 // Em nome repetido vale a primeira ocorrência (TEXTURE1 antes de TEXTURE2).
-function readTextureDefs(wad) {
+// Exportada na etapa 20: os interruptores conferem se a contraparte (SW1 <-> SW2) existe.
+export function readTextureDefs(wad) {
   const defs = new Map();
   for (const lumpName of ['TEXTURE1', 'TEXTURE2']) {
     const li = findLastLump(wad, lumpName);

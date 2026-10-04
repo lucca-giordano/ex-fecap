@@ -45,6 +45,7 @@ import { computeTintTable, flashPalette, tintFor } from './gpu/palettesTint.js';
 import { angleTo } from './game/MonsterAI.js';
 import { radiusAttack, BARREL_DAMAGE } from './game/radiusAttack.js';
 import { EffectList, effectFrame, MAX_EFFECTS } from './game/effects.js';
+import { MissileSystem, MAX_MISSILES, ROCKET_BLAST, missileSpriteFrames, missileTargets } from './game/Missiles.js';
 import { CombatStats } from './game/stats.js';
 import { MAX_PARTICLES, paletteIndices, packSimUniforms, packRenderUniforms } from './particles/particleConfig.js';
 import { ParticleParams } from './particles/ParticleParams.js';
@@ -55,6 +56,10 @@ import { Menu } from './menu/Menu.js';
 import { composeMenu, skullFrame } from './menu/MenuRenderer.js';
 import { MENU_LANG, MENU_TEXT } from './menu/menuText.js';
 import { buildWalls } from './map/buildWalls.js';
+import { DynamicGeometry, dynamicSets } from './map/dynamicGeometry.js';
+import { LevelState, targetsFit, INTERMISSION_DELAY } from './game/LevelState.js';
+import { analyzeSpecials, switchCounterpartNames } from './game/specials.js';
+import { useLines, crossLines, monsterUseDoor, tickLevel, openAllDoors, CrossTracker } from './game/UseLines.js';
 import { VERTEX_STRIDE, VERTEX_ATTRIBUTES } from './map/vertexLayout.js';
 import { buildFlats, distanceInside } from './map/buildFlats.js';
 import { findSector, findSubsector } from './map/bsp.js';
@@ -211,6 +216,8 @@ async function main() {
   const skyName = skyNameForMap(MAP_NAME);
   const used = usedTextureNames(map);
   used.walls.add(skyName); // o céu é carregado mesmo que nenhuma sidedef o use
+  // Etapa 20: contrapartes dos interruptores (SW1 <-> SW2), acrescentadas no fim (camadas existentes iguais).
+  for (const name of switchCounterpartNames(map)) used.walls.add(name);
   const textures = loadTextures(wad, used.walls, used.flats);
   const colormap = loadColormap(wad);
   const litPalette = buildLitPalette(textures.palette, colormap);
@@ -218,7 +225,16 @@ async function main() {
   const textureSet = createTextureSet(device, textureLayout, textures, litPalette, skyName);
   printTextureStats(textures, used, textureSet.info);
 
-  const walls = buildWalls(map, textureSet.wallLayers);
+  // --- Setores móveis (etapa 20): estado da fase, especiais e conjuntos dinâmicos ---
+  const level = new LevelState(map);
+  const specialsInfo = analyzeSpecials(map, level.tagMap);
+  const dynSets = dynamicSets(level, specialsInfo.movableSectors, specialsInfo.switchLines);
+  let movingEnabled = true; // desligado só nesta sessão se os buffers dinâmicos falharem
+  console.log(`Especiais: ${specialsInfo.movableSectors.size} setores móveis, ${dynSets.lines.size} linhas dinâmicas; ` +
+    `não suportados [${[...specialsInfo.unsupported.keys()].join(', ')}]` +
+    (specialsInfo.warnings.length ? `; avisos: ${specialsInfo.warnings.join('; ')}` : ''));
+  // As linhas e os setores dinâmicos saem da geometria estática (desenhados pelos buffers dinâmicos).
+  let walls = buildWalls(map, textureSet.wallLayers, { linedefs: dynSets.lines });
 
   const spawn = map.things.find((t) => t.type === 1); // type 1 = início do jogador 1
   if (!spawn) throw new Error(`${MAP_NAME}: início do jogador 1 não encontrado`);
@@ -226,27 +242,71 @@ async function main() {
   const sector = map.sectors[spawnSector];
   printStats(walls, spawn, spawnSector, sector);
 
-  const flats = buildFlats(map, textureSet.flatLayers);
+  let flats = buildFlats(map, textureSet.flatLayers, { sectors: dynSets.sectors });
   validateFlats(map, flats, spawn);
   printLightingStats(colormap, litPalette, textures.palette, textureSet, flats, map);
 
   const far = farFromMap(map);
 
   // --- Buffers de geometria ---
-  const makeBuffer = (data, usage) => {
-    const buffer = device.createBuffer({ size: data.byteLength, usage: usage | GPUBufferUsage.COPY_DST });
+  const makeBuffer = (data, usage, label) => {
+    const buffer = device.createBuffer({ label, size: data.byteLength, usage: usage | GPUBufferUsage.COPY_DST });
     device.queue.writeBuffer(buffer, 0, data);
     return buffer;
   };
-  const vertexBuffer = makeBuffer(walls.vertices, GPUBufferUsage.VERTEX);
-  const indexBuffer = makeBuffer(walls.indices, GPUBufferUsage.INDEX);
+  let vertexBuffer, indexBuffer, flatVertexBuffers, flatIndexBuffer;
+  // Envia (ou reenvia, etapa 20) a geometria estática.
+  function uploadStaticGeometry() {
+    for (const b of [vertexBuffer, indexBuffer, flatVertexBuffers?.flat, flatVertexBuffers?.sector, flatIndexBuffer]) b?.destroy();
+    vertexBuffer = makeBuffer(walls.vertices, GPUBufferUsage.VERTEX, 'paredes (vértices)');
+    indexBuffer = makeBuffer(walls.indices, GPUBufferUsage.INDEX, 'paredes (índices)');
+    // Flats: dois vertex buffers com as mesmas posições, cor por flat ou por setor (tecla V).
+    flatVertexBuffers = {
+      flat: makeBuffer(flats.vertices, GPUBufferUsage.VERTEX, 'planos (vértices, cor por flat)'),
+      sector: makeBuffer(flats.sectorColorVertices, GPUBufferUsage.VERTEX, 'planos (vértices, cor por setor)'),
+    };
+    flatIndexBuffer = makeBuffer(flats.indices, GPUBufferUsage.INDEX, 'planos (índices)');
+  }
+  uploadStaticGeometry();
 
-  // Flats: dois vertex buffers com as mesmas posições, cor por flat ou por setor (tecla V).
-  const flatVertexBuffers = {
-    flat: makeBuffer(flats.vertices, GPUBufferUsage.VERTEX),
-    sector: makeBuffer(flats.sectorColorVertices, GPUBufferUsage.VERTEX),
-  };
-  const flatIndexBuffer = makeBuffer(flats.indices, GPUBufferUsage.INDEX);
+  // Etapa 20: geometria dos setores móveis em buffers próprios, desenhados com a mesma pipeline. Se a
+  // criação ou a validação falhar, a geometria estática volta a ser montada SEM exclusões e os setores
+  // móveis ficam desligados nesta sessão (portas fechadas e sem função, como na etapa 19).
+  let dynamic = null; // { geo, vb: { flat, sector }, ib }
+  try {
+    const geo = new DynamicGeometry(map, dynSets, flats.subsectorInfo, textureSet.wallLayers, textureSet.flatLayers);
+    if (geo.vertexCount > 0) {
+      const max = device.limits.maxBufferSize;
+      if (geo.byteLength > max || geo.indices.byteLength > max) throw new Error(`buffers dinâmicos maiores que maxBufferSize (${max})`);
+      device.pushErrorScope('validation');
+      const usage = GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST;
+      const vb = {
+        flat: device.createBuffer({ label: 'setores móveis (vértices, cor por flat)', size: geo.byteLength, usage }),
+        sector: device.createBuffer({ label: 'setores móveis (vértices, cor por setor)', size: geo.byteLength, usage }),
+      };
+      const ib = device.createBuffer({ label: 'setores móveis (índices)', size: geo.indices.byteLength, usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST });
+      device.queue.writeBuffer(vb.flat, 0, geo.vertices);
+      device.queue.writeBuffer(vb.sector, 0, geo.sectorVertices);
+      device.queue.writeBuffer(ib, 0, geo.indices);
+      const error = await device.popErrorScope();
+      if (error) throw new Error(`validação dos buffers dinâmicos: ${error.message}`);
+      geo.dirty = false;
+      dynamic = { geo, vb, ib };
+      console.log(`Setores móveis: ${geo.vertexCount} vértices (${geo.byteLength} bytes por buffer, x2), ` +
+        `${geo.indices.length} índices; limite maxBufferSize ${max}`);
+    }
+  } catch (err) {
+    console.error(`Setores móveis desligados nesta sessão: ${err.message}`);
+    reportError(err);
+    movingEnabled = false;
+    dynamic = null;
+    walls = buildWalls(map, textureSet.wallLayers);
+    flats = buildFlats(map, textureSet.flatLayers);
+    uploadStaticGeometry();
+  }
+  // Mudanças de altura e de textura marcam só o que foi afetado.
+  level.onSectorChanged = (s) => dynamic?.geo.updateSector(s, level.sectorLines[s]);
+  level.onLineChanged = (li) => dynamic?.geo.updateLinedef(li);
 
   // Uniforms da cena (96 bytes): viewProj (16 f32), camPos (4 f32), mode, lighting, skyTest, skyLayer (u32).
   const uniformData = new ArrayBuffer(96);
@@ -365,7 +425,7 @@ async function main() {
   // --- Painel de ajuda (tecla H durante o jogo; não abre sozinho nem aparece sobre o menu) ---
   const helpPanel = document.getElementById('help');
   // Grupos (armas, roda, setas) viram uma linha só.
-  const GROUP_LINES = { weapons: '1 a 7  armas (1 a 4 utilizáveis)', wheel: 'Roda   próxima / anterior arma',
+  const GROUP_LINES = { weapons: '1 a 7  armas (1 a 5 utilizáveis)', wheel: 'Roda   próxima / anterior arma',
     tuning: 'Setas  girar a câmera (calibragem)' };
   helpPanel.textContent =
     [...new Set(Object.values(ACTION_KEYS).map((k) => (k.group ? GROUP_LINES[k.group] : `${k.label.padEnd(7)}${k.desc}`)))].join('\n') +
@@ -383,6 +443,8 @@ async function main() {
   // Posição e ângulo do THING 1 (etapa 3); também usado pelo NEW GAME.
   // Física do modo andar (etapa 12), em coordenadas do Doom; a câmera fica no olho (pés + EYE_HEIGHT).
   const physicsWorld = { map, lines: buildCollisionLines(map), sectors: map.sectors, spawn: { x: spawn.x, y: spawn.y } };
+  physicsWorld.lineSpecial = level.lineSpecial; // etapa 20: spechit dos monstros
+  const crossTracker = new CrossTracker();       // etapa 20: cruzamento só entre estados contínuos
   let walker = createPlayerState(physicsWorld, spawn.x, spawn.y);
   let eyeOffset = EYE_HEIGHT; // etapa 19: desce até 6 na morte
   const syncCameraToWalker = () => { camera.pos = doomToWorld(walker.x, walker.y, walker.z + eyeOffset); };
@@ -394,6 +456,7 @@ async function main() {
     camera.pitch = 0;
     walker = createPlayerState(physicsWorld, spawn.x, spawn.y); // pés no chão do ponto de início
     eyeOffset = EYE_HEIGHT;
+    crossTracker.invalidate();
   }
   resetToSpawn();
 
@@ -402,6 +465,7 @@ async function main() {
     if (mode !== 'walk') return;
     const [x, y, eyeZ] = worldToDoom(...camera.pos);
     walker = enterWalk(physicsWorld, x, y, eyeZ);
+    crossTracker.invalidate(); // troca discreta de posição: não conta como cruzamento
     syncCameraToWalker();
   });
 
@@ -464,7 +528,8 @@ async function main() {
     spriteScene = buildSpriteScene(wad, map, {
       maxLayers: device.limits.maxTextureArrayLayers,
       // Etapa 16: CLIP, SHOT e MGUN (itens largados) na categoria 'drop', que nunca é descartada.
-      extraFrames: [...extraSpriteFrames(monsterTable.entries), ...DROP_SPRITES.map((f) => ({ ...f, category: 'drop' }))],
+      extraFrames: [...extraSpriteFrames(monsterTable.entries), ...DROP_SPRITES.map((f) => ({ ...f, category: 'drop' })),
+        ...missileSpriteFrames().map((f) => ({ ...f, category: 'effect' }))], // etapa 21: projéteis
     });
     console.log(`Sprites: ${spriteScene.layers.length} camadas no total (limite ${device.limits.maxTextureArrayLayers})` +
       (spriteScene.stats.droppedCategories.length ? `; quadros descartados: ${spriteScene.stats.droppedCategories.join(', ')}` : '') +
@@ -488,7 +553,7 @@ async function main() {
       { name: 'sprites.wgsl', code: spriteCode },
     ]);
     // Capacidade: objetos do mapa + efeitos + itens largados (etapa 16).
-    const capacity = spriteScene.objects.length + MAX_EFFECTS + MAX_DROPS;
+    const capacity = spriteScene.objects.length + MAX_EFFECTS + MAX_DROPS + MAX_MISSILES; // etapa 21: projéteis
     sprites = await SpriteSet.create(device, spriteModule, spriteScene, textureSet.litPaletteView, {
       capacity, report: reportError,
     });
@@ -555,6 +620,13 @@ async function main() {
   const thingType = (obj) => map.things[obj.index].type;
   const floorAt = (x, y) => map.sectors[findSector(map, x, y)]?.floorHeight ?? 0;
   const itemSystem = new ItemSystem(spriteScene?.objects ?? [], thingType, floorAt, PLAYER_RADIUS);
+  // Etapa 20: setor de cada item (elevadores mudam o floorZ) e objetos em setores móveis (sprites).
+  for (const it of itemSystem.items) { it.sector = findSector(map, it.x, it.y); it.origFloorZ = it.floorZ; }
+  const liftSectorOf = new Map();
+  for (const obj of spriteScene?.objects ?? []) {
+    const s = findSector(map, obj.x, obj.y);
+    if (dynSets.sectors.has(s)) liftSectorOf.set(obj.index, s);
+  }
   const fixedSolids = staticSolids(spriteScene?.objects ?? [], thingType);
   const frameSolids = []; // reaproveitado a cada frame
   const missingItemTypes = [...new Set(map.things.map((t) => t.type))]
@@ -569,11 +641,44 @@ async function main() {
     const z = settings.get('moveMode') === 'walk' ? walker.z : stats.isDead ? deathFeet : eyeZ - EYE_HEIGHT;
     return { x: px, y: py, z, alive: !stats.isDead };
   };
+  // --- Projéteis (etapa 21) ---
+  // Decoração sólida como alvo de projétil: altura 64 por simplificação, no chão do setor.
+  const solidTargets = fixedSolids.map((s) => ({ x: s.x, y: s.y, radius: s.radius, height: 64,
+    z: map.sectors[findSector(map, s.x, s.y)]?.floorHeight ?? 0 }));
+  const missileSource = (p) => (p.ownerType === 3003 ? 'BOSS' : 'TROO');
+  const missiles = new MissileSystem(physicsWorld, rng, {
+    sectorAt: (x, y) => findSector(map, x, y),
+    // Regra de alvos em missileTargets (Missiles.js): sem infighting, decoração para todos.
+    targets: (p) => missileTargets(p, { player: stats.isDead ? null : playerFeet(), monsters: monsters.monsters, solids: solidTargets }),
+    hit: (p, target, amount) => {
+      if (target.kind === 'player') {
+        const owner = monsters.byObject.get(p.owner);
+        const attacker = owner && !owner.removed ? { x: owner.x, y: owner.y } : null; // posição atual do dono
+        damagePlayer(amount, missileSource(p), 'missile', attacker);
+      } else {
+        if (p.owner === 'player') combat.hits++; // acerto: dano direto em monstro ou barril
+        monsters.damage(target.ref, amount);
+      }
+    },
+    // A_Explode do foguete: monstros, barris e o próprio jogador (sem atacante).
+    blast: (p) => radiusAttack(physicsWorld, { x: p.x, y: p.y }, ROCKET_BLAST, null, monsters.monsters, rng, {
+      damage: (target, amount) => monsters.damage(target, amount),
+      onPlayerDamaged: (amount) => damagePlayer(amount, 'player', 'explosion', null),
+      player: playerTarget(),
+    }),
+    sound: (name, p) => audio.play(name, { origin: `missile:${p.id}`, x: p.x, y: p.y }),
+  });
+  function spawnMonsterMissile(m, type) {
+    missiles.spawnFromMonster(m, playerFeet(), type);
+  }
+
   const monsterAI = new MonsterAI({
     world: physicsWorld, rng, player: playerFeet,
+    spawnMissile: (m, type) => spawnMonsterMissile(m, type), // etapa 21: diabrete e barão
     noTarget: () => settings.get('noTarget'), staticSolids: fixedSolids,
     onSound: (name, m) => audio.play(name, { origin: `thing:${m.thingIndex}`, x: m.x, y: m.y }),
     onPlayerDamaged: (amount, source, kind, attacker) => damagePlayer(amount, source, kind, attacker),
+    useDoor: (m, li) => monsterOpensDoor(m, li), // etapa 20: só portas do especial 1
   }).attach(monsters);
   monsters.setAIEnabled(settings.get('monsterAI'));
   settings.subscribe('monsterAI', (on) => monsters.setAIEnabled(on));
@@ -585,14 +690,61 @@ async function main() {
   const MESSAGE_TICS = 140;
   const resetItems = () => {
     itemSystem.reset();
+    for (const it of itemSystem.items) it.floorZ = it.origFloorZ;
     pickupMessage = '';
     messageTics = 0;
   };
   const resetCombat = () => {
+    missiles.reset(); // etapa 21
     monsters.reset();
     effects.reset();
     combat.reset();
     playerDamage.reset(); // monsters.reset() também apaga os alertas de setor
+  };
+
+  // --- Portas, elevadores, interruptores e saída (etapa 20) ---
+  // Alvos para esmagamento: jogador vivo, monstros e barris vivos (corpos, itens e largados não contam).
+  const crushTargets = () => {
+    const out = [];
+    if (!stats.isDead) {
+      const [px, py] = worldToDoom(...camera.pos);
+      out.push({ sector: findSector(map, px, py), height: 56 });
+    }
+    for (const m of monsters.monsters) if (m.shootable && !m.removed) out.push({ sector: m.sector, height: m.entry.height });
+    return out;
+  };
+  // Elevador mudou o chão: monstros (vivos e corpos), itens e largados do setor acompanham.
+  function carryFloor(s) {
+    const floor = map.sectors[s].floorHeight;
+    for (const m of monsters.monsters) if (!m.removed && m.sector === s) m.floorZ = floor;
+    for (const it of itemSystem.items) if (it.sector === s) it.floorZ = floor;
+    for (const d of itemSystem.drops) if (findSector(map, d.x, d.y) === s) d.floorZ = floor;
+  }
+  const warnedLevel = new Set();
+  const levelCtx = {
+    get keys() { return stats.keys; },
+    get dead() { return stats.isDead; },
+    // Setor null = origem do jogador; senão, som posicional no centro do setor.
+    sound: (name, s) => (s === null || s === undefined
+      ? audio.play(name, { origin: 'player' })
+      : audio.play(name, { origin: `sector:${s}`, x: level.soundOrg[s].x, y: level.soundOrg[s].y })),
+    message: (key) => { pickupMessage = ITEM_TEXT[MENU_LANG][key] ?? key; messageTics = MESSAGE_TICS; },
+    textureExists: (name) => textureSet.wallLayers.has(name),
+    warn: (text) => { if (!warnedLevel.has(text)) { warnedLevel.add(text); console.warn(text); } },
+    fits: (s, gap) => targetsFit(crushTargets(), s, gap),
+    onFloorMoved: carryFloor,
+  };
+  function monsterOpensDoor(m, li) {
+    return movingEnabled && monsterUseDoor(level, li, m, levelCtx);
+  }
+  function useAction() {
+    if (!menu.started || !movingEnabled) return;
+    const [px, py] = worldToDoom(...camera.pos);
+    useLines(level, physicsWorld, { x: px, y: py, angle: yawToDoomAngle(camera.yaw) }, levelCtx);
+  }
+  const mmss = (tics) => {
+    const s = Math.floor(tics / 35);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   };
 
   // Evento "fire" da máquina de armas (etapa 17): pistola e metralhadora 1 bala, espingarda 7 projéteis,
@@ -600,9 +752,14 @@ async function main() {
   function handleFire(ev) {
     combat.shots++;
     if (ev.weapon === 3) audio.play('shotgn', { origin: 'player' });
-    else if (ev.weapon !== 1) audio.play('pistol', { origin: 'player' }); // pistola e metralhadora
+    else if (ev.weapon === 2 || ev.weapon === 4) audio.play('pistol', { origin: 'player' }); // pistola e metralhadora
     const [ox, oy, oz] = worldToDoom(...camera.pos); // olho do jogador
     monsterAI.noise(findSector(map, ox, oy)); // etapa 18: todo disparo acorda quem ouve
+    if (ev.weapon === 5) {
+      // Etapa 21: foguete (o som "rlaunc" é do projétil); acerto contado quando o dano direto acontece.
+      missiles.spawnFromPlayer(playerFeet(), yawToDoomAngle(camera.yaw), camera.pitch * 180 / Math.PI);
+      return;
+    }
     const r = fireWeapon(ev, {
       world: physicsWorld, origin: { x: ox, y: oy, z: oz }, yaw: yawToDoomAngle(camera.yaw),
       pitch: camera.pitch * 180 / Math.PI, // o pitch da câmera manda (sem mira automática)
@@ -627,15 +784,23 @@ async function main() {
       // Parado (ou quadro descartado por falta de camadas): animação de parado da etapa 11.
       if (!views) views = obj.type.frameLayers.get(frameAt(obj.type.frames, obj.type.tics, tic, obj.offset));
       // Etapa 18: monstros usam posição, chão e ângulo atuais (a luz é a do setor onde estão).
-      const moved = m && (m.x !== obj.x || m.y !== obj.y);
+      const moved = m && (m.x !== obj.x || m.y !== obj.y || m.floorZ !== obj.base[1]);
+      const lift = liftSectorOf.get(obj.index); // etapa 20: objeto parado num elevador
+      const objBase = !m && lift !== undefined ? doomToWorld(obj.x, obj.y, map.sectors[lift].floorHeight) : obj.base;
       items.push({ x: m ? m.x : obj.x, y: m ? m.y : obj.y, angle: m ? m.angle : obj.angle,
-        base: moved ? doomToWorld(m.x, m.y, m.floorZ) : obj.base, lightnum: moved ? lightAt(m.x, m.y) : obj.lightnum, views,
+        base: moved ? doomToWorld(m.x, m.y, m.floorZ) : objBase, lightnum: moved ? lightAt(m.x, m.y) : obj.lightnum, views,
         fullbright: obj.type.fullbright || Boolean(f?.fullbright), fuzz: obj.type.fuzz });
     }
     // Itens largados por monstros (etapa 16): quadro A, no chão do setor.
     for (const d of itemSystem.drops) {
       const views = spriteScene.frames.get(ITEM_DROP_PREFIX[d.type] + 'A');
       if (views) items.push({ x: d.x, y: d.y, angle: 0, base: doomToWorld(d.x, d.y, d.floorZ), lightnum: lightAt(d.x, d.y), views, fullbright: false, fuzz: false });
+    }
+    // Etapa 21: projéteis em voo e explodindo, com z arbitrário e o ângulo do projétil (vistas do foguete).
+    for (const p of missiles.list) {
+      const f = missiles.frameOf(p);
+      const views = spriteScene.frames.get(f.prefix + f.letter);
+      if (views) items.push({ x: p.x, y: p.y, angle: p.angle, base: doomToWorld(p.x, p.y, p.z), lightnum: 15, views, fullbright: true, fuzz: false });
     }
     for (const e of effects.items) {
       const { letter, fullbright } = effectFrame(e);
@@ -678,7 +843,7 @@ async function main() {
   const warnedUnusable = new Set(); // aviso único por arma não utilizável
   // Pedido de troca (tecla ou roda); só com o jogo iniciado.
   function selectWeapon(slot) {
-    if (!menu.started) return;
+    if (!menu.started || level.intermission) return;
     if (!WEAPONS[slot].usable) {
       if (!warnedUnusable.has(slot)) console.warn(`Arma ${slot} (${WEAPONS[slot].name}) não é utilizável nesta etapa`);
       warnedUnusable.add(slot);
@@ -687,6 +852,7 @@ async function main() {
     requestWeapon(weapons, slot, stats);
   }
   let lastPistolTic = 0;
+  let statsClickArmed = false; // etapa 20: o clique só reinicia depois de soltar o botão
   let lastHudKey = '';
   const WEAPON_STATE_LABEL = { lower: 'descendo', raise: 'subindo', ready: 'parada', fire: 'atacando' };
 
@@ -720,6 +886,8 @@ async function main() {
   // alertas de som, contadores, rosto e arma subindo.
   function newGame() {
     lockReason = 'newGame';
+    level.reset(); // etapa 20: alturas, especiais, texturas, thinkers e fim de fase (antes do resto)
+    dynamic?.geo.markAll();
     resetToSpawn();
     stats.reset();
     face.reset();
@@ -729,9 +897,11 @@ async function main() {
     controls.clear(); // estado de disparo (e de movimento) limpo
     controls.requestLock();
   }
-  // Reinício: só morto, depois de 35 tics.
+  // Reinício: morto, depois de 35 tics; ou na tela de estatísticas, depois de 35 tics nela (etapa 20).
   const tryRestart = () => {
-    if (!menu.started || !stats.isDead || !canRestart(stats.deathTics)) return false;
+    const fromDeath = stats.isDead && canRestart(stats.deathTics);
+    const fromStats = level.intermission && level.finishTics >= 2 * INTERMISSION_DELAY;
+    if (!menu.started || !(fromDeath || fromStats)) return false;
     newGame();
     return true;
   };
@@ -751,6 +921,8 @@ async function main() {
         case 'damage10': damagePlayer(10, 'debug', 'debug', null); break;
         case 'damage25': damagePlayer(25, 'debug', 'debug', null); break;
         case 'killPlayer': damagePlayer(1000, 'debug', 'debug', null); break;
+        case 'openAllDoors': if (movingEnabled) openAllDoors(level, levelCtx); break; // etapa 20
+        case 'finishLevel': if (!stats.isDead) level.finish(false); break;
         case 'armorUp': stats.addArmor(25); break;
         case 'ammoUp': stats.addAmmo(10); break;
         case 'resetStats':
@@ -785,7 +957,7 @@ async function main() {
 
   controls = new Controls(canvas, {
     onLook: (dx, dy) => {
-      if (stats.isDead) return; // etapa 19: morto, a câmera só vira para o assassino
+      if (stats.isDead || level.intermission) return; // morto, a câmera só vira para o assassino
       camera.look(dx, dy, BASE_MOUSE_SENS * levelScale(settings.get('mouseSensitivityLevel')));
     },
     isBlocked: menuVisible,
@@ -823,9 +995,10 @@ async function main() {
         case 'sensUp': stepLevel('mouseSensitivityLevel', +1); break;
         case 'speedDown': stepLevel('flySpeedLevel', -1); break;
         case 'speedUp': stepLevel('flySpeedLevel', +1); break;
-        case 'use': tryRestart(); break; // etapa 19: fora da morte, "usar" ainda não faz nada
-        case 'weaponNext': if (menu.started) cycleWeapon(weapons, stats, +1); break;
-        case 'weaponPrev': if (menu.started) cycleWeapon(weapons, stats, -1); break;
+        // Morto ou nas estatísticas: reinicia; senão, usa (portas, interruptores, saída).
+        case 'use': if (stats.isDead || level.intermission) tryRestart(); else useAction(); break;
+        case 'weaponNext': if (menu.started && !level.intermission) cycleWeapon(weapons, stats, +1); break;
+        case 'weaponPrev': if (menu.started && !level.intermission) cycleWeapon(weapons, stats, -1); break;
         case 'weapon1': case 'weapon2': case 'weapon3': case 'weapon4':
         case 'weapon5': case 'weapon6': case 'weapon7':
           selectWeapon(ACTION_KEYS[action].slot);
@@ -857,7 +1030,7 @@ async function main() {
     return `IA ${settings.get('monsterAI') ? 'on' : 'off'}${settings.get('noTarget') ? ' (sem alvo)' : ''}  ` +
       `acordados ${awake.length}/${monsters.monsters.filter((m) => m.aiDef).length}  ` +
       `mais próximo ${nearest === null ? '-' : nearest.toFixed(0)}  alertados ${monsterAI.alertedSectors().length}\n` +
-      `dano recebido: hitscan ${d.hitscan}, corpo a corpo ${d.melee}, explosão ${d.explosion}, ` +
+      `dano recebido: hitscan ${d.hitscan}, corpo a corpo ${d.melee}, projétil ${d.missile ?? 0}, explosão ${d.explosion}, ` +
       `teste ${d.debug ?? 0}; absorvido pela armadura ${playerDamage.absorbed}\n`;
   }
   function updateHud(fps) {
@@ -896,6 +1069,11 @@ async function main() {
       `chaves ${KEY_NAMES.filter((k) => stats.keys[k]).join(' ') || '-'}\n` +
       `mortos ${combat.kills}/${combat.totalMonsters}  disparos ${combat.shots}  acertos ${combat.hits}\n` +
       monsterHud(x, y) +
+      `projéteis ${missiles.list.length}  disparados: diabrete ${missiles.stats.fired.TROO}, barão ${missiles.stats.fired.BOSS}, ` +
+      `jogador ${missiles.stats.fired.player}  acertaram o jogador ${missiles.stats.hitPlayer}\n` +
+      `fase: ${level.thinkers.size} setores em movimento  uso: ${level.lastUse}  ` +
+      `não suportados: ${specialsInfo.unsupported.size} tipo(s), ${level.unsupportedUses} uso(s)  tempo ${mmss(level.levelTics)}` +
+      `${movingEnabled ? '' : '  (setores móveis desligados)'}${level.finished ? '  FIM DA FASE' : ''}\n` +
       `som(${key('toggleMute')}) ${onOff(!settings.get('muted'))} vol ${settings.get('sfxVolumeLevel')}/${MAX_VOLUME_LEVEL} ` +
       `canais ${audio.getStats().channelsActive}/${MAX_CHANNELS}${audio.getStats().running ? '' : ' (aguardando clique)'}\n` +
       `sprites(${key('sprites')}) ` + (sprites
@@ -927,7 +1105,7 @@ async function main() {
       if (settings.get('moveMode') === 'walk') {
         // Andar: WASD no plano horizontal (Space e C ignorados), com colisão e gravidade.
         // A física só roda com o jogo iniciado (o menu fechado já é garantido por showMenu).
-        if (menu.started) {
+        if (menu.started && !level.intermission) {
           const mv = stats.isDead ? { f: 0, s: 0, u: 0 } : controls.moveVector(); // morto: só gravidade
           const sinY = Math.sin(camera.yaw), cosY = Math.cos(camera.yaw);
           // No Doom: frente = (sin yaw, cos yaw), direita = (cos yaw, -sin yaw) (inverso de doomToWorld).
@@ -936,14 +1114,21 @@ async function main() {
           for (const ev of stepPlayer(walker, wish, dt, physicsWorld, frameSolids)) {
             if (ev.type === 'landed' && ev.impactSpeed > OOF_IMPACT_SPEED) audio.play('oof', { origin: 'player' });
           }
+          // Etapa 20: linhas de cruzamento entre a posição anterior e a atual (só andando, vivo).
+          const seg = crossTracker.step({ x: walker.x, y: walker.y }, movingEnabled && !stats.isDead);
+          if (seg) crossLines(level, physicsWorld, seg[0], seg[1], levelCtx);
           syncCameraToWalker();
         }
       } else {
-        if (!stats.isDead) camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
+        crossTracker.invalidate();
+        if (!stats.isDead && !level.intermission) camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
       }
     }
     const tics = gameTics(gameTime);
-    if (!showMenu && menu.started) {
+    if (!showMenu && menu.started && level.intermission) {
+      for (let t = lastPistolTic; t < tics; t++) level.advanceClock(); // estatísticas: tudo congelado
+      if (missiles.list.length) missiles.reset(); // etapa 21: a tela de estatísticas apaga os projéteis
+    } else if (!showMenu && menu.started) {
       // Balanço: velocidade horizontal real da física de andar; zero voando ou no ar.
       const walking = settings.get('moveMode') === 'walk';
       const onGround = walking && walker.z <= walker.floorz;
@@ -956,7 +1141,12 @@ async function main() {
       const [px, py, eyeZ] = worldToDoom(...camera.pos);
       const feet = { x: px, y: py, z: walking ? walker.z : eyeZ - EYE_HEIGHT };
       for (let t = lastPistolTic; t < tics; t++) {
+        // Etapa 20: portas e elevadores antes da IA; o relógio da fase conta só tics ativos.
+        if (level.intermission) { level.advanceClock(); continue; }
+        if (movingEnabled) tickLevel(level, levelCtx);
+        level.advanceClock();
         monsters.tick();
+        missiles.update(); // etapa 21: depois da IA
         effects.tick();
         for (const ev of monsters.takeEvents()) if (ev.type === 'died') itemSystem.onMonsterDied(ev);
         // Etapa 19: morreu neste tic (monstro ou barril): a arma desce e os pés ficam onde estavam.
@@ -1000,6 +1190,13 @@ async function main() {
         else if (fireReleasedSinceDeath) tryRestart();
       }
     }
+    // Etapa 20: na tela de estatísticas, clique (disparo solto e apertado de novo) reinicia.
+    if (menu.started && !showMenu && level.intermission) {
+      if (!controls.firing) statsClickArmed = true;
+      else if (statsClickArmed) tryRestart();
+    } else {
+      statsClickArmed = false;
+    }
     // Flash de tela: dano tem prioridade sobre o bônus; desligado com FLASHES OFF.
     display.setTint(tintFor(tintTable, flashPalette(stats.damageCount, stats.bonusCount), settings.get('screenFlashes')));
     for (const ev of monsters.takeEvents()) if (ev.type === 'died') itemSystem.onMonsterDied(ev); // ex.: KILL ALL
@@ -1034,6 +1231,12 @@ async function main() {
 
     // Passada 1: cena na resolução interna. Passada 2 (só com o menu aberto): menu na mesma textura.
     // Passada 3: blit/CRT para o canvas. Mesmo encoder.
+    // Etapa 20: vértices dos setores móveis reenviados inteiros quando algo mudou (buffer pequeno).
+    if (dynamic?.geo.dirty) {
+      device.queue.writeBuffer(dynamic.vb.flat, 0, dynamic.geo.vertices);
+      device.queue.writeBuffer(dynamic.vb.sector, 0, dynamic.geo.sectorVertices);
+      dynamic.geo.dirty = false;
+    }
     const encoder = device.createCommandEncoder();
 
     // Partículas: só com o jogo iniciado e a cena desenhada; com o menu aberto ou "Congelar
@@ -1079,6 +1282,12 @@ async function main() {
       pass.setVertexBuffer(0, settings.get('sectorColors') ? flatVertexBuffers.sector : flatVertexBuffers.flat);
       pass.setIndexBuffer(flatIndexBuffer, 'uint32');
       pass.drawIndexed(flats.indices.length);
+      // Etapa 20: setores móveis, mesma pipeline e mesmos bind groups.
+      if (dynamic) {
+        pass.setVertexBuffer(0, settings.get('sectorColors') ? dynamic.vb.sector : dynamic.vb.flat);
+        pass.setIndexBuffer(dynamic.ib, 'uint32');
+        pass.drawIndexed(dynamic.geo.indices.length);
+      }
       pass.end();
     }
     // Sprites: depois da cena e antes das partículas; com o menu aberto, a animação para.
@@ -1105,12 +1314,18 @@ async function main() {
       const [fx, fy] = worldToDoom(...camera.pos);
       const faceName = face.lump(stats, { x: fx, y: fy, angle: yawToDoomAngle(camera.yaw) }, settings.get('godMode'), hudAssets.patches);
       const restartText = stats.isDead && canRestart(stats.deathTics) ? MENU_TEXT[MENU_LANG].restartPrompt : '';
-      const hudKey = [Math.max(0, stats.health), stats.armor, faceName, restartText, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
+      const T = MENU_TEXT[MENU_LANG];
+      const intermission = level.intermission ? {
+        title: MAP_NAME, subtitle: level.secretExit ? T.statsSecret : T.statsFinished, footer: T.statsFooter,
+        rows: [[T.statsKills, `${combat.kills}/${combat.totalMonsters}`],
+          [T.statsItems, `${itemSystem.collectedCountable}/${itemSystem.totalCountable}`], [T.statsTime, mmss(level.levelTics)]],
+      } : null;
+      const hudKey = [JSON.stringify(intermission), Math.max(0, stats.health), stats.armor, faceName, restartText, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
         KEY_NAMES.map((k) => (stats.keys[k] ? 1 : 0)).join(''), [...stats.weaponsOwned].join(','), pickupMessage,
         weapon.prefix, weapon.frame, weapon.flash ? weapon.flash.prefix + weapon.flash.letter : '',
         weapon.sx.toFixed(2), weapon.sy.toFixed(2), weaponLevel].join('|');
       if (hudKey !== lastHudKey) {
-        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage, face: faceName, restartText }, hudAssets, tics));
+        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage, face: faceName, restartText, intermission }, hudAssets, tics));
         lastHudKey = hudKey;
       }
       hudPass.draw(encoder, display.colorView, display.internal.width, display.internal.height);

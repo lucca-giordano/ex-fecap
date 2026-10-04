@@ -40,13 +40,18 @@ export const WEAPONS = {
     // Dois tiros por ciclo de 8 tics; o clarão de cada tiro substitui o anterior.
     attack: [f('A', 4, 'chaingunShot', [['A', 5]]), f('B', 4, 'chaingunShot', [['B', 5]]), f('B', 0, 'refire')] },
   // Definidas, mas não utilizáveis nesta etapa.
-  5: { slot: 5, name: 'rocketLauncher', prefix: 'MISG', flashPrefix: 'MISF', ammo: 'rocket', usable: false, ready: 'A', attack: [] },
+  // Etapa 21: lança-foguetes. gunFlash só acende o clarão (MISF A 3, B 4, C 4, D 4); fireRocket, no tic 8,
+  // gasta 1 foguete e cria o projétil (o som "rlaunc" é do projétil). 20 tics.
+  5: { slot: 5, name: 'rocketLauncher', prefix: 'MISG', flashPrefix: 'MISF', ammo: 'rocket', usable: true, ready: 'A',
+    attack: [f('A', 8, 'gunFlash', [['A', 3], ['B', 4], ['C', 4], ['D', 4]]), f('B', 12, 'fireRocket'), f('B', 0, 'refire')] },
   6: { slot: 6, name: 'plasma', prefix: 'PLSG', flashPrefix: 'PLSF', ammo: 'cell', usable: false, ready: 'A', attack: [] },
   7: { slot: 7, name: 'bfg', prefix: 'BFGG', flashPrefix: 'BFGF', ammo: 'cell', usable: false, ready: 'A', attack: [] },
 };
 export const USABLE_SLOTS = Object.values(WEAPONS).filter((w) => w.usable).map((w) => w.slot);
-// Ordem da troca automática sem munição (P_CheckAmmo): metralhadora, espingarda, pistola, soco.
-export const FALLBACK_ORDER = [CHAINGUN, SHOTGUN, PISTOL, FIST];
+export const ROCKET_LAUNCHER = 5;
+// Ordem da troca automática sem munição (P_CheckAmmo): metralhadora, espingarda, pistola,
+// lança-foguetes (etapa 21) e soco.
+export const FALLBACK_ORDER = [CHAINGUN, SHOTGUN, PISTOL, ROCKET_LAUNCHER, FIST];
 
 // Lumps de sprite que uma arma precisa (parado, ataque e clarão), como 'PUNGA0'.
 export function weaponLumps(slot) {
@@ -185,6 +190,11 @@ function tickFlash(w) {
 // Ação de disparo: gasta 1 de munição (exceto o soco); sem munição, não dispara (A_FireCGun).
 function fireAction(w, fr, ctx) {
   const def = WEAPONS[w.current];
+  if (fr.action === 'gunFlash') { // A_GunFlash: só o clarão, sem munição nem disparo
+    w.flash = { prefix: def.flashPrefix, seq: fr.flash, index: 0, tics: fr.flash[0][1] };
+    w.flashTics = flashRemaining(w.flash);
+    return;
+  }
   if (def.ammo && !ctx.stats.spendAmmo(1, def.ammo)) return;
   ctx.events.push({ type: 'fire', weapon: w.current, action: fr.action, refire: w.refire, flash: Boolean(fr.flash) });
   if (fr.flash) {

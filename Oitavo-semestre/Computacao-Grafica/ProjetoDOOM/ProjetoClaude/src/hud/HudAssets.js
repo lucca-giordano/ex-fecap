@@ -12,6 +12,7 @@ export const REQUIRED_PATCHES = ['STBAR', ...range('STTNUM', 0, 9)];
 export const OPTIONAL_PATCHES = [
   'STARMS', 'STTMINUS', 'STTPRCNT', ...range('STYSNUM', 0, 9), ...range('STGNUM', 2, 7), ...range('STKEYS', 0, 5),
   ...[0, 1, 2, 3, 4].flatMap((pain) => [0, 1, 2].map((look) => `STFST${pain}${look}`)), 'STFDEAD0',
+  'INTERPIC', // etapa 20: fundo da tela de estatísticas (opcional; sem ele, preto)
 ];
 export const REQUIRED_SPRITES = ['PISGA0', 'PISGB0', 'PISGC0', 'PISFA0'];
 // Etapa 17: lumps das armas utilizáveis (soco, espingarda e metralhadora); se faltarem, só aquela arma

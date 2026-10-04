@@ -1,22 +1,27 @@
 // Alerta sonoro, como o P_NoiseAlert / P_RecursiveSound do Doom. Puro.
-// O grafo de setores é montado uma vez (sem portas, as aberturas não mudam). A busca usa uma pilha
-// explícita em vez de recursão; o conjunto final de setores alertados é o mesmo.
+// O grafo de setores é montado uma vez com as arestas CANDIDATAS (todas as linhas de dois lados); a
+// abertura de cada uma é avaliada na hora do alerta, com as alturas correntes (etapa 20: porta fechada
+// bloqueia, aberta deixa passar). A busca usa uma pilha explícita em vez de recursão; o conjunto final
+// de setores alertados é o mesmo.
 
 export const ML_SOUNDBLOCK = 0x0040;
 
-// Arestas por setor: { to, soundBlock } para cada linha de dois lados com abertura > 0.
+// Arestas por setor: { to, soundBlock, line } para cada linha de dois lados (candidatas).
 export function buildSoundGraph(world) {
   const edges = world.sectors.map(() => []);
   for (const l of world.lines) {
     if (l.oneSided) continue;
-    const f = world.sectors[l.front], b = world.sectors[l.back];
-    const open = Math.min(f.ceilingHeight, b.ceilingHeight) - Math.max(f.floorHeight, b.floorHeight);
-    if (open <= 0) continue;
     const soundBlock = (l.flags & ML_SOUNDBLOCK) !== 0;
-    edges[l.front].push({ to: l.back, soundBlock });
-    edges[l.back].push({ to: l.front, soundBlock });
+    edges[l.front].push({ to: l.back, soundBlock, line: l });
+    edges[l.back].push({ to: l.front, soundBlock, line: l });
   }
-  return { edges };
+  return { edges, sectors: world.sectors };
+}
+
+// Abertura corrente da linha (min dos tetos - max dos chãos).
+function opening(sectors, l) {
+  const f = sectors[l.front], b = sectors[l.back];
+  return Math.min(f.ceilingHeight, b.ceilingHeight) - Math.max(f.floorHeight, b.floorHeight);
 }
 
 // Marca `alerted[setor] = true` em todos os setores alcançados a partir de `start`.
@@ -33,6 +38,7 @@ export function noiseAlert(graph, start, alerted) {
     traversed.set(sec, b + 1);
     alerted[sec] = true;
     for (const e of graph.edges[sec]) {
+      if (opening(graph.sectors, e.line) <= 0) continue; // porta fechada
       if (e.soundBlock) {
         if (b === 0) stack.push([e.to, 1]);
       } else {

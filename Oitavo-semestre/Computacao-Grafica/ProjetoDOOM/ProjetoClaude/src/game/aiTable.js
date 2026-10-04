@@ -48,14 +48,20 @@ export const AI_TABLE = {
   9: { speed: 8, spawn: stand, see: run(4), melee: null,
     missile: s('E10:faceTarget F10:sPosAttack:bright E10'),
     sounds: { see: posSee, active: 'posact', attack: null } },
-  // Diabrete: só o ataque corpo a corpo nesta etapa (a bola de fogo é um projétil).
-  3001: { speed: 8, spawn: stand, see: run(3), missile: null,
+  // Diabrete (etapa 21): corpo a corpo e à distância no MESMO estado; troopAttack decide no quadro G
+  // (garra de perto, bola de fogo de longe).
+  3001: { speed: 8, spawn: stand, see: run(3),
     melee: s('E8:faceTarget F8:faceTarget G6:troopAttack'),
+    missile: s('E8:faceTarget F8:faceTarget G6:troopAttack'),
     sounds: { see: ['bgsit1', 'bgsit2'], active: 'bgact', attack: null } },
   3002: { speed: 10, spawn: stand, see: run(2), missile: null,
     melee: s('E8:faceTarget F8:faceTarget G8:sargAttack'),
     sounds: { see: ['sgtsit'], active: 'dmact', attack: 'sgtatk' } },
 };
 AI_TABLE[58] = AI_TABLE[3002]; // espectro: o mesmo do demônio (o fuzz vem do thingTable)
+// Barão (etapa 21): corpo a corpo e à distância no mesmo estado; bruisAttack decide no quadro G.
+const bruis = s('E8:faceTarget F8:faceTarget G8:bruisAttack');
+AI_TABLE[3003] = { speed: 8, spawn: stand, see: run(3), melee: bruis, missile: bruis,
+  sounds: { see: ['brssit'], active: 'dmact', attack: null } };
 
 export const AI_TYPES = Object.keys(AI_TABLE).map(Number);

@@ -25,15 +25,23 @@ export function packVertices(list) {
   const buffer = new ArrayBuffer(list.length * VERTEX_STRIDE);
   const f32 = new Float32Array(buffer);
   const u32 = new Uint32Array(buffer);
-  list.forEach((v, i) => {
-    const o = i * WORDS_PER_VERTEX;
-    f32.set(v.pos, o);
-    f32.set(v.normal, o + 3);
-    f32.set(v.color, o + 6);
-    f32.set(v.uv, o + 9);
-    u32[o + 11] = v.layer;
-    u32[o + 12] = v.kind;
-    u32[o + 13] = v.light;
-  });
+  list.forEach((v, i) => writeVertex(f32, u32, i, v));
   return f32;
+}
+
+// Escreve um vértice na posição i (etapa 20: a geometria dinâmica reescreve vértices no lugar).
+export function writeVertex(f32, u32, i, v) {
+  const o = i * WORDS_PER_VERTEX;
+  f32.set(v.pos, o);
+  f32.set(v.normal, o + 3);
+  f32.set(v.color, o + 6);
+  f32.set(v.uv, o + 9);
+  u32[o + 11] = v.layer;
+  u32[o + 12] = v.kind;
+  u32[o + 13] = v.light;
+}
+
+// Zera um vértice (quad não aplicável: triângulos degenerados).
+export function clearVertex(f32, i) {
+  f32.fill(0, i * WORDS_PER_VERTEX, (i + 1) * WORDS_PER_VERTEX);
 }

@@ -2,6 +2,10 @@
 
 export const ITEM_TEXT = {
   en: {
+    // Etapa 20: portas de chave (mensagem no mesmo lugar das de coleta).
+    needBlueKey: 'You need a blue key to open this door.',
+    needYellowKey: 'You need a yellow key to open this door.',
+    needRedKey: 'You need a red key to open this door.',
     stimpack: 'Picked up a stimpack.',
     medikit: 'Picked up a medikit.',
     healthBonus: 'Picked up a health bonus.',
@@ -33,6 +37,9 @@ export const ITEM_TEXT = {
     chainsaw: 'A chainsaw! Find some meat!',
   },
   pt: {
+    needBlueKey: 'VOCE PRECISA DE UMA CHAVE AZUL PARA ABRIR ESTA PORTA.',
+    needYellowKey: 'VOCE PRECISA DE UMA CHAVE AMARELA PARA ABRIR ESTA PORTA.',
+    needRedKey: 'VOCE PRECISA DE UMA CHAVE VERMELHA PARA ABRIR ESTA PORTA.',
     stimpack: 'Pegou um estimulante.',
     medikit: 'Pegou um kit medico.',
     healthBonus: 'Pegou um bonus de vida.',

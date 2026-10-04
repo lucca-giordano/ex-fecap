@@ -21,12 +21,12 @@ export const ACTION_KEYS = {
   visualMode: { code: 'KeyV', label: 'V', desc: 'visual retro / moderno', kind: 'toggle' },
   hud: { code: 'Digit0', label: '0', desc: 'HUD', kind: 'toggle' },
   // group 'weapons': a tela READ THIS! e o painel de ajuda mostram os sete numa linha só.
-  // 5, 6 e 7 são aceitos, mas não trocam (armas não utilizáveis nesta etapa).
+  // 6 e 7 são aceitos, mas não trocam (armas não utilizáveis; o 5 é utilizável desde a etapa 21).
   weapon1: { code: 'Digit1', label: '1', desc: 'soco', kind: 'press', group: 'weapons', slot: 1 },
   weapon2: { code: 'Digit2', label: '2', desc: 'pistola', kind: 'press', group: 'weapons', slot: 2 },
   weapon3: { code: 'Digit3', label: '3', desc: 'espingarda', kind: 'press', group: 'weapons', slot: 3 },
   weapon4: { code: 'Digit4', label: '4', desc: 'metralhadora', kind: 'press', group: 'weapons', slot: 4 },
-  weapon5: { code: 'Digit5', label: '5', desc: 'lança-foguetes (não utilizável)', kind: 'press', group: 'weapons', slot: 5 },
+  weapon5: { code: 'Digit5', label: '5', desc: 'lança-foguetes', kind: 'press', group: 'weapons', slot: 5 }, // etapa 21
   weapon6: { code: 'Digit6', label: '6', desc: 'plasma (não utilizável)', kind: 'press', group: 'weapons', slot: 6 },
   weapon7: { code: 'Digit7', label: '7', desc: 'BFG (não utilizável)', kind: 'press', group: 'weapons', slot: 7 },
   // Roda do mouse: códigos 'WheelUp' e 'WheelDown' nunca vêm do teclado; tratados no evento wheel.

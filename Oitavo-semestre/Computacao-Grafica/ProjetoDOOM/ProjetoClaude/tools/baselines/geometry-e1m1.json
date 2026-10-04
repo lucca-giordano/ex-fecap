@@ -1,0 +1,16 @@
+{
+  "map": "E1M1",
+  "createdAt": "2026-10-04T05:16:44.061Z",
+  "walls": {
+    "vertexCount": 5156,
+    "indexCount": 7734,
+    "vertices": "286c434d97e1447db55cbb967463d5e5a64bfe19937621d4f9314129996a44eb",
+    "indices": "31d73880ce2584bd87c8f23a48a73d6859b3326a0092c07e57d7db81a20983e9"
+  },
+  "flats": {
+    "vertexCount": 5420,
+    "indexCount": 8076,
+    "vertices": "8f306522f18d5e752589d36ce9b39d1935c8577376f9c85330c3616fc4508b06",
+    "indices": "b51041a4b65deb2f1135698d195ad4c76db6ba34fa304a24bec75b7f6311a322"
+  }
+}

@@ -72,6 +72,8 @@ export const SCREENS = {
       { id: 'giveKeys', type: 'action', stats: true },    // etapa 16
       { id: 'giveWeapons', type: 'action', stats: true }, // etapa 16
       { id: 'giveAmmo', type: 'action', stats: true },    // etapa 17
+      { id: 'openAllDoors', type: 'action', stats: true }, // etapa 20
+      { id: 'finishLevel', type: 'action', stats: true },  // etapa 20
     ],
   },
   // Etapa 18: IA dos monstros (RESET MONSTERS e KILL ALL MONSTERS vieram do GAME DEBUG).

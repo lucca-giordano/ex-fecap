@@ -112,8 +112,8 @@ for (const slot of [1, 2, 3, 4]) {
   // Pedidos ignorados.
   const s2 = new PlayerStats();
   const w2 = ready(2);
-  s2.weaponsOwned.add(5);
-  check(!requestWeapon(w2, 2, s2) && !requestWeapon(w2, 3, s2) && !requestWeapon(w2, 5, s2) && w2.pending === null && w2.state === 'ready',
+  s2.weaponsOwned.add(6); // etapa 21: o 5 passou a ser utilizável; o 6 (plasma) continua não utilizável
+  check(!requestWeapon(w2, 2, s2) && !requestWeapon(w2, 3, s2) && !requestWeapon(w2, 6, s2) && w2.pending === null && w2.state === 'ready',
     'pedido para a arma atual, não possuída ou não utilizável é ignorado');
   // Troca completa: 32 tics, sy de 32 a 128 e de volta a 32.
   const s3 = armed();
@@ -190,10 +190,17 @@ function pickup(type, stats, w) {
   const sClipFull = new PlayerStats();
   w = pickup(2007, sClipFull, ready(1));
   check(w.pending === null, 'balas com balas sobrando: não troca');
-  for (const type of [2003, 2004, 2006]) {
+  for (const type of [2004, 2006]) {
     w = pickup(type, new PlayerStats(), ready(2));
     check(w.pending === null && w.state === 'ready', `pegar ${type} (não utilizável): não troca`);
   }
+  // Etapa 21: o lança-foguetes é utilizável; pegar pela primeira vez troca para ele.
+  w = pickup(2003, new PlayerStats(), ready(2));
+  check(w.pending === 5, 'pegar o lança-foguetes (novo): vira pendente');
+  const sRock = new PlayerStats();
+  sRock.weaponsOwned.add(5);
+  w = pickup(2010, sRock, ready(5));
+  check(w.pending === null, 'foguetes com 0 foguetes e o lança-foguetes na mão: não troca');
 }
 
 // --- e) Tiros com semente fixa ---
@@ -291,8 +298,9 @@ check(fireAt(2, room(512), zombies()).results.length === 1 && fireAt(4, room(512
   const byCode = Object.fromEntries(entries.map(([a, k]) => [k.code, [a, k]]));
   for (let n = 1; n <= 7; n++) check(byCode[`Digit${n}`]?.[1].slot === n, `Digit${n} escolhe o slot ${n}`);
   const s = armed((x) => { for (const slot of [5, 6, 7]) x.weaponsOwned.add(slot); });
+  check(byCode.Digit5?.[1].slot === 5 && requestWeapon(ready(2), 5, s), 'Digit5 escolhe o lança-foguetes possuído (etapa 21)');
   const w = ready(2);
-  check([5, 6, 7].every((slot) => !requestWeapon(w, slot, s)) && w.pending === null, 'Digit5 a Digit7: aceitos, mas não trocam');
+  check([6, 7].every((slot) => !requestWeapon(w, slot, s)) && w.pending === null, 'Digit6 e Digit7: aceitos, mas não trocam');
   check([1, 3, 4].every((slot) => { const ww = ready(2); return requestWeapon(ww, slot, s) && ww.pending === slot; }), 'Digit1, 3 e 4 trocam (2 é a atual)');
   check(['textured', 'sectorColors', 'culling', 'skyTest'].every((a) => !ACTION_KEYS[a]), 'atalhos de texturas, cor por setor, culling e céu removidos');
   check(['textured', 'sectorColors', 'culling', 'skyTest'].every((id) => SCREENS.debug.items.some((i) => i.id === id)), 'os quatro continuam no submenu DEBUG');
@@ -309,8 +317,8 @@ check(fireAt(2, room(512), zombies()).results.length === 1 && fireAt(4, room(512
   check(wh.push(-30, 0, 129) === 0 && wh.push(-100, 0, 131) === 1, 'depois de 120 ms: volta a trocar (acumulação reiniciada)');
   check(wh.push(100, 0, 400) === -1, 'para baixo: -1');
   check(wh.push(-3, 1, 1000) === 1, 'deltaMode de linhas (3 linhas = 120)');
-  const s = armed((x) => x.weaponsOwned.add(5));
-  check(cycleTarget(ready(4), s, 1) === 1 && cycleTarget(ready(1), s, -1) === 4 && cycleTarget(ready(2), s, 1) === 3, 'ciclo 1-2-3-4 com volta, sem o 5');
+  const s = armed((x) => { x.weaponsOwned.add(5); x.weaponsOwned.add(6); });
+  check(cycleTarget(ready(5), s, 1) === 1 && cycleTarget(ready(1), s, -1) === 5 && cycleTarget(ready(4), s, 1) === 5, 'ciclo 1-2-3-4-5 com volta, sem o 6');
   const s2 = new PlayerStats();
   check(cycleTarget(ready(2), s2, 1) === 1 && cycleTarget(ready(1), s2, 1) === 2, 'ciclo só entre as possuídas (1 e 2)');
   const w = ready(1);
@@ -361,14 +369,15 @@ const hudAssets = loadHudAssets(wad);
 // --- l) Lumps ---
 {
   const required = ['PUNGA0', 'PUNGB0', 'PUNGC0', 'PUNGD0', 'PISGA0', 'PISGB0', 'PISGC0', 'SHTGA0', 'SHTGB0', 'SHTGC0', 'SHTGD0',
-    'CHGGA0', 'CHGGB0', 'SHTFA0', 'SHTFB0', 'CHGFA0', 'CHGFB0', 'PISFA0'];
+    'CHGGA0', 'CHGGB0', 'SHTFA0', 'SHTFB0', 'CHGFA0', 'CHGFB0', 'PISFA0',
+    'MISGA0', 'MISGB0', 'MISFA0', 'MISFB0', 'MISFC0', 'MISFD0']; // etapa 21: lança-foguetes
   const missing = required.filter((n) => !hudAssets.sprites[n]);
   console.log(`Lumps de arma ausentes: ${missing.join(', ') || 'nenhum'}; armas disponíveis: ${hudAssets.weaponSlots.join(', ')}`);
   check(missing.length === 0, 'todos os lumps de arma existem');
   check(USABLE_SLOTS.every((slot) => weaponLumps(slot).every((n) => required.includes(n))), 'tabela usa só os lumps conferidos');
-  check(hudAssets.weaponSlots.join() === '1,2,3,4', 'armas 1 a 4 disponíveis');
-  check(availableSlots((n) => n !== 'SHTGD0').join() === '1,2,4', 'lump ausente: só aquela arma fica indisponível');
-  check(Object.values(WEAPONS).filter((w) => !w.usable).map((w) => w.slot).join() === '5,6,7', 'slots 5, 6 e 7 não utilizáveis');
+  check(hudAssets.weaponSlots.join() === '1,2,3,4,5', 'armas 1 a 5 disponíveis');
+  check(availableSlots((n) => n !== 'SHTGD0').join() === '1,2,4,5', 'lump ausente: só aquela arma fica indisponível');
+  check(Object.values(WEAPONS).filter((w) => !w.usable).map((w) => w.slot).join() === '6,7', 'slots 6 e 7 não utilizáveis');
   for (const name of ['DSSHOTGN', 'DSPUNCH', 'DSPISTOL']) check(wad.findLump(name) >= 0, `som ${name} no WAD`);
 }
 

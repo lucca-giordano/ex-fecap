@@ -354,8 +354,9 @@ check(aproxDist(300, 400) === 550, 'aproxDist(300, 400) = 550');
   m.justAttacked = true;
   t.sys.setState(m, 'chase');
   check(m.state === 'chase' && !m.justAttacked, 'chase com justAttacked: limpa e só muda de direção');
-  // Dor leva à corrida (diabrete, jogador longe: sem ataque ao entrar na corrida).
-  const p = aiSystem(room(2048), [[3001, 500, 500, 0]], { player: P, rng: { next255: () => 0, nextRange: (a, b) => (a + b) / 2 } });
+  // Dor leva à corrida (demônio, jogador longe: sem ataque ao entrar na corrida; desde a etapa 21 o
+  // diabrete com justHit dispara a bola de fogo na hora, como no Doom).
+  const p = aiSystem(room(2048), [[3002, 500, 500, 0]], { player: P, rng: { next255: () => 0, nextRange: (a, b) => (a + b) / 2 } });
   const pm = p.sys.monsters[0];
   p.sys.damage(pm, 1);
   check(pm.state === 'pain', 'dano com chance: dor');
@@ -408,8 +409,10 @@ check(aproxDist(300, 400) === 550, 'aproxDist(300, 400) = 550');
   }
   const far = aiSystem(room(2048), [[3001, 500, 500, 0]], { player: { x: 700, y: 500, z: 0, alive: true } });
   far.sys.monsters[0].target = 'player';
+  let spawned = null;
+  far.ai.ctx.spawnMissile = (mm, type) => { spawned = type; };
   far.ai.action(far.sys.monsters[0], 'troopAttack');
-  check(far.damage.length === 0, 'garra fora do alcance: nada');
+  check(far.damage.length === 0 && spawned === 'troopShot', 'fora do alcance da garra: sem dano direto, bola de fogo (etapa 21)');
 }
 
 // --- k) Hitscan de monstro ---
