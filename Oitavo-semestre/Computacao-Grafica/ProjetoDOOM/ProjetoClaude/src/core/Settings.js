@@ -24,6 +24,9 @@ const SCHEMA = {
   // Etapa 14: volume dos efeitos 0..15 (o Doom usa 8 por padrão; 12 se ouve melhor numa sala) e mudo.
   sfxVolumeLevel: { type: 'int', min: 0, max: 15, default: 12, persist: true },
   muted: { type: 'bool', default: false, persist: true },
+  // Etapa 18: IA dos monstros e "sem alvo" (os monstros ignoram o jogador), só na sessão.
+  monsterAI: { type: 'bool', default: true, persist: false },
+  noTarget: { type: 'bool', default: false, persist: false },
 };
 
 function isValid(key, value) {

@@ -35,6 +35,9 @@ import { findSpriteLumps } from './wad/Sprites.js';
 import { Rng } from './game/Rng.js';
 import { resolveMonsterTable, extraSpriteFrames } from './game/monsterTable.js';
 import { MonsterSystem } from './game/MonsterSystem.js';
+import { MonsterAI } from './game/MonsterAI.js';
+import { aproxDist } from './game/aiTable.js';
+import { PlayerDamageSink } from './game/PlayerDamageSink.js';
 import { radiusAttack, BARREL_DAMAGE } from './game/radiusAttack.js';
 import { EffectList, effectFrame, MAX_EFFECTS } from './game/effects.js';
 import { CombatStats } from './game/stats.js';
@@ -424,6 +427,7 @@ async function main() {
   const monsterTable = resolveMonsterTable(findSpriteLumps(wad).lumps, new Set(map.things.map((t) => t.type)));
   if (monsterTable.removed.length) console.warn(`Combate: quadros ausentes removidos: ${monsterTable.removed.join(', ')}`);
   if (monsterTable.unresolved.length) console.warn(`Combate: tipos sem quadros de morte: ${monsterTable.unresolved.join(', ')}`);
+  if (monsterTable.noAI.length) console.warn(`IA: tipos que ficam passivos: ${monsterTable.noAI.join('; ')}`);
 
   // --- Sprites dos objetos (etapa 11); se falharem, ficam desligados só nesta sessão ---
   let spriteScene = null;
@@ -447,6 +451,9 @@ async function main() {
       `setor inválido ${st.discarded.sector}; ignorados (sem sprite) ${st.ignored}; ` +
       `desconhecidos [${st.unknown.join(', ')}]; não resolvidos [${st.unresolved.join(', ')}]`);
     if (st.truncated) console.warn('Sprites: camadas demais; só o primeiro quadro de cada animação foi mantido');
+    // Etapa 18: estimativa da textura (camadas x largura x altura x 2 bytes, formato rg8uint).
+    console.log(`Sprites: textura de ${st.texture.layers} camadas de ${st.texture.layerW}x${st.texture.layerH}, ` +
+      `cerca de ${(st.texture.bytes / 1048576).toFixed(1)} MiB`);
     const spriteCode = await fetchText(new URL('./shaders/sprites.wgsl', import.meta.url));
     // walls.wgsl vem antes para reaproveitar lightLevel() (mesma regra de luz das paredes).
     const spriteModule = await createCheckedShaderModule(device, 'sprites', [
@@ -466,13 +473,14 @@ async function main() {
     }
   } catch (err) {
     console.error('Sprites: falha ao preparar; sprites desligados nesta sessão.', err);
+    reportError(err);
     sprites = null;
   }
   let gameTime = 0; // relógio de jogo (s): não avança com o menu aberto
 
   // --- Monstros, efeitos e contadores (etapa 15) ---
   const effects = new EffectList();
-  let playerBlastDamage = 0; // dano de explosão ao jogador: só contado nesta etapa, não aplicado
+  const playerDamage = new PlayerDamageSink(); // etapa 18: dano ao jogador só contado, não aplicado
   const lightAt = (x, y) => {
     const sec = map.sectors[findSector(map, x, y)];
     return sec ? Math.min(15, Math.max(0, Math.floor(sec.lightLevel / 16))) : 15;
@@ -489,7 +497,7 @@ async function main() {
       // Barril no quadro C: dano em raio a partir do centro dele (reação em cadeia acontece sozinha).
       onExplode: (m) => radiusAttack(physicsWorld, m, BARREL_DAMAGE, m, monsters.monsters, rng, {
         damage: (target, amount) => monsters.damage(target, amount),
-        onPlayerDamaged: (amount) => { playerBlastDamage += amount; },
+        onPlayerDamaged: (amount) => playerDamage.onPlayerDamaged(amount, 'BAR1', 'explosion'),
         player: playerTarget(),
       }),
     });
@@ -506,6 +514,23 @@ async function main() {
     .filter((type) => ITEM_TABLE[type] && !spriteScene?.types.has(type));
   console.log(`Itens: ${itemSystem.items.length} no mapa, ${itemSystem.totalCountable} contáveis; ` +
     `${fixedSolids.length} sólidos fixos` + (missingItemTypes.length ? `; sem sprite: ${missingItemTypes.join(', ')}` : ''));
+  // --- IA dos monstros (etapa 18) ---
+  // Pés do jogador: no modo andar, a física; voando, olho - 41.
+  const playerFeet = () => {
+    const [px, py, eyeZ] = worldToDoom(...camera.pos);
+    return { x: px, y: py, z: settings.get('moveMode') === 'walk' ? walker.z : eyeZ - EYE_HEIGHT, alive: true };
+  };
+  const monsterAI = new MonsterAI({
+    world: physicsWorld, rng, player: playerFeet,
+    noTarget: () => settings.get('noTarget'), staticSolids: fixedSolids,
+    onSound: (name, m) => audio.play(name, { origin: `thing:${m.thingIndex}`, x: m.x, y: m.y }),
+    onPlayerDamaged: (amount, source, kind) => playerDamage.onPlayerDamaged(amount, source, kind),
+  }).attach(monsters);
+  monsters.setAIEnabled(settings.get('monsterAI'));
+  settings.subscribe('monsterAI', (on) => monsters.setAIEnabled(on));
+  console.log(`IA: ${monsters.monsters.filter((m) => m.aiDef).length} monstros com IA; ` +
+    `${monsterAI.graph.edges.reduce((n, e) => n + e.length, 0) / 2} ligações de som entre setores`);
+
   let pickupMessage = '';  // mensagem de coleta mostrada na barra
   let messageTics = 0;     // tics restantes da mensagem (140 = 4 segundos)
   const MESSAGE_TICS = 140;
@@ -518,7 +543,7 @@ async function main() {
     monsters.reset();
     effects.reset();
     combat.reset();
-    playerBlastDamage = 0;
+    playerDamage.reset(); // monsters.reset() também apaga os alertas de setor
   };
 
   // Evento "fire" da máquina de armas (etapa 17): pistola e metralhadora 1 bala, espingarda 7 projéteis,
@@ -528,6 +553,7 @@ async function main() {
     if (ev.weapon === 3) audio.play('shotgn', { origin: 'player' });
     else if (ev.weapon !== 1) audio.play('pistol', { origin: 'player' }); // pistola e metralhadora
     const [ox, oy, oz] = worldToDoom(...camera.pos); // olho do jogador
+    monsterAI.noise(findSector(map, ox, oy)); // etapa 18: todo disparo acorda quem ouve
     const r = fireWeapon(ev, {
       world: physicsWorld, origin: { x: ox, y: oy, z: oz }, yaw: yawToDoomAngle(camera.yaw),
       pitch: camera.pitch * 180 / Math.PI, // o pitch da câmera manda (sem mira automática)
@@ -551,7 +577,10 @@ async function main() {
       let views = f ? spriteScene.frames.get(f.prefix + f.letter) : null;
       // Parado (ou quadro descartado por falta de camadas): animação de parado da etapa 11.
       if (!views) views = obj.type.frameLayers.get(frameAt(obj.type.frames, obj.type.tics, tic, obj.offset));
-      items.push({ x: obj.x, y: obj.y, angle: obj.angle, base: obj.base, lightnum: obj.lightnum, views,
+      // Etapa 18: monstros usam posição, chão e ângulo atuais (a luz é a do setor onde estão).
+      const moved = m && (m.x !== obj.x || m.y !== obj.y);
+      items.push({ x: m ? m.x : obj.x, y: m ? m.y : obj.y, angle: m ? m.angle : obj.angle,
+        base: moved ? doomToWorld(m.x, m.y, m.floorZ) : obj.base, lightnum: moved ? lightAt(m.x, m.y) : obj.lightnum, views,
         fullbright: obj.type.fullbright || Boolean(f?.fullbright), fuzz: obj.type.fuzz });
     }
     // Itens largados por monstros (etapa 16): quadro A, no chão do setor.
@@ -749,6 +778,16 @@ async function main() {
     return `movimento(${key('toggleMoveMode')}) ${walking ? 'andar' : 'voar'}  pés ${feet.toFixed(0)}  ` +
       `chão ${floor ?? '-'}  ${status}\n`;
   }
+  // Linha da IA: acordados/total, distância ao acordado mais próximo e dano que seria causado.
+  function monsterHud(px, py) {
+    const awake = monsters.monsters.filter((m) => m.shootable && (m.state === 'chase' || m.state === 'melee' || m.state === 'missile'));
+    const nearest = awake.length ? Math.min(...awake.map((m) => aproxDist(m.x - px, m.y - py))) : null;
+    const d = playerDamage.byKind;
+    return `IA ${settings.get('monsterAI') ? 'on' : 'off'}${settings.get('noTarget') ? ' (sem alvo)' : ''}  ` +
+      `acordados ${awake.length}/${monsters.monsters.filter((m) => m.aiDef).length}  ` +
+      `mais próximo ${nearest === null ? '-' : nearest.toFixed(0)}  alertados ${monsterAI.alertedSectors().length}\n` +
+      `dano ao jogador (ainda não aplicado): hitscan ${d.hitscan}, melee ${d.melee}, explosão ${d.explosion}\n`;
+  }
   function updateHud(fps) {
     if (!settings.get('hud') || menuVisible()) return;
     const [x, y, z] = worldToDoom(...camera.pos);
@@ -781,7 +820,7 @@ async function main() {
       `itens ${itemSystem.collectedCountable}/${itemSystem.totalCountable}  largados ${itemSystem.drops.length}  ` +
       `chaves ${KEY_NAMES.filter((k) => stats.keys[k]).join(' ') || '-'}\n` +
       `mortos ${combat.kills}/${combat.totalMonsters}  disparos ${combat.shots}  acertos ${combat.hits}\n` +
-      `dano de explosão ao jogador, ainda não aplicado: ${playerBlastDamage}\n` +
+      monsterHud(x, y) +
       `som(${key('toggleMute')}) ${onOff(!settings.get('muted'))} vol ${settings.get('sfxVolumeLevel')}/${MAX_VOLUME_LEVEL} ` +
       `canais ${audio.getStats().channelsActive}/${MAX_CHANNELS}${audio.getStats().running ? '' : ' (aguardando clique)'}\n` +
       `sprites(${key('sprites')}) ` + (sprites

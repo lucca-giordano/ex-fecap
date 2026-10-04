@@ -145,7 +145,10 @@ check(s.sys.monsters[0].state === 'xdie' && s.sounds[0][0] === 'slop', 'dano 128
 check(s.sys.monsters[1].state === 'die', 'dano 25 (vida -5): morte normal');
 s = system([[3004, 0, 0]], fixedRng(0));
 s.sys.damage(s.sys.monsters[0], 5);
-check(s.sys.monsters[0].state === 'pain' && s.sounds[0][0] === 'popain', 'rng 0: dor em dano que não mata');
+check(s.sys.monsters[0].state === 'pain' && s.sounds.length === 0, 'rng 0: dor em dano que não mata');
+// Etapa 18: o som de dor toca ao entrar no 2º quadro (A_Pain do Doom), 3 tics depois.
+for (let i = 0; i < 3; i++) s.sys.tick();
+check(s.sounds.length === 1 && s.sounds[0][0] === 'popain', 'som de dor no 2º quadro de dor (tic 3)');
 s = system([[3002, 0, 0], [3004, 0, 0], [3005, 0, 0]], fixedRng(255));
 for (const m of s.sys.monsters) s.sys.damage(m, 5);
 check(s.sys.monsters.every((m) => m.state === 'stand'), 'rng 255: sem dor em chance < 255');

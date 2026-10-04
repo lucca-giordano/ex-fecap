@@ -8,10 +8,13 @@ import { doomToWorld } from '../map/coords.js';
 
 // Prepara os objetos do mapa ao carregar (uma vez). maxLayers: limite de camadas do texture array.
 // extraFrames (etapa 15): [{ prefix, letter, category }] além da animação de parado (dor, morte,
-// morte esfacelada, efeitos). Quando faltam camadas, descarta nesta ordem: 'xdeath', 'pain' e, por
-// último, a animação de parado além do primeiro quadro.
-// Devolve { objects, layers: [{ name, patch }], types, frames: Map 'PREFIXO'+letra -> vistas, stats }.
-export function buildSpriteScene(wad, map, { skill = SKILL, maxLayers = Infinity, extraFrames = [] } = {}) {
+// morte esfacelada, efeitos; etapa 18: corrida e ataque). Quando faltam camadas, ou a textura estimada
+// (camadas x largura x altura x 2 bytes) passa de maxBytes, descarta nesta ordem: 'xdeath', 'pain',
+// 'runExtra' (corrida além de A e B) e, por último, a animação de parado além do primeiro quadro.
+// Devolve { objects, layers: [{ name, patch }], types, frames: Map 'PREFIXO'+letra -> vistas, stats };
+// stats.texture = { layers, layerW, layerH, bytes }.
+export const MAX_SPRITE_BYTES = 256 * 1024 * 1024;
+export function buildSpriteScene(wad, map, { skill = SKILL, maxLayers = Infinity, extraFrames = [], maxBytes = MAX_SPRITE_BYTES } = {}) {
   const { lumps: spriteLumps, source } = findSpriteLumps(wad);
   const stats = {
     source, spriteLumps: spriteLumps.size, histogram: new Map(), unresolved: [], unknown: [],
@@ -74,22 +77,40 @@ export function buildSpriteScene(wad, map, { skill = SKILL, maxLayers = Infinity
     for (const f of extras) if (!dropped.includes(f.category)) add(f.prefix + f.letter, f.views);
     return layerOf;
   };
+  // Patches decodificados uma vez (o tamanho da camada é o maior sprite).
+  const patchCache = new Map();
+  const patchOf = (name) => {
+    if (!patchCache.has(name)) patchCache.set(name, decodeSprite(wad, spriteLumps, name));
+    return patchCache.get(name);
+  };
+  const textureOf = (layerOf) => {
+    let layerW = 1, layerH = 1;
+    for (const name of layerOf.keys()) {
+      const p = patchOf(name);
+      layerW = Math.max(layerW, p.width);
+      layerH = Math.max(layerH, p.height);
+    }
+    return { layers: layerOf.size, layerW, layerH, bytes: layerOf.size * layerW * layerH * 2 };
+  };
+  const fits = (layerOf) => layerOf.size <= maxLayers && textureOf(layerOf).bytes <= maxBytes;
   let layerOf = assignLayers([]);
-  for (const category of ['xdeath', 'pain']) {
-    if (layerOf.size <= maxLayers) break;
+  for (const category of ['xdeath', 'pain', 'runExtra']) {
+    if (fits(layerOf)) break;
     stats.droppedCategories.push(category);
     layerOf = assignLayers(stats.droppedCategories);
   }
-  if (layerOf.size > maxLayers) {
+  if (!fits(layerOf)) {
     // Ainda sem espaço: fica só o primeiro quadro de cada animação de parado.
     stats.truncated = true;
     for (const type of resolved.values()) type.frames = type.frames[0];
     layerOf = assignLayers(stats.droppedCategories);
   }
-  if (layerOf.size > maxLayers) {
-    throw new Error(`Sprites: ${layerOf.size} camadas excedem o limite de ${maxLayers}`);
+  if (!fits(layerOf)) {
+    throw new Error(`Sprites: ${layerOf.size} camadas (${textureOf(layerOf).bytes} bytes) excedem os limites ` +
+      `(${maxLayers} camadas, ${maxBytes} bytes)`);
   }
-  const layers = [...layerOf.keys()].map((name) => ({ name, patch: decodeSprite(wad, spriteLumps, name) }));
+  stats.texture = textureOf(layerOf);
+  const layers = [...layerOf.keys()].map((name) => ({ name, patch: patchOf(name) }));
 
   // Objetos: filtro de dificuldade, setor (base no chão) e luz do setor.
   const objects = [];
@@ -107,7 +128,7 @@ export function buildSpriteScene(wad, map, { skill = SKILL, maxLayers = Infinity
       return;
     }
     objects.push({
-      x: thing.x, y: thing.y, angle: thing.angle, type, index,
+      x: thing.x, y: thing.y, angle: thing.angle, flags: thing.flags, type, index,
       base: doomToWorld(thing.x, thing.y, sector.floorHeight),
       lightnum: Math.min(15, Math.max(0, Math.floor(sector.lightLevel / 16))),
       offset: animOffset(index),

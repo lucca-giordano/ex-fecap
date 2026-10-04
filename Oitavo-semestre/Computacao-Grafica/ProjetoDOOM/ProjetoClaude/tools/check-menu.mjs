@@ -21,6 +21,7 @@ const values = (level) => ({
   mouseSensitivityLevel: level, flySpeedLevel: level,
   textured: true, sectorColors: false, culling: true, skyTest: false, hud: true,
   particles: true, sprites: true, moveMode: 'walk', sfxVolumeLevel: Math.min(15, level),
+  monsterAI: true, noTarget: level > 5,
 });
 
 // Casos: nome, estado.
@@ -32,6 +33,7 @@ for (const lang of ['en', 'pt']) {
   cases.push([`${lang} opções (nível 10)`, { lang, screen: 'options', selected: 6, started: false, resumeFailed: false, values: values(10) }]);
   cases.push([`${lang} debug`, { lang, screen: 'debug', selected: 5, started: true, resumeFailed: true, values: values(5) }]);
   cases.push([`${lang} game debug`, { lang, screen: 'gameDebug', selected: 6, started: true, resumeFailed: true, values: values(5) }]);
+  cases.push([`${lang} monster debug`, { lang, screen: 'monsterDebug', selected: 1, started: true, resumeFailed: true, values: values(10) }]);
   cases.push([`${lang} extras`, { lang, screen: 'extras', selected: 2, started: true, resumeFailed: false, values: values(5) }]);
   cases.push([`${lang} opções (volume 0)`, { lang, screen: 'options', selected: 4, started: true, resumeFailed: false,
     values: { ...values(1), sfxVolumeLevel: 0 } }]);
@@ -66,7 +68,7 @@ for (const [name, state] of cases) {
 const { OPTIONS, HELP } = MENU_LAYOUT;
 for (const lang of ['en', 'pt']) {
   const T = MENU_TEXT[lang];
-  for (const screen of ['options', 'extras', 'debug', 'gameDebug']) {
+  for (const screen of ['options', 'extras', 'debug', 'gameDebug', 'monsterDebug']) {
     for (const item of SCREENS[screen].items) {
       if (item.type !== 'toggle' && item.type !== 'fullscreen') continue;
       const end = OPTIONS.x + measureText(assets.font, T[item.id]);
@@ -86,7 +88,7 @@ for (const lang of ['en', 'pt']) {
 // O último item das opções (e do debug) deve terminar acima de y = 190 (sem a mensagem do rodapé).
 const LAST_ITEM_MAX_Y = 190;
 for (const lang of ['en', 'pt']) {
-  for (const screen of ['options', 'extras', 'debug', 'gameDebug']) {
+  for (const screen of ['options', 'extras', 'debug', 'gameDebug', 'monsterDebug']) {
     const report = [];
     composeMenu({ lang, screen, selected: 0, started: true, resumeFailed: false, values: values(5) }, assets, 0, report);
     const bottom = Math.max(...report.map((r) => r.bottom));
@@ -113,7 +115,7 @@ for (const lang of ['en', 'pt']) {
 }
 
 // Termômetros: a ponta direita (x + 8 + células * 8 + largura de M_THERMR) cabe na tela.
-for (const screen of ['options', 'extras', 'debug', 'gameDebug']) {
+for (const screen of ['options', 'extras', 'debug', 'gameDebug', 'monsterDebug']) {
   for (const item of SCREENS[screen].items) {
     if (item.type !== 'thermo') continue;
     const cells = item.cells ?? 10;

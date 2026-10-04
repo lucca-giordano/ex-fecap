@@ -52,6 +52,7 @@ export const SCREENS = {
       { id: 'hud', type: 'toggle', setting: 'hud' },
       { id: 'reset', type: 'action' },
       { id: 'gameDebug', type: 'submenu', target: 'gameDebug' }, // etapa 15
+      { id: 'monsterDebug', type: 'submenu', target: 'monsterDebug' }, // etapa 18
     ],
   },
   // Etapa 15: ações sobre o estado do jogo (antes no DEBUG) e sobre os monstros.
@@ -63,11 +64,19 @@ export const SCREENS = {
       { id: 'armorUp', type: 'action', stats: true },
       { id: 'ammoUp', type: 'action', stats: true },
       { id: 'resetStats', type: 'action', stats: true },
-      { id: 'resetMonsters', type: 'action', stats: true },
-      { id: 'killAll', type: 'action', stats: true },
       { id: 'giveKeys', type: 'action', stats: true },    // etapa 16
       { id: 'giveWeapons', type: 'action', stats: true }, // etapa 16
       { id: 'giveAmmo', type: 'action', stats: true },    // etapa 17
+    ],
+  },
+  // Etapa 18: IA dos monstros (RESET MONSTERS e KILL ALL MONSTERS vieram do GAME DEBUG).
+  monsterDebug: {
+    parent: 'debug',
+    items: [
+      { id: 'monsterAI', type: 'toggle', setting: 'monsterAI' },
+      { id: 'noTarget', type: 'toggle', setting: 'noTarget' },
+      { id: 'resetMonsters', type: 'action', stats: true },
+      { id: 'killAll', type: 'action', stats: true },
     ],
   },
   help: { parent: 'main', items: [] },
@@ -104,7 +113,7 @@ export class Menu {
     this.cb = callbacks;
     this.sound = callbacks.onSound ?? (() => {});
     this.screen = 'main';
-    this.selected = { main: 0, options: 0, extras: 0, debug: 0, gameDebug: 0, help: 0 }; // último item de cada tela
+    this.selected = { main: 0, options: 0, extras: 0, debug: 0, gameDebug: 0, monsterDebug: 0, help: 0 }; // último item de cada tela
     this.started = false;
     this.resumeFailed = false;
     this.helpPage = 0; // página da tela READ THIS! (etapa 17)
@@ -265,6 +274,8 @@ export class Menu {
         particles: s.get('particles'),
         sprites: s.get('sprites'),
         moveMode: s.get('moveMode'),
+        monsterAI: s.get('monsterAI'),
+        noTarget: s.get('noTarget'),
       },
     };
   }

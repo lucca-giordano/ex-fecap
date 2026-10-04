@@ -213,6 +213,9 @@ export function composeMenu(state, assets, time, report) {
   } else if (state.screen === 'gameDebug') {
     drawText(buffer, assets.font, T.gameDebugTitle, centeredX(assets.font, T.gameDebugTitle), OPTIONS.titleY, report);
     drawList(buffer, assets, T, 'gameDebug', state, time, report);
+  } else if (state.screen === 'monsterDebug') {
+    drawText(buffer, assets.font, T.monsterDebugTitle, centeredX(assets.font, T.monsterDebugTitle), OPTIONS.titleY, report);
+    drawList(buffer, assets, T, 'monsterDebug', state, time, report);
   } else if (state.screen === 'debug') {
     drawText(buffer, assets.font, T.debugTitle, centeredX(assets.font, T.debugTitle), OPTIONS.titleY, report);
     drawList(buffer, assets, T, 'debug', state, time, report);

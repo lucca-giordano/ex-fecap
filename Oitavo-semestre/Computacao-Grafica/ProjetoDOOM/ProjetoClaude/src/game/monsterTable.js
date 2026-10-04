@@ -4,6 +4,7 @@
 // Sons: nomes lógicos (lump sem o "DS").
 
 import { buildFrames, frameComplete } from '../wad/Sprites.js';
+import { AI_TABLE } from './aiTable.js';
 
 const seq = (s) => s.trim().split(/\s+/).map((f) => [f[0], Number(f.slice(1))]);
 
@@ -61,12 +62,14 @@ export const BLOOD_FRAMES = seq('C8 B8 A8');
 export const EFFECT_PREFIXES = { puff: 'PUFF', blood: 'BLUD' };
 
 // Confere as letras contra os lumps: remove quadros ausentes de cada estado e lista o que saiu.
-// Devolve { entries: Map tipo -> entrada resolvida, removed: [texto], unresolved: [tipo] }.
-// presentTypes: tipos presentes no mapa.
+// Devolve { entries: Map tipo -> entrada resolvida, removed: [texto], unresolved: [tipo], noAI: [texto] }.
+// presentTypes: tipos presentes no mapa. Etapa 18: entry.ai é a tabela de IA (aiTable.js) com os quadros
+// conferidos; sem corrida ou sem nenhum ataque, o tipo fica passivo (entry.ai = null, listado em noAI).
 export function resolveMonsterTable(spriteLumps, presentTypes) {
   const entries = new Map();
   const removed = [];
   const unresolved = [];
+  const noAI = [];
   const framesOf = new Map();
   const frames = (prefix) => {
     if (!framesOf.has(prefix)) framesOf.set(prefix, buildFrames(prefix, spriteLumps));
@@ -75,9 +78,9 @@ export function resolveMonsterTable(spriteLumps, presentTypes) {
   for (const type of presentTypes) {
     const base = MONSTER_TABLE[type];
     if (!base) continue;
-    const filter = (state, prefix) => {
-      if (!base[state]) return null;
-      const kept = base[state].filter(([letter]) => {
+    const filter = (state, prefix, source = base) => {
+      if (!source[state]) return null;
+      const kept = source[state].filter(([letter]) => {
         const ok = frameComplete(frames(prefix).get(letter));
         if (!ok) removed.push(`${type} ${prefix}${letter} (${state})`);
         return ok;
@@ -93,16 +96,29 @@ export function resolveMonsterTable(spriteLumps, presentTypes) {
       xdeath: filter('xdeath', base.prefix),
     };
     if (!entry.death) { unresolved.push(type); continue; } // sem quadros de morte: não resolvido
+    const ai = AI_TABLE[type];
+    entry.ai = null;
+    if (ai) {
+      const resolvedAI = { ...ai, spawn: filter('spawn', base.prefix, ai), see: filter('see', base.prefix, ai),
+        melee: filter('melee', base.prefix, ai), missile: filter('missile', base.prefix, ai) };
+      if (resolvedAI.spawn && resolvedAI.see && (resolvedAI.melee || resolvedAI.missile)) entry.ai = resolvedAI;
+      else noAI.push(`${type} ${base.prefix}: sem quadros de ${resolvedAI.see ? 'ataque' : 'corrida'}`);
+    }
     entries.set(type, entry);
   }
-  return { entries, removed, unresolved };
+  return { entries, removed, unresolved, noAI };
 }
 
 // Quadros extras para a textura de sprites: [{ prefix, letter, category }].
-// Categorias (ordem de descarte quando faltam camadas): xdeath, pain; death e effect nunca saem.
+// Categorias (ordem de descarte quando faltam camadas): xdeath, pain, runExtra (corrida além de A e B);
+// death, run, attack e effect nunca saem.
 export function extraSpriteFrames(resolvedEntries) {
   const out = [];
   for (const e of resolvedEntries.values()) {
+    if (e.ai) {
+      for (const [letter] of e.ai.see) out.push({ prefix: e.prefix, letter, category: 'AB'.includes(letter) ? 'run' : 'runExtra' });
+      for (const [letter] of [...(e.ai.melee ?? []), ...(e.ai.missile ?? [])]) out.push({ prefix: e.prefix, letter, category: 'attack' });
+    }
     for (const [letter] of e.pain ?? []) out.push({ prefix: e.prefix, letter, category: 'pain' });
     for (const [letter] of e.death) out.push({ prefix: e.deathPrefix ?? e.prefix, letter, category: 'death' });
     for (const [letter] of e.xdeath ?? []) out.push({ prefix: e.prefix, letter, category: 'xdeath' });

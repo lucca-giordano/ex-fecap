@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IA dos monstros (debug)</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; color: #ddd; font: 12px monospace; overflow: hidden; }
+    #wrap { display: flex; height: 100%; }
+    canvas { flex: 1; display: block; min-width: 0; cursor: crosshair; }
+    #side { width: 330px; padding: 8px; overflow-y: auto; border-left: 1px solid #333; }
+    #side button, #side select, #side input { font: 12px monospace; margin: 2px 0; }
+    #side label { display: block; margin: 4px 0; }
+    #counters { white-space: pre; margin: 8px 0; color: #9c9; }
+    #log { white-space: pre; color: #ccc; }
+    .legend span { display: inline-block; width: 10px; height: 10px; margin: 0 4px 0 8px; border-radius: 5px; }
+    #msg { color: #f44; padding: 8px; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="map"></canvas>
+    <div id="side">
+      <div id="msg"></div>
+      <div>
+        <button id="play">Play</button>
+        <button id="step">+1 tic</button>
+        <select id="speed"><option value="1">1x</option><option value="4">4x</option><option value="16">16x</option></select>
+      </div>
+      <div>
+        <button id="noise">Alerta sonoro agora</button>
+        <button id="reset">Reiniciar</button>
+      </div>
+      <label>Semente <input id="seed" type="number" value="1" style="width: 90px"></label>
+      <label><input id="noTarget" type="checkbox"> noTarget (ignoram o jogador)</label>
+      <label><input id="sight" type="checkbox"> mostrar linhas de visão</label>
+      <div class="legend">
+        <span style="background:#888"></span>parado<span style="background:#fd3"></span>corrida<span style="background:#f33"></span>ataque<br>
+        <span style="background:#f3f"></span>dor<span style="background:#533"></span>morte<span style="background:#38f"></span>jogador
+      </div>
+      <p>Clique ou arraste no mapa para posicionar o jogador.</p>
+      <div id="counters"></div>
+      <b>Últimos eventos</b>
+      <div id="log"></div>
+    </div>
+  </div>
+  <script type="module" src="ai.js"></script>
+</body>
+</html>
