@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sons (debug)</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px 16px 8px; font-size: 14px; }
+    section { padding: 0 16px 12px; }
+    table { border-collapse: collapse; }
+    td, th { border: 1px solid #444; padding: 2px 6px; text-align: right; }
+    td.name { text-align: left; }
+    tr.bad td { color: #f66; }
+    canvas { display: block; background: #111; }
+    button { font: 12px monospace; }
+    label { margin-right: 12px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 4px 0; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+    .note { color: #9c9; }
+  </style>
+</head>
+<body>
+  <div id="msg"></div>
+  <h2>Volume mestre</h2>
+  <section>
+    <div class="row">
+      <label>Nível <input id="volume" type="range" min="0" max="15" step="1" value="12"> <span id="volumeValue">12</span>/15</label>
+      <label><input id="muted" type="checkbox"> mudo</label>
+      <span id="status" class="note"></span>
+    </div>
+  </section>
+  <h2>Som posicional (ouvinte na origem, olhando para o leste)</h2>
+  <section>
+    <div class="row">
+      <label>Som <select id="posSound"></select></label>
+      <label>Ângulo <input id="angle" type="range" min="-180" max="180" step="1" value="90"> <span id="angleValue"></span>°</label>
+      <label>Distância <input id="dist" type="range" min="0" max="1500" step="10" value="400"> <span id="distValue"></span></label>
+      <button id="playPos">Tocar</button>
+    </div>
+    <div id="posInfo" class="note"></div>
+  </section>
+  <h2 id="title">Sons do WAD</h2>
+  <section><table id="table"></table></section>
+  <script type="module" src="sounds.js"></script>
+</body>
+</html>

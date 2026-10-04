@@ -1,0 +1,10 @@
+{
+  "name": "projetodoom-webgpu",
+  "version": "1.0.0",
+  "description": "Recriação do Doom usando WebGPU puro",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

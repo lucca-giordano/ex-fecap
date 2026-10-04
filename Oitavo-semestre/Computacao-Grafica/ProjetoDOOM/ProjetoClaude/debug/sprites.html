@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sprites (debug)</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px 16px 8px; font-size: 14px; }
+    .type { padding: 8px 16px; border-top: 1px solid #333; }
+    .type.unresolved .title { color: #f44; }
+    .views { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-top: 6px; }
+    figure { margin: 0; text-align: center; }
+    canvas { display: block; image-rendering: pixelated; background: #333; }
+    figcaption { margin-top: 2px; color: #aaa; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2 id="title">Sprites do mapa</h2>
+  <div id="msg"></div>
+  <div id="types"></div>
+  <script type="module" src="sprites.js"></script>
+</body>
+</html>

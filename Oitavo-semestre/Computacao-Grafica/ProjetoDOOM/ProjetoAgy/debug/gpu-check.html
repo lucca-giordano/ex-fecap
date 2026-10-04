@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico WebGPU - Validação de Shaders e Pipelines</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0e0e13;
+            color: #d1d5db;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            color: #ffca28;
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subtitle {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: #181822;
+            border: 1px solid #2d2d3d;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            color: #ececec;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #2d2d3d;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-limits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .limit-item {
+            background: #20202e;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid #ffca28;
+        }
+
+        .limit-item .label {
+            font-size: 12px;
+            color: #9ca3af;
+            font-family: monospace;
+        }
+
+        .limit-item .val {
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        th {
+            background: #14141c;
+            color: #ffca28;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: #1c1c28;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-ok {
+            background: rgba(46, 125, 50, 0.25);
+            color: #66bb6a;
+            border: 1px solid #2e7d32;
+        }
+
+        .badge-err {
+            background: rgba(198, 40, 40, 0.25);
+            color: #ef5350;
+            border: 1px solid #c62828;
+        }
+
+        .badge-warn {
+            background: rgba(239, 108, 0, 0.25);
+            color: #ffa726;
+            border: 1px solid #ef6c00;
+        }
+
+        .msg-pre {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 11px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #ef9a9a;
+            background: #160000;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #4a0000;
+            margin-top: 4px;
+        }
+
+        .nav-links {
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-links a {
+            color: #64b5f6;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1><span>⚙️</span> Diagnóstico WebGPU: Shaders e Pipelines</h1>
+    <div class="subtitle">Verificação em tempo real da integridade de todos os Shader Modules e Pipelines do motor.</div>
+
+    <!-- Limites do Dispositivo e Formatos -->
+    <div class="card">
+        <h2>Dispositivo WebGPU e Limites Relevantes</h2>
+        <div id="device-info" class="grid-limits">
+            <div class="limit-item"><div class="label">Status</div><div class="val">Detectando adaptador e dispositivo...</div></div>
+        </div>
+    </div>
+
+    <!-- Shader Modules -->
+    <div class="card">
+        <h2>Shader Modules (Compilação WGSL)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 280px;">Shader Module</th>
+                    <th style="width: 120px;">Status</th>
+                    <th>Mensagens / Detalhes</th>
+                </tr>
+            </thead>
+            <tbody id="shaders-tbody">
+                <tr><td colspan="3" style="text-align: center; color: #888;">Testando módulos de shader...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Render e Compute Pipelines -->
+    <div class="card">
+        <h2>Pipelines (Render & Compute)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 280px;">Pipeline</th>
+                    <th style="width: 120px;">Tipo</th>
+                    <th style="width: 120px;">Status</th>
+                    <th>Detalhes / Erro de Validação</th>
+                </tr>
+            </thead>
+            <tbody id="pipelines-tbody">
+                <tr><td colspan="4" style="text-align: center; color: #888;">Testando pipelines...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="nav-links">
+        <a href="../index.html">← Voltar para o Jogo Principal</a>
+        <a href="./sprites.html">Visualizador de Sprites (debug/sprites.html)</a>
+        <a href="./colormap.html">Visualizador de COLORMAP (debug/colormap.html)</a>
+        <a href="./menu.html">Visualizador de Menu (debug/menu.html)</a>
+    </div>
+
+    <script type="module" src="./gpu-check.js"></script>
+</body>
+</html>

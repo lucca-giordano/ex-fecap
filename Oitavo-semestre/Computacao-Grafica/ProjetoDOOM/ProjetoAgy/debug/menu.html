@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depuração do Menu - Doom WebGPU (Canvas 2D, 3x)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121216;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        header {
+            max-width: 1000px;
+            margin: 0 auto 24px auto;
+            background: #1a1a22;
+            border: 1px solid #333;
+            border-left: 4px solid #e53935;
+            border-radius: 6px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #ef5350;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .controls label {
+            font-size: 13px;
+            color: #bbb;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        select, button {
+            background: #2b2b36;
+            color: #ffca28;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 36px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .screen-card {
+            background: #181820;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        canvas {
+            display: block;
+            width: 960px;
+            height: 600px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            background-color: #050508;
+            border: 1px solid #222;
+            border-radius: 4px;
+            margin: 0 auto;
+        }
+
+        .screen-title {
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffca28;
+            letter-spacing: 0.5px;
+        }
+
+        .screen-desc {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Depuração Visual das Telas do Menu (3x)</h1>
+        <p style="font-size: 13px; color: #aaa;">Composição pura com os gráficos originais do <code>freedoom1.wad</code> via Canvas 2D (sem WebGPU).</p>
+        <div class="controls">
+            <label>
+                Quadro da Caveira:
+                <select id="sel-skull">
+                    <option value="auto">Animada (Auto 35Hz)</option>
+                    <option value="0">Caveira 1 (M_SKULL1)</option>
+                    <option value="1">Caveira 2 (M_SKULL2)</option>
+                </select>
+            </label>
+            <label>
+                Idioma:
+                <select id="sel-lang">
+                    <option value="en">English (EN)</option>
+                    <option value="pt">Português (PT)</option>
+                </select>
+            </label>
+        </div>
+    </header>
+
+    <div class="gallery" id="gallery-container">
+        <!-- Telas geradas dinamicamente via debug/menu.js -->
+    </div>
+
+    <script type="module" src="./menu.js"></script>
+</body>
+</html>

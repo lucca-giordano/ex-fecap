@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depuração de COLORMAP - Doom E1M1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121216;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 24px;
+        }
+
+        header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #e53935;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-bar {
+            font-size: 14px;
+            color: #9e9e9e;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .stats-item strong {
+            color: #ffca28;
+        }
+
+        .legend {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        #loading {
+            font-size: 16px;
+            color: #ffca28;
+            padding: 20px;
+        }
+
+        .canvas-container {
+            margin-top: 20px;
+            background: #181820;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tabela COLORMAP e Paleta Iluminada (256 × 32)</h1>
+        <div class="stats-bar" id="stats-bar">
+            <span>Carregando WAD e decodificando COLORMAP...</span>
+        </div>
+        <div class="legend">
+            Cada coluna representa um dos 256 índices da paleta original do Doom. Cada linha representa um nível de luminosidade da tabela COLORMAP (0 = claridade total / identidade até 31 = escuridão máxima).
+        </div>
+    </header>
+
+    <div id="loading">Decodificando lump COLORMAP e PLAYPAL...</div>
+
+    <div class="canvas-container" id="container" style="display:none;">
+        <canvas id="colormap-canvas"></canvas>
+    </div>
+
+    <script type="module" src="./colormap.js"></script>
+</body>
+</html>

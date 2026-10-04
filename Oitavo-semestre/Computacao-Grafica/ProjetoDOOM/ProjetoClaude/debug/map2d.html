@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa 2D (debug)</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; }
+    #msg {
+      position: fixed; inset: 0; display: none;
+      align-items: center; justify-content: center; text-align: center;
+      color: #f44; font: 18px monospace; padding: 16px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="map"></canvas>
+  <div id="msg"></div>
+  <script type="module" src="map2d.js"></script>
+</body>
+</html>

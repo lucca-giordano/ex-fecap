@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "count": 1200,
+  "emberRatio": 0.25,
+  "boxHalfXZ": 512,
+  "boxHalfY": 128,
+  "dust": { "size": 0.35, "lifeMin": 6, "lifeMax": 12, "speed": 6, "color": "#C0B8A8", "lightnum": 7 },
+  "ember": { "size": 0.6, "lifeMin": 1.5, "lifeMax": 3.5, "riseMin": 24, "riseMax": 48, "drift": 8, "colorHot": "#FFA030", "colorCool": "#C84010", "flickerHz": 8 },
+  "render": { "sizeScale": 1.0, "minPixels": 1, "maxPixels": 6, "pixelSnap": true, "fadeFraction": 0.15 }
+}

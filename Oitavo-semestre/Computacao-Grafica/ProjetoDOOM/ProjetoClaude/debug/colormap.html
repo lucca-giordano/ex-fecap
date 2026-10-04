@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colormap (debug)</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px; font-size: 14px; }
+    canvas { display: block; margin: 0 16px; image-rendering: pixelated; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2 id="title">Paleta iluminada (COLORMAP)</h2>
+  <canvas id="cm"></canvas>
+  <div id="msg"></div>
+  <script type="module" src="colormap.js"></script>
+</body>
+</html>

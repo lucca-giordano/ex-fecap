@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doom WebGPU</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; }
+    #msg {
+      position: fixed; inset: 0; display: none;
+      align-items: center; justify-content: center; text-align: center;
+      color: #f44; font: 18px monospace; padding: 16px;
+    }
+    #hud {
+      position: fixed; left: 8px; top: 8px; margin: 0;
+      color: #0f0; font: 13px monospace; white-space: pre;
+      background: rgba(0, 0, 0, 0.5); padding: 4px 6px; pointer-events: none;
+    }
+    #buttons { position: fixed; right: 8px; top: 8px; display: flex; gap: 6px; }
+    #buttons button {
+      font: 13px monospace; color: #0f0; background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #0f0; padding: 4px 8px; cursor: pointer;
+    }
+    #help {
+      position: fixed; left: 8px; bottom: 8px; margin: 0;
+      color: #ccc; font: 12px monospace; white-space: pre;
+      background: rgba(0, 0, 0, 0.6); padding: 6px 8px; pointer-events: none;
+    }
+    #loading {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: #0f0; font: 18px monospace; pointer-events: none;
+    }
+    /* Painel de calibragem das partículas (src/ui/TuningPanel.js). */
+    #tuning {
+      position: fixed; right: 0; top: 0; bottom: 0; width: 340px; box-sizing: border-box;
+      overflow-y: auto; z-index: 10; padding: 8px;
+      background: rgba(0, 0, 0, 0.78); color: #0f0; font: 12px monospace;
+    }
+    #tuning .tuning-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    #tuning fieldset { border: 1px solid #060; margin: 0 0 8px; padding: 4px 6px; }
+    #tuning legend { color: #8f8; }
+    #tuning .row { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+    #tuning .name { width: 110px; flex: none; }
+    #tuning input[type=range] { flex: 1; min-width: 0; }
+    #tuning .value { width: 44px; text-align: right; flex: none; }
+    #tuning button {
+      font: 12px monospace; color: #0f0; background: #010; border: 1px solid #0a0;
+      margin: 2px 2px 2px 0; padding: 2px 6px; cursor: pointer;
+    }
+    #tuning table { border-collapse: collapse; margin: 4px 0; }
+    #tuning td, #tuning th { border: 1px solid #060; padding: 1px 4px; text-align: right; }
+    #tuning .note { color: #9c9; margin: 4px 0; }
+    /* Quadro de erros (src/ui/errorOverlay.js, só para desenvolvimento). */
+    #errorOverlay {
+      position: fixed; left: 8px; top: 8px; z-index: 100; max-width: 70vw; max-height: 80vh; overflow: auto;
+      margin: 0; padding: 8px; background: #400; color: #fdd; border: 2px solid #f44;
+      font: 12px monospace; white-space: pre-wrap;
+    }
+    #errorOverlay .count { color: #ff8; }
+  </style>
+</head>
+<body>
+  <canvas id="gfx"></canvas>
+  <div id="msg"></div>
+  <pre id="hud"></pre>
+  <!-- tabindex -1 + blur() no clique: os botões nunca ficam com foco, então Space não os aciona. -->
+  <div id="buttons">
+    <button id="crtBtn" tabindex="-1">CRT: ligado</button>
+    <button id="modeBtn" tabindex="-1">Visual: Retro 4:3</button>
+  </div>
+  <!-- Painel de ajuda gerado a partir de ACTION_KEYS (src/input/Controls.js). -->
+  <pre id="help" style="display: none"></pre>
+  <div id="loading">Carregando mapa...</div>
+  <aside id="tuning" style="display: none"></aside>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Texturas (debug)</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px 16px 8px; font-size: 14px; }
+    .grid { display: flex; flex-wrap: wrap; gap: 12px; padding: 0 16px 16px; }
+    figure { margin: 0; text-align: center; }
+    canvas { display: block; image-rendering: pixelated; background: #000; }
+    figcaption { margin-top: 4px; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div id="msg"></div>
+  <h2 id="wallsTitle">Texturas de parede</h2>
+  <div class="grid" id="walls"></div>
+  <h2 id="flatsTitle">Flats</h2>
+  <div class="grid" id="flats"></div>
+  <script type="module" src="textures.js"></script>
+</body>
+</html>

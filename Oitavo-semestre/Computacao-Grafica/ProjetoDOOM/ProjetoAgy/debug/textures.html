@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depuração de Texturas - Doom E1M1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121216;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #e53935;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-bar {
+            font-size: 14px;
+            color: #9e9e9e;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .stats-item strong {
+            color: #ffca28;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin: 25px 0 15px 0;
+            color: #4caf50;
+            border-left: 4px solid #4caf50;
+            padding-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .texture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .texture-card {
+            background: #1a1a22;
+            border: 1px solid #2e2e38;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+
+        .texture-card:hover {
+            transform: translateY(-2px);
+            border-color: #e53935;
+        }
+
+        .canvas-wrapper {
+            background: #000;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        canvas {
+            image-rendering: pixelated;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .texture-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .texture-size {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .badge-transparent {
+            font-size: 10px;
+            background: #ab47bc;
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-top: 4px;
+        }
+
+        #loading {
+            font-size: 16px;
+            color: #ffca28;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Galeria de Texturas e Flats - E1M1</h1>
+        <div class="stats-bar" id="stats-bar">
+            <span>Carregando WAD e decodificando texturas...</span>
+        </div>
+    </header>
+
+    <div id="loading">Decodificando recursos de imagem...</div>
+
+    <main id="content" style="display:none;">
+        <h2 class="section-title">Texturas de Parede (<span id="wall-count">0</span>)</h2>
+        <div class="texture-grid" id="wall-grid"></div>
+
+        <h2 class="section-title">Flats de Piso e Teto (<span id="flat-count">0</span>)</h2>
+        <div class="texture-grid" id="flat-grid"></div>
+    </main>
+
+    <script type="module" src="./textures.js"></script>
+</body>
+</html>

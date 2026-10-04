@@ -1,0 +1,7 @@
+Fonte: https://github.com/webgpu/webgpu-samples/tree/main/sample/particles
+Projeto: WebGPU Samples (webgpu/webgpu-samples)
+Autores: WebGPU Samples Contributors (conforme o LICENSE do repositório)
+Licença: BSD-3-Clause
+Acessado em: 03/10/2026
+Arquivos: particle.wgsl, probabilityMap.wgsl, main.ts.txt (referência), LICENSE-webgpu-samples.txt
+Os arquivos desta pasta estão sem modificações.

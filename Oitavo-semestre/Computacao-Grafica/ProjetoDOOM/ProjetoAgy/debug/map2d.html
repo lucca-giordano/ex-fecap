@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depuração 2D - Mapa E1M1 (WAD)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0e0;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #info-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(18, 18, 24, 0.85);
+            border: 1px solid #333;
+            border-left: 4px solid #4caf50;
+            border-radius: 4px;
+            padding: 10px 16px;
+            font-size: 13px;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        #info-overlay h1 {
+            font-size: 15px;
+            color: #4caf50;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend {
+            margin-top: 6px;
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 3px;
+            display: inline-block;
+        }
+
+        /* Mensagem de Erro */
+        #error-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 18, 0.95);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #error-box {
+            max-width: 600px;
+            background: #1c1a20;
+            border: 2px solid #e53935;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 0 25px rgba(229, 57, 53, 0.35);
+        }
+
+        #error-box h2 {
+            color: #ef5350;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        #error-box p {
+            line-height: 1.6;
+            color: #d1d5db;
+            font-size: 14px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="map-canvas"></canvas>
+        <div id="info-overlay">
+            <h1>Doom E1M1 - Depuração 2D</h1>
+            <p id="status-text">Carregando freedoom1.wad...</p>
+            <div class="legend">
+                <span class="legend-item"><span class="legend-color" style="background:#ffffff;"></span> 1 Lado (Paredes)</span>
+                <span class="legend-item"><span class="legend-color" style="background:#777777;"></span> 2 Lados (Passagens)</span>
+                <span class="legend-item"><span class="legend-color" style="background:#00ff00; height:8px; width:8px; border-radius:50%;"></span> Início Jogador 1</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-overlay">
+        <div id="error-box">
+            <h2>Falha no Carregamento do Mapa</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
+
+    <script type="module" src="./map2d.js"></script>
+</body>
+</html>

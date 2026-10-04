@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Doom - WebGPU Puro (E1M1 Iluminação, Céu e Efeito CRT)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ececec;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        /* Barra de botões superiores no canto direito */
+        .top-right-bar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .top-bar-btn {
+            background: rgba(20, 20, 26, 0.90);
+            color: #ffca28;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .top-bar-btn:hover {
+            background: #2a2a38;
+            border-color: #ffca28;
+        }
+
+        /* Mira central (Crosshair) */
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        #crosshair::before, #crosshair::after {
+            content: '';
+            position: absolute;
+            background-color: #ffffff;
+            box-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+
+        #crosshair::before {
+            top: 6px;
+            left: 0;
+            width: 14px;
+            height: 2px;
+        }
+
+        #crosshair::after {
+            top: 0;
+            left: 6px;
+            width: 2px;
+            height: 14px;
+        }
+
+        /* Banner de Instruções */
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(18, 18, 24, 0.90);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 12px 24px;
+            text-align: center;
+            font-size: 13px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        #instructions h2 {
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: #e53935;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #instructions kbd {
+            background-color: #2b2b2b;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 2px 5px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #ffca28;
+        }
+
+        .controls-row {
+            margin-top: 4px;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        /* HUD inferior com coordenadas e métricas em tempo real */
+        #hud-info {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(12, 12, 16, 0.86);
+            border-left: 3px solid #e53935;
+            padding: 10px 14px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #cfd8dc;
+            border-radius: 0 4px 4px 0;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* Mensagem de Erro */
+        #error-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 18, 0.96);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #error-box {
+            max-width: 600px;
+            background: #1e1e24;
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.4);
+        }
+
+        #error-box h1 {
+            color: #ef5350;
+            margin-bottom: 16px;
+            font-size: 22px;
+        }
+
+        #error-box p {
+            line-height: 1.6;
+            color: #d1d5db;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="webgpu-canvas"></canvas>
+        <div class="top-right-bar">
+            <button id="btn-crt-toggle" class="top-bar-btn" tabindex="-1">CRT: Ligado</button>
+            <button id="btn-display-mode" class="top-bar-btn" tabindex="-1">Visual: Retro 4:3</button>
+        </div>
+        <div id="crosshair"></div>
+        <div id="hud-info">Carregando mapa E1M1...</div>
+    </div>
+
+    <!-- Mensagem de erro -->
+    <div id="error-overlay">
+        <div id="error-box">
+            <h1>Falha ao Inicializar</h1>
+            <p id="error-message"></p>
+        </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
