@@ -2,6 +2,8 @@
 // Coordenadas de partida do st_stuff.c do Doom. Reaproveita createBuffer/drawPatch do menu.
 
 import { createBuffer, drawPatch, drawText, measureText } from '../menu/MenuRenderer.js';
+import { drawAutomap, automapColors } from '../automap/AutomapRenderer.js';
+import { AM_HEIGHT } from '../automap/AutomapState.js';
 import { weaponTopLeft } from '../game/weapons.js';
 import { PISTOL_SLOT, AMMO_TYPES } from '../game/PlayerStats.js';
 
@@ -121,6 +123,13 @@ function composeIntermission(buffer, info, assets, report) {
   return buffer.data;
 }
 
+// Cores do automapa por paleta (calculadas uma vez).
+const amColorCache = new WeakMap();
+export function automapColorsFor(palette) {
+  if (!amColorCache.has(palette)) amColorCache.set(palette, automapColors(palette));
+  return amColorCache.get(palette);
+}
+
 // Linha da paleta iluminada (256 x RGB) para um nível de luz (litPalette: 256 x 32 RGBA).
 const litRows = new WeakMap();
 function paletteRow(litPalette, level) {
@@ -135,7 +144,8 @@ function paletteRow(litPalette, level) {
 }
 
 // state: { stats, weapon: { prefix, frame, sx, sy, flash: { prefix, letter } | null, ammo } | null, weaponLevel,
-// message?, face? (lump do rosto, etapa 19), restartText? }; tics: relógio de jogo (rosto). weapon.prefix ausente: pistola (PISG); flash true: PISF A.
+// message?, face? (lump do rosto, etapa 19), restartText?, automap? (etapa 22: { state, map, player,
+// things, name }) }; tics: relógio de jogo (rosto). weapon.prefix ausente: pistola (PISG); flash true: PISF A.
 // O campo grande de munição mostra o tipo weapon.ammo (padrão: balas); null (soco) deixa em branco.
 // Devolve Uint8ClampedArray 320x200x4; transparente onde não há desenho. `report` (opcional) recebe
 // { name, x, y, w, h } de cada elemento desenhado, para verificação.
@@ -145,8 +155,8 @@ export function composeHud(state, assets, tics, report) {
   if (state.intermission) return composeIntermission(buffer, state.intermission, assets, report);
   const box = (name, x, y, p) => report?.push({ name, x, y, w: p.width, h: p.height });
 
-  // 1. Arma (iluminada pelo setor) e clarão (brilho máximo), antes da barra.
-  if (state.weapon) {
+  // 1. Arma (iluminada pelo setor) e clarão (brilho máximo), antes da barra; não com o automapa.
+  if (state.weapon && !state.automap) {
     const { frame, sx, sy, flash } = state.weapon;
     const gunName = `${state.weapon.prefix ?? 'PISG'}${frame}0`;
     const gun = sprites[gunName];
@@ -165,6 +175,15 @@ export function composeHud(state, assets, tics, report) {
       box(flashName, x, y, flashPatch);
     }
     buffer.palette = assets.palette; // barra e números sem iluminação
+  }
+
+  // Etapa 22: automapa na região de 320x168, com fundo opaco, antes da barra.
+  if (state.automap) {
+    const am = state.automap;
+    drawAutomap(buffer, am.state, am.map, am.player, am.things, automapColorsFor(assets.palette), () => {
+      if (assets.font?.some(Boolean)) drawText(buffer, assets.font, am.name, 0, AM_HEIGHT - 10); // nome do mapa
+    });
+    report?.push({ name: 'automap', x: 0, y: 0, w: HUD_WIDTH, h: AM_HEIGHT });
   }
 
   // 2. Barra por cima (linhas 168 a 199).

@@ -1,13 +1,14 @@
 // Estado e navegação do menu. Lógica pura: sem DOM e sem WebGPU.
 // As configurações são alteradas só por settings.set / settings.toggle; o menu não guarda cópia.
 
-import { helpPages } from './helpPages.js';
+import { helpPages, creditsPages } from './helpPages.js';
 import { MENU_TEXT, MENU_LANG } from './menuText.js';
 
 // Itens de cada tela (tipo e configuração ligada). O desenho de cada tela fica em composeMenu.
 //   action: executa algo; submenu: abre `target`; toggle: alterna `setting`;
 //   thermo: nível de `setting` entre `min` e `max` (padrão 1..10), com `cells` células (padrão 10);
-//   fullscreen: alterna a tela cheia do documento.
+//   fullscreen: alterna a tela cheia do documento;
+//   episode / skill (etapa 23): escolha do episódio e da dificuldade do NEW GAME.
 export const SCREENS = {
   main: {
     parent: null,
@@ -15,6 +16,7 @@ export const SCREENS = {
       { id: 'newGame', type: 'action' },
       { id: 'options', type: 'submenu', target: 'options' },
       { id: 'readThis', type: 'submenu', target: 'help' },
+      { id: 'credits', type: 'submenu', target: 'credits' }, // etapa 22
     ],
   },
   options: {
@@ -54,6 +56,7 @@ export const SCREENS = {
       { id: 'reset', type: 'action' },
       { id: 'gameDebug', type: 'submenu', target: 'gameDebug' }, // etapa 15
       { id: 'monsterDebug', type: 'submenu', target: 'monsterDebug' }, // etapa 18
+      { id: 'levelDebug', type: 'submenu', target: 'levelDebug' }, // etapa 23
     ],
   },
   // Etapa 15: ações sobre o estado do jogo (antes no DEBUG) e sobre os monstros.
@@ -86,7 +89,27 @@ export const SCREENS = {
       { id: 'killAll', type: 'action', stats: true },
     ],
   },
+  // Etapa 23: troca de nível (o GAME DEBUG não tem mais espaço na tela).
+  levelDebug: {
+    parent: 'debug',
+    items: [
+      { id: 'nextMap', type: 'action', stats: true },
+      { id: 'prevMap', type: 'action', stats: true },
+      { id: 'reloadLevel', type: 'action', stats: true },
+    ],
+  },
+  // Etapa 23: NEW GAME do Doom 1 (EpiDef, NewDef e a confirmação do Nightmare).
+  episode: {
+    parent: 'main',
+    items: [1, 2, 3, 4].map((n) => ({ id: `episode${n}`, type: 'episode', episode: n })),
+  },
+  skill: {
+    parent: 'episode',
+    items: [1, 2, 3, 4, 5].map((n) => ({ id: `skill${n}`, type: 'skill', skill: n })),
+  },
+  nightmare: { parent: 'skill', items: [] },
   help: { parent: 'main', items: [] },
+  credits: { parent: 'main', items: [] }, // etapa 22: páginas como a ajuda
 };
 
 // Teclas do menu (event.code). Nenhuma usa modificadores.
@@ -98,6 +121,10 @@ const MENU_KEYS = {
   Enter: 'enter', NumpadEnter: 'enter',
   Escape: 'back', Backspace: 'back',
 };
+
+// Etapa 23: confirmação do Nightmare (S também confirma no português).
+const CONFIRM_KEYS = { KeyY: true, Enter: true, NumpadEnter: true, KeyN: false, Escape: false, Backspace: false };
+export const DEFAULT_SKILL_INDEX = 2; // cursor no terceiro item (Hurt me plenty), como o NewDef do Doom
 
 // Faixa padrão dos termômetros (sensibilidade e velocidade).
 export const LEVEL_MIN = 1;
@@ -113,14 +140,16 @@ export const MENU_SOUNDS = {
 };
 
 export class Menu {
-  // callbacks: { newGame(), resume(), toggleFullscreen(), isFullscreen(), openTuning(), statsAction(id),
-  //   onSound(nome) (opcional) }
+  // callbacks: { newGame(episódio, dificuldade), resume(), toggleFullscreen(), isFullscreen(), openTuning(),
+  //   statsAction(id), onSound(nome) (opcional), episodes() -> episódios do WAD (etapa 23) }
   constructor(settings, callbacks) {
     this.settings = settings;
     this.cb = callbacks;
     this.sound = callbacks.onSound ?? (() => {});
     this.screen = 'main';
-    this.selected = { main: 0, options: 0, extras: 0, debug: 0, gameDebug: 0, monsterDebug: 0, help: 0 }; // último item de cada tela
+    this.selected = { main: 0, options: 0, extras: 0, debug: 0, gameDebug: 0, monsterDebug: 0, levelDebug: 0, help: 0, credits: 0,
+      episode: 0, skill: DEFAULT_SKILL_INDEX, nightmare: 0 }; // último item de cada tela
+    this.episode = 1; // episódio escolhido no NEW GAME (etapa 23)
     this.started = false;
     this.resumeFailed = false;
     this.helpPage = 0; // página da tela READ THIS! (etapa 17)
@@ -150,6 +179,7 @@ export class Menu {
   // Devolve true se a tecla foi consumida pelo menu.
   handleKey(e) {
     if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return false; // atalhos do navegador
+    if (this.screen === 'nightmare') return this.confirmKey(e); // etapa 23
     const key = MENU_KEYS[e.code];
     if (!key) return false;
     if ((key === 'enter' || key === 'back') && e.repeat) return true; // consome, mas não repete
@@ -169,7 +199,7 @@ export class Menu {
         break;
       case 'left':
       case 'right':
-        if (this.screen === 'help') { this.turnHelpPage(key === 'left' ? -1 : 1); break; }
+        if (this.screen === 'help' || this.screen === 'credits') { this.turnHelpPage(key === 'left' ? -1 : 1); break; }
         if (!item) break;
         if (item.type === 'thermo') {
           // Termômetro: limite nas pontas, sem volta.
@@ -187,7 +217,7 @@ export class Menu {
         break;
       case 'enter':
         // Ajuda: Enter vai para a próxima página; na última, volta.
-        if (this.screen === 'help') {
+        if (this.screen === 'help' || this.screen === 'credits') {
           if (this.helpPage + 1 < this.helpPageCount()) this.turnHelpPage(1);
           else this.back();
           break;
@@ -214,14 +244,27 @@ export class Menu {
         break;
       case 'submenu':
         this.screen = item.target;
-        if (item.target === 'help') this.helpPage = 0;
+        if (item.target === 'help' || item.target === 'credits') this.helpPage = 0;
         this.sound(MENU_SOUNDS.confirm);
+        break;
+      case 'episode': // etapa 23: episódio que não existe no WAD é ignorado
+        if (!this.episodes().includes(item.episode)) break;
+        this.sound(MENU_SOUNDS.confirm);
+        this.episode = item.episode;
+        this.screen = 'skill';
+        break;
+      case 'skill':
+        this.sound(MENU_SOUNDS.confirm);
+        if (item.skill === 5) this.screen = 'nightmare'; // pede confirmação
+        else this.startGame(item.skill);
         break;
       case 'action':
         this.sound(MENU_SOUNDS.confirm);
         if (item.id === 'newGame') {
-          this.started = true;
-          this.cb.newGame(); // pede o pointer lock dentro do handler do teclado (gesto do usuário)
+          // Etapa 23: escolha do episódio (pulada se o WAD tiver um só) e da dificuldade.
+          const eps = this.episodes();
+          if (eps.length > 1) this.screen = 'episode';
+          else { this.episode = eps[0] ?? 1; this.screen = 'skill'; }
         } else if (item.id === 'reset') {
           this.settings.reset();
         } else if (item.stats) {
@@ -233,8 +276,32 @@ export class Menu {
     }
   }
 
+  episodes() {
+    return this.cb.episodes?.() ?? [1];
+  }
+
+  // Começa o jogo: chamado dentro do handler do teclado ou do clique (o pedido de pointer lock é um gesto).
+  startGame(skill) {
+    this.started = true;
+    this.screen = 'main';
+    this.dirty = true;
+    this.cb.newGame(this.episode, skill);
+  }
+
+  // Confirmação do Nightmare: Y ou Enter (no português também S) confirma; N, Esc ou Backspace volta.
+  confirmKey(e) {
+    const yes = e.code === 'KeyS' && MENU_LANG === 'pt' ? true : CONFIRM_KEYS[e.code];
+    if (yes === undefined || e.repeat) return true; // outras teclas: consumidas, sem efeito
+    if (yes) this.startGame(5);
+    else { this.screen = 'skill'; this.sound(MENU_SOUNDS.back); }
+    this.dirty = true;
+    return true;
+  }
+
+  // Páginas da tela atual (ajuda ou créditos).
   helpPageCount() {
-    return helpPages(MENU_TEXT[MENU_LANG]).length;
+    const T = MENU_TEXT[MENU_LANG];
+    return (this.screen === 'credits' ? creditsPages(T) : helpPages(T)).length;
   }
 
   // Muda de página da ajuda, parando nas pontas.
@@ -247,7 +314,8 @@ export class Menu {
   }
 
   back() {
-    const parent = SCREENS[this.screen].parent;
+    let parent = SCREENS[this.screen].parent;
+    if (this.screen === 'skill' && this.episodes().length <= 1) parent = 'main'; // etapa 23: sem a tela de episódio
     if (parent) {
       this.screen = parent;
       this.sound(MENU_SOUNDS.back);

@@ -8,6 +8,8 @@ export const EFFECT_RISE = 35;        // u/s para cima, sem gravidade
 export const PUFF_BACKOFF = 4;        // a fumaça fica 4 unidades antes do ponto de batida, ao longo do raio
 export const EFFECT_Z_JITTER = 4;     // deslocamento vertical aleatório de até ±4
 const TICS_PER_SECOND = 35;
+// Etapa 23: névoa de teletransporte (S_TFOG do Doom), 6 tics por quadro, sempre com brilho máximo.
+export const TFOG_FRAMES = [['A', 6], ['B', 6], ['A', 6], ['B', 6], ['C', 6], ['D', 6], ['E', 6], ['F', 6], ['G', 6], ['H', 6], ['I', 6], ['J', 6]];
 
 const jitter = (rng) => rng.nextRange(-EFFECT_Z_JITTER, EFFECT_Z_JITTER);
 
@@ -47,6 +49,13 @@ export class EffectList {
       frames, frameIndex: 0, ticsLeft: frames[0][1], fullbrightFirst: false });
   }
 
+  // Etapa 23: névoa no ponto (x, y) com base no chão z (respawn do Nightmare); parada, brilho máximo.
+  spawnFog(x, y, z) {
+    const frames = TFOG_FRAMES.map(([l, t]) => [l, t]);
+    return this.add({ type: 'fog', prefix: 'TFOG', x, y, z, vz: 0, frames, frameIndex: 0, ticsLeft: frames[0][1],
+      fullbrightFirst: true, fullbrightAll: true, lightnum: 15 });
+  }
+
   // Um tic: sobe e avança os quadros; remove os que terminaram.
   tick() {
     for (const e of this.items) {
@@ -62,5 +71,5 @@ export class EffectList {
 
 // Letra e brilho do quadro atual de um efeito.
 export function effectFrame(e) {
-  return { letter: e.frames[e.frameIndex][0], fullbright: e.fullbrightFirst && e.frameIndex === 0 };
+  return { letter: e.frames[e.frameIndex][0], fullbright: Boolean(e.fullbrightAll) || (e.fullbrightFirst && e.frameIndex === 0) };
 }

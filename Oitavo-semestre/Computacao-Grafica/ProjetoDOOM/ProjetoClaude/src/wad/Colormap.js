@@ -36,9 +36,15 @@ export function buildLitPalette(palette, colormap) {
 }
 
 // ExMy -> SKYx (episódio limitado a 1..3). MAPxx -> SKY1 (01-11), SKY2 (12-20), SKY3 (21-32).
-export function skyNameForMap(mapName) {
+// exists(nome) (etapa 23, opcional): confere se a textura existe; ExMy usa SKY1 a SKY4 conforme o
+// episódio e recua para o maior céu existente (sem exists, o comportamento antigo: até SKY3).
+export function skyNameForMap(mapName, exists = null) {
   const name = mapName.toUpperCase();
   let m = /^E(\d)M\d+$/.exec(name);
+  if (m && exists) {
+    for (let n = Math.min(4, Math.max(1, Number(m[1]))); n > 1; n--) if (exists(`SKY${n}`)) return `SKY${n}`;
+    return 'SKY1';
+  }
   if (m) return `SKY${Math.min(3, Math.max(1, Number(m[1])))}`;
   m = /^MAP(\d+)$/.exec(name);
   if (m) {

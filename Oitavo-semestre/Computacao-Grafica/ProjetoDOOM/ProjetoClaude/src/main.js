@@ -4,10 +4,19 @@ import { Camera, VIEW_HEIGHT, FOVY, BASE_MOUSE_SENS, BASE_FLY_SPEED, RUN_MULT, l
 import { settings } from './core/Settings.js';
 import { Controls, ACTION_KEYS } from './input/Controls.js';
 import { WadFile } from './wad/WadFile.js';
-import { loadMap } from './wad/MapData.js';
-import { loadTextures, usedTextureNames } from './wad/Textures.js';
-import { loadColormap, buildLitPalette, skyNameForMap } from './wad/Colormap.js';
-import { createTextureBindGroupLayout, createTextureSet } from './gpu/TextureSet.js';
+import { readPalette } from './wad/Textures.js';
+import { TextureCache } from './wad/TextureCache.js';
+import { loadColormap, buildLitPalette } from './wad/Colormap.js';
+import { createTextureBindGroupLayout, createLitPaletteTexture } from './gpu/TextureSet.js';
+import { buildLevelData } from './game/LevelData.js';
+import { uploadLevel, liveCounts } from './gpu/LevelGpu.js';
+import { createLevelRuntime } from './game/LevelRuntime.js';
+import { GameSession, listMaps } from './game/GameSession.js';
+import { nextMap, secretReturnFrom, applyPlayerEntry, LEVEL_ENTRY } from './game/GameFlow.js';
+import { skillParams, clampSkill, scaleDamage } from './game/skill.js';
+import { Intermission } from './game/Intermission.js';
+import { loadIntermissionAssets, composeIntermission } from './hud/IntermissionRenderer.js';
+import { Finale, composeFinale, loadFinaleFlat } from './game/Finale.js';
 import { Display, SCENE_FORMAT, DEPTH_FORMAT } from './gpu/Display.js';
 import { createCheckedShaderModule, fetchText } from './gpu/shaderModule.js';
 import { MenuPass } from './gpu/MenuPass.js';
@@ -15,10 +24,9 @@ import { ParticlePass } from './gpu/ParticlePass.js';
 import { SpriteSet } from './gpu/SpriteSet.js';
 import { HudPass } from './gpu/HudPass.js';
 import { PlayerStats, AMMO_TYPES, KEY_NAMES } from './game/PlayerStats.js';
-import { ItemSystem, MAX_DROPS } from './game/ItemSystem.js';
-import { ITEM_TABLE, DROP_SPRITES } from './game/itemTable.js';
+import { ITEM_TABLE } from './game/itemTable.js';
 import { ITEM_TEXT } from './game/itemText.js';
-import { staticSolids, getSolids } from './physics/solids.js';
+import { getSolids } from './physics/solids.js';
 import {
   WEAPONS, PISTOL, USABLE_SLOTS, createWeapons, startRaise, updateWeapons, updateSwayAmplitude, weaponLightLevel,
   requestWeapon, cycleWeapon, autoSwitchOnPickup, weaponView, killWeapons,
@@ -30,12 +38,8 @@ import { loadSounds } from './audio/dmx.js';
 import { AudioEngine } from './audio/AudioEngine.js';
 import { MAX_CHANNELS } from './audio/channels.js';
 import { MAX_VOLUME_LEVEL } from './audio/soundMath.js';
-import { buildSpriteScene, writeSpriteInstances, frameAt, gameTics, INSTANCE_STRIDE } from './sprites/spriteLogic.js';
-import { findSpriteLumps } from './wad/Sprites.js';
+import { writeSpriteInstances, frameAt, gameTics, INSTANCE_STRIDE } from './sprites/spriteLogic.js';
 import { Rng } from './game/Rng.js';
-import { resolveMonsterTable, extraSpriteFrames } from './game/monsterTable.js';
-import { MonsterSystem } from './game/MonsterSystem.js';
-import { MonsterAI } from './game/MonsterAI.js';
 import { aproxDist } from './game/aiTable.js';
 import { PlayerDamageSink } from './game/PlayerDamageSink.js';
 import { applyDamage, deathSound } from './game/PlayerDamage.js';
@@ -43,10 +47,7 @@ import { deathEyeHeight, turnTowards, canRestart } from './game/PlayerDeath.js';
 import { FaceState } from './hud/face.js';
 import { computeTintTable, flashPalette, tintFor } from './gpu/palettesTint.js';
 import { angleTo } from './game/MonsterAI.js';
-import { radiusAttack, BARREL_DAMAGE } from './game/radiusAttack.js';
-import { EffectList, effectFrame, MAX_EFFECTS } from './game/effects.js';
-import { MissileSystem, MAX_MISSILES, ROCKET_BLAST, missileSpriteFrames, missileTargets } from './game/Missiles.js';
-import { CombatStats } from './game/stats.js';
+import { effectFrame } from './game/effects.js';
 import { MAX_PARTICLES, paletteIndices, packSimUniforms, packRenderUniforms } from './particles/particleConfig.js';
 import { ParticleParams } from './particles/ParticleParams.js';
 import { TuningPanel } from './ui/TuningPanel.js';
@@ -55,20 +56,18 @@ import { loadMenuAssets } from './menu/MenuAssets.js';
 import { Menu } from './menu/Menu.js';
 import { composeMenu, skullFrame } from './menu/MenuRenderer.js';
 import { MENU_LANG, MENU_TEXT } from './menu/menuText.js';
-import { buildWalls } from './map/buildWalls.js';
-import { DynamicGeometry, dynamicSets } from './map/dynamicGeometry.js';
-import { LevelState, targetsFit, INTERMISSION_DELAY } from './game/LevelState.js';
-import { analyzeSpecials, switchCounterpartNames } from './game/specials.js';
+import { targetsFit } from './game/LevelState.js';
+import { markSeen, hfovDeg } from './automap/seen.js';
+import { automapColorsFor } from './hud/HudRenderer.js';
+import { CheatReader, giveAll, toggleGod, myPosText } from './game/Cheats.js';
 import { useLines, crossLines, monsterUseDoor, tickLevel, openAllDoors, CrossTracker } from './game/UseLines.js';
 import { VERTEX_STRIDE, VERTEX_ATTRIBUTES } from './map/vertexLayout.js';
-import { buildFlats, distanceInside } from './map/buildFlats.js';
+import { distanceInside } from './map/buildFlats.js';
 import { findSector, findSubsector } from './map/bsp.js';
-import { buildCollisionLines } from './physics/collisionData.js';
 import { EYE_HEIGHT, PLAYER_RADIUS, createPlayerState, stepPlayer, enterWalk } from './physics/collision.js';
 import { doomToWorld, worldToDoom, doomAngleToYaw, yawToDoomAngle } from './map/coords.js';
 
 const WAD_URL = new URL('../assets/freedoom1.wad', import.meta.url);
-const MAP_NAME = 'E1M1';
 
 const NEAR = 1;
 const CLEAR_COLOR = { r: 0.15, g: 0.15, b: 0.15, a: 1 };
@@ -80,15 +79,8 @@ function showError(text) {
   console.error(text);
 }
 
-// Plano far a partir do tamanho do mapa: diagonal dos limites * 1.5.
-function farFromMap(map) {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const v of map.vertexes) {
-    minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x);
-    minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
-  }
-  return Math.hypot(maxX - minX, maxY - minY) * 1.5;
-}
+// Etapa 23: espera o navegador pintar um quadro (o texto de carregamento aparece antes do trabalho pesado).
+const nextPaint = () => new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
 
 function printStats(walls, spawn, spawnSector, sector) {
   const s = walls.stats;
@@ -194,9 +186,10 @@ async function main() {
     reportError(new Error(`WebGPU: ${e.error.message}`), 'erro de validação do WebGPU (uncapturederror)');
   });
 
-  // --- Mapa ---
+  // --- WAD e sessão (etapa 23): lista de mapas do WAD, fase, dificuldade e mapa atual ---
   const wad = await WadFile.fromUrl(WAD_URL);
-  const map = loadMap(wad, MAP_NAME);
+  const session = new GameSession(listMaps(wad));
+  console.log(`Mapas: ${session.maps.length} (${session.maps.map((m) => m.name).join(' ')})`);
 
   // --- Som (etapa 14): sons DMX do WAD; o AudioContext só é criado no primeiro gesto do usuário ---
   const soundData = loadSounds(wad);
@@ -212,101 +205,39 @@ async function main() {
   // Por que o mouse vai ser recuperado: 'resume' toca "swtchx" (fechar o menu para retomar o jogo).
   let lockReason = 'resume';
 
-  // --- Texturas, colormap e céu ---
-  const skyName = skyNameForMap(MAP_NAME);
-  const used = usedTextureNames(map);
-  used.walls.add(skyName); // o céu é carregado mesmo que nenhuma sidedef o use
-  // Etapa 20: contrapartes dos interruptores (SW1 <-> SW2), acrescentadas no fim (camadas existentes iguais).
-  for (const name of switchCounterpartNames(map)) used.walls.add(name);
-  const textures = loadTextures(wad, used.walls, used.flats);
+  // --- Paleta, colormap e cache de texturas (globais, etapa 23: criados uma vez para todos os níveis) ---
+  // PLAYPAL (paleta 0: 256 cores RGB) e COLORMAP (34 tabelas de 256 índices, uma por nível de luz) viram a
+  // paleta iluminada 256x32 da GPU. TEXTURE1/PNAMES, patches e flats decodificados ficam no TextureCache.
+  const palette = readPalette(wad);
   const colormap = loadColormap(wad);
-  const litPalette = buildLitPalette(textures.palette, colormap);
+  const litPalette = buildLitPalette(palette, colormap);
+  const levelCache = { textures: new TextureCache(), spriteLumps: null };
   const textureLayout = createTextureBindGroupLayout(device);
-  const textureSet = createTextureSet(device, textureLayout, textures, litPalette, skyName);
-  printTextureStats(textures, used, textureSet.info);
+  device.pushErrorScope('validation');
+  const paletteTex = createLitPaletteTexture(device, litPalette);
+  const paletteError = await device.popErrorScope();
+  if (paletteError) throw new Error(`paleta iluminada: ${paletteError.message}`);
 
-  // --- Setores móveis (etapa 20): estado da fase, especiais e conjuntos dinâmicos ---
-  const level = new LevelState(map);
-  const specialsInfo = analyzeSpecials(map, level.tagMap);
-  const dynSets = dynamicSets(level, specialsInfo.movableSectors, specialsInfo.switchLines);
-  let movingEnabled = true; // desligado só nesta sessão se os buffers dinâmicos falharem
-  console.log(`Especiais: ${specialsInfo.movableSectors.size} setores móveis, ${dynSets.lines.size} linhas dinâmicas; ` +
-    `não suportados [${[...specialsInfo.unsupported.keys()].join(', ')}]` +
-    (specialsInfo.warnings.length ? `; avisos: ${specialsInfo.warnings.join('; ')}` : ''));
-  // As linhas e os setores dinâmicos saem da geometria estática (desenhados pelos buffers dinâmicos).
-  let walls = buildWalls(map, textureSet.wallLayers, { linedefs: dynSets.lines });
-
-  const spawn = map.things.find((t) => t.type === 1); // type 1 = início do jogador 1
-  if (!spawn) throw new Error(`${MAP_NAME}: início do jogador 1 não encontrado`);
-  const spawnSector = findSector(map, spawn.x, spawn.y);
-  const sector = map.sectors[spawnSector];
-  printStats(walls, spawn, spawnSector, sector);
-
-  let flats = buildFlats(map, textureSet.flatLayers, { sectors: dynSets.sectors });
-  validateFlats(map, flats, spawn);
-  printLightingStats(colormap, litPalette, textures.palette, textureSet, flats, map);
-
-  const far = farFromMap(map);
-
-  // --- Buffers de geometria ---
-  const makeBuffer = (data, usage, label) => {
-    const buffer = device.createBuffer({ label, size: data.byteLength, usage: usage | GPUBufferUsage.COPY_DST });
-    device.queue.writeBuffer(buffer, 0, data);
-    return buffer;
-  };
-  let vertexBuffer, indexBuffer, flatVertexBuffers, flatIndexBuffer;
-  // Envia (ou reenvia, etapa 20) a geometria estática.
-  function uploadStaticGeometry() {
-    for (const b of [vertexBuffer, indexBuffer, flatVertexBuffers?.flat, flatVertexBuffers?.sector, flatIndexBuffer]) b?.destroy();
-    vertexBuffer = makeBuffer(walls.vertices, GPUBufferUsage.VERTEX, 'paredes (vértices)');
-    indexBuffer = makeBuffer(walls.indices, GPUBufferUsage.INDEX, 'paredes (índices)');
-    // Flats: dois vertex buffers com as mesmas posições, cor por flat ou por setor (tecla V).
-    flatVertexBuffers = {
-      flat: makeBuffer(flats.vertices, GPUBufferUsage.VERTEX, 'planos (vértices, cor por flat)'),
-      sector: makeBuffer(flats.sectorColorVertices, GPUBufferUsage.VERTEX, 'planos (vértices, cor por setor)'),
-    };
-    flatIndexBuffer = makeBuffer(flats.indices, GPUBufferUsage.INDEX, 'planos (índices)');
+  // Etapa 22: automapa e noclip (só da sessão).
+  let noClip = false;
+  const AUTOMAP_CODES = new Set(['KeyF', 'KeyG', 'Equal', 'Minus', 'Digit0']); // com função própria no automapa
+  const automapHeld = new Set(); // + e - pressionados (zoom contínuo)
+  {
+    const colors = automapColorsFor(palette);
+    console.log('Automapa: cores (índice da paleta 0 e RGB real)');
+    console.table(Object.fromEntries(Object.entries(colors).map(([k, c]) => [k, { indice: c.index, rgb: c.rgb.join(', ') }])));
   }
-  uploadStaticGeometry();
 
-  // Etapa 20: geometria dos setores móveis em buffers próprios, desenhados com a mesma pipeline. Se a
-  // criação ou a validação falhar, a geometria estática volta a ser montada SEM exclusões e os setores
-  // móveis ficam desligados nesta sessão (portas fechadas e sem função, como na etapa 19).
-  let dynamic = null; // { geo, vb: { flat, sector }, ib }
-  try {
-    const geo = new DynamicGeometry(map, dynSets, flats.subsectorInfo, textureSet.wallLayers, textureSet.flatLayers);
-    if (geo.vertexCount > 0) {
-      const max = device.limits.maxBufferSize;
-      if (geo.byteLength > max || geo.indices.byteLength > max) throw new Error(`buffers dinâmicos maiores que maxBufferSize (${max})`);
-      device.pushErrorScope('validation');
-      const usage = GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST;
-      const vb = {
-        flat: device.createBuffer({ label: 'setores móveis (vértices, cor por flat)', size: geo.byteLength, usage }),
-        sector: device.createBuffer({ label: 'setores móveis (vértices, cor por setor)', size: geo.byteLength, usage }),
-      };
-      const ib = device.createBuffer({ label: 'setores móveis (índices)', size: geo.indices.byteLength, usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST });
-      device.queue.writeBuffer(vb.flat, 0, geo.vertices);
-      device.queue.writeBuffer(vb.sector, 0, geo.sectorVertices);
-      device.queue.writeBuffer(ib, 0, geo.indices);
-      const error = await device.popErrorScope();
-      if (error) throw new Error(`validação dos buffers dinâmicos: ${error.message}`);
-      geo.dirty = false;
-      dynamic = { geo, vb, ib };
-      console.log(`Setores móveis: ${geo.vertexCount} vértices (${geo.byteLength} bytes por buffer, x2), ` +
-        `${geo.indices.length} índices; limite maxBufferSize ${max}`);
-    }
-  } catch (err) {
-    console.error(`Setores móveis desligados nesta sessão: ${err.message}`);
-    reportError(err);
-    movingEnabled = false;
-    dynamic = null;
-    walls = buildWalls(map, textureSet.wallLayers);
-    flats = buildFlats(map, textureSet.flatLayers);
-    uploadStaticGeometry();
-  }
-  // Mudanças de altura e de textura marcam só o que foi afetado.
-  level.onSectorChanged = (s) => dynamic?.geo.updateSector(s, level.sectorLines[s]);
-  level.onLineChanged = (li) => dynamic?.geo.updateLinedef(li);
+  // --- Nível atual (etapa 23): tudo que depende do mapa. Preenchido por installLevel e trocado inteiro
+  // por startLevel (o próximo nível é montado antes; o atual só é descartado depois da troca). ---
+  let current = null; // { data, gpu, rt }
+  let loadingLevel = false; // startLevel em andamento (uma troca por vez)
+  let map, spawn, sector, far;
+  let textureSet, walls, flats, staticBuffers, dynamic;
+  let movingEnabled = true; // falso no nível cujos buffers dinâmicos falharam
+  let level, specialsInfo, automap, physicsWorld;
+  let spriteScene, sprites;
+  let effects, combat, monsters, itemSystem, liftSectorOf, fixedSolids, missiles, monsterAI, amSolids;
 
   // Uniforms da cena (96 bytes): viewProj (16 f32), camPos (4 f32), mode, lighting, skyTest, skyLayer (u32).
   const uniformData = new ArrayBuffer(96);
@@ -406,7 +337,11 @@ async function main() {
   let controls = null;
   let tuningPanel = null;
   // O menu está aberto sempre que o pointer lock NÃO está ativo, exceto com o painel de calibragem.
-  const menuVisible = () => !controls.locked && !tuningPanel.isOpen;
+  // Etapa 23: na intermissão e no fim de episódio o mouse fica solto sem abrir o menu; ele só aparece
+  // por cima quando o jogador aperta Esc (menuOverlay).
+  const screenPhase = () => session.phase === 'intermission' || session.phase === 'finale';
+  let menuOverlay = false;
+  const menuVisible = () => (screenPhase() ? menuOverlay : !controls.locked && !tuningPanel.isOpen);
 
   // O HUD aparece conforme a configuração, e nunca com o menu aberto.
   const applyHud = () => { hud.style.display = settings.get('hud') && !menuVisible() ? '' : 'none'; };
@@ -429,7 +364,8 @@ async function main() {
     tuning: 'Setas  girar a câmera (calibragem)' };
   helpPanel.textContent =
     [...new Set(Object.values(ACTION_KEYS).map((k) => (k.group ? GROUP_LINES[k.group] : `${k.label.padEnd(7)}${k.desc}`)))].join('\n') +
-    '\nEsc    abrir o menu';
+    '\nEsc    abrir o menu' +
+    '\nNo automapa: F seguir, G grade, + e - zoom, 0 mapa inteiro, setas mover (sem seguir)';
   const setHelp = (visible) => { helpPanel.style.display = visible ? '' : 'none'; };
   setHelp(false);
 
@@ -442,13 +378,11 @@ async function main() {
   const camera = new Camera([0, 0, 0]);
   // Posição e ângulo do THING 1 (etapa 3); também usado pelo NEW GAME.
   // Física do modo andar (etapa 12), em coordenadas do Doom; a câmera fica no olho (pés + EYE_HEIGHT).
-  const physicsWorld = { map, lines: buildCollisionLines(map), sectors: map.sectors, spawn: { x: spawn.x, y: spawn.y } };
-  physicsWorld.lineSpecial = level.lineSpecial; // etapa 20: spechit dos monstros
+  // O mundo da física (physicsWorld) é do nível (LevelRuntime); o jogador (walker) é recriado em cada um.
   const crossTracker = new CrossTracker();       // etapa 20: cruzamento só entre estados contínuos
-  let walker = createPlayerState(physicsWorld, spawn.x, spawn.y);
+  let walker = null;
   let eyeOffset = EYE_HEIGHT; // etapa 19: desce até 6 na morte
   const syncCameraToWalker = () => { camera.pos = doomToWorld(walker.x, walker.y, walker.z + eyeOffset); };
-  console.log(`Física: ${physicsWorld.lines.length} linhas de colisão; modo inicial ${settings.get('moveMode')}`);
 
   function resetToSpawn() {
     camera.pos = doomToWorld(spawn.x, spawn.y, sector.floorHeight + VIEW_HEIGHT);
@@ -458,7 +392,6 @@ async function main() {
     eyeOffset = EYE_HEIGHT;
     crossTracker.invalidate();
   }
-  resetToSpawn();
 
   // Troca de modo (tecla G ou menu): voar -> andar parte do olho atual; andar -> voar mantém o olho.
   settings.subscribe('moveMode', (mode) => {
@@ -490,7 +423,7 @@ async function main() {
   // --- Partículas (etapa 10): compute + desenho; se falharem, ficam desligadas só nesta sessão ---
   const particleCode = await fetchText(new URL('./shaders/particles.wgsl', import.meta.url));
   const particleModule = await createCheckedShaderModule(device, 'partículas', [{ name: 'particles.wgsl', code: particleCode }]);
-  const particles = await ParticlePass.create(device, particleModule, textureSet.litPaletteView);
+  const particles = await ParticlePass.create(device, particleModule, paletteTex.view); // etapa 23: paleta global
   console.log(`Partículas: ${particles ? 'disponíveis' : 'INDISPONÍVEIS nesta sessão'}; máximo ${MAX_PARTICLES}`);
 
   // Parâmetros ajustáveis (padrões < config/particles.json < localStorage), lidos a cada frame.
@@ -503,8 +436,8 @@ async function main() {
     const colors = `${p.dust.color} ${p.ember.colorHot} ${p.ember.colorCool}`;
     if (colors === lastColors) return;
     lastColors = colors;
-    particlePalette = paletteIndices(textures.palette, p);
-    const rgb = (i) => Array.from(textures.palette.subarray(i * 3, i * 3 + 3)).join(', ');
+    particlePalette = paletteIndices(palette, p);
+    const rgb = (i) => Array.from(palette.subarray(i * 3, i * 3 + 3)).join(', ');
     console.log(`Partículas: cores ${colors} -> índices poeira ${particlePalette.dust} (${rgb(particlePalette.dust)}), ` +
       `brasa quente ${particlePalette.emberHot} (${rgb(particlePalette.emberHot)}), ` +
       `brasa fria ${particlePalette.emberCold} (${rgb(particlePalette.emberCold)})`);
@@ -513,73 +446,50 @@ async function main() {
   let particleGeneration = 1; // "Reiniciar partículas" incrementa; o shader faz renascer as de outra geração
   const startTime = performance.now();
 
-  // --- Combate (etapa 15): tabela de monstros conferida contra os lumps do WAD ---
   const rng = new Rng(Date.now()); // gerador próprio (não é a tabela de 256 números do Doom)
-  const monsterTable = resolveMonsterTable(findSpriteLumps(wad).lumps, new Set(map.things.map((t) => t.type)));
-  if (monsterTable.removed.length) console.warn(`Combate: quadros ausentes removidos: ${monsterTable.removed.join(', ')}`);
-  if (monsterTable.unresolved.length) console.warn(`Combate: tipos sem quadros de morte: ${monsterTable.unresolved.join(', ')}`);
-  if (monsterTable.noAI.length) console.warn(`IA: tipos que ficam passivos: ${monsterTable.noAI.join('; ')}`);
 
-  // --- Sprites dos objetos (etapa 11); se falharem, ficam desligados só nesta sessão ---
-  let spriteScene = null;
-  let sprites = null;
+  // --- Pipeline dos sprites (etapa 11; etapa 23: global, criada uma vez). Cada nível cria só os recursos. ---
+  let spritePipeline = null;
   try {
-    // Etapa 15: quadros de dor, morte, morte esfacelada e efeitos também vão para a textura.
-    spriteScene = buildSpriteScene(wad, map, {
-      maxLayers: device.limits.maxTextureArrayLayers,
-      // Etapa 16: CLIP, SHOT e MGUN (itens largados) na categoria 'drop', que nunca é descartada.
-      extraFrames: [...extraSpriteFrames(monsterTable.entries), ...DROP_SPRITES.map((f) => ({ ...f, category: 'drop' })),
-        ...missileSpriteFrames().map((f) => ({ ...f, category: 'effect' }))], // etapa 21: projéteis
-    });
-    console.log(`Sprites: ${spriteScene.layers.length} camadas no total (limite ${device.limits.maxTextureArrayLayers})` +
-      (spriteScene.stats.droppedCategories.length ? `; quadros descartados: ${spriteScene.stats.droppedCategories.join(', ')}` : '') +
-      (spriteScene.stats.missingExtra.length ? `; ausentes: ${spriteScene.stats.missingExtra.join(', ')}` : ''));
-    if (spriteScene.stats.droppedCategories.length) console.warn('Sprites: camadas insuficientes; parte dos quadros de combate foi descartada');
-    const st = spriteScene.stats;
-    console.log(`Sprites: lumps ${st.spriteLumps} (${st.source}); histograma dos tipos do ${MAP_NAME}:`);
-    console.table([...st.histogram.values()].sort((a, b) => a.type - b.type)
-      .map((h) => ({ tipo: h.type, quantidade: h.count, prefixo: h.prefix, resolvido: h.resolved ? 'sim' : 'não' })));
-    console.log(`Sprites: descartados por dificuldade ${st.discarded.skill}, só multiplayer ${st.discarded.multiplayer}, ` +
-      `setor inválido ${st.discarded.sector}; ignorados (sem sprite) ${st.ignored}; ` +
-      `desconhecidos [${st.unknown.join(', ')}]; não resolvidos [${st.unresolved.join(', ')}]`);
-    if (st.truncated) console.warn('Sprites: camadas demais; só o primeiro quadro de cada animação foi mantido');
-    // Etapa 18: estimativa da textura (camadas x largura x altura x 2 bytes, formato rg8uint).
-    console.log(`Sprites: textura de ${st.texture.layers} camadas de ${st.texture.layerW}x${st.texture.layerH}, ` +
-      `cerca de ${(st.texture.bytes / 1048576).toFixed(1)} MiB`);
     const spriteCode = await fetchText(new URL('./shaders/sprites.wgsl', import.meta.url));
     // walls.wgsl vem antes para reaproveitar lightLevel() (mesma regra de luz das paredes).
     const spriteModule = await createCheckedShaderModule(device, 'sprites', [
       { name: 'walls.wgsl', code: sceneCode },
       { name: 'sprites.wgsl', code: spriteCode },
     ]);
-    // Capacidade: objetos do mapa + efeitos + itens largados (etapa 16).
-    const capacity = spriteScene.objects.length + MAX_EFFECTS + MAX_DROPS + MAX_MISSILES; // etapa 21: projéteis
-    sprites = await SpriteSet.create(device, spriteModule, spriteScene, textureSet.litPaletteView, {
-      capacity, report: reportError,
-    });
-    console.log(`Sprites: ${spriteScene.layers.length} camadas, capacidade de ${capacity} instâncias`);
-    if (sprites) {
-      const i = sprites.info;
-      console.log(`Sprites: ${spriteScene.objects.length} objetos, ${spriteScene.types.size} tipos, ` +
-        `${i.layers} camadas de ${i.layerW}x${i.layerH}, instância de ${INSTANCE_STRIDE} bytes`);
+    device.pushErrorScope('validation');
+    let pipeError = null;
+    try {
+      spritePipeline = await SpriteSet.createPipeline(device, spriteModule);
+    } catch (err) {
+      pipeError = err;
     }
+    pipeError = pipeError ?? await device.popErrorScope();
+    if (pipeError) throw pipeError;
   } catch (err) {
-    console.error('Sprites: falha ao preparar; sprites desligados nesta sessão.', err);
+    console.error('Sprites desligados nesta sessão: falha na pipeline.', err);
     reportError(err);
-    sprites = null;
+    spritePipeline = null;
   }
   let gameTime = 0; // relógio de jogo (s): não avança com o menu aberto
 
-  // --- Monstros, efeitos e contadores (etapa 15) ---
-  const effects = new EffectList();
   // --- Jogador: estado, dano, morte e rosto (etapa 19) ---
   const stats = new PlayerStats();
+  // Etapa 23: parâmetros da dificuldade da sessão (skill.js); a munição dobrada vale para giveAmmo.
+  let skill = skillParams(session.skill);
+  function setSkill(n) {
+    session.skill = clampSkill(n);
+    skill = skillParams(session.skill);
+    stats.ammoScale = skill.ammoScale;
+  }
+  setSkill(session.skill);
   const playerDamage = new PlayerDamageSink(); // contadores por origem para o HUD de texto
   const face = new FaceState();
   let deathFeet = 0;             // altura dos pés na morte (modo voar)
   let fireReleasedSinceDeath = false;
   // Todo dano ao jogador passa por aqui (monstros, barris e depuração). attacker: { x, y } ou null.
   function damagePlayer(amount, source, kind, attacker) {
+    amount = scaleDamage(amount, skill); // etapa 23: metade do dano na dificuldade 1, antes da armadura
     const r = applyDamage(stats, amount, attacker, source, rng, settings.get('godMode'));
     if (r.applied <= 0 && r.savedByArmor <= 0) return r;
     playerDamage.onPlayerDamaged(r.applied, source, kind, r.savedByArmor);
@@ -601,89 +511,26 @@ async function main() {
     const [px, py] = worldToDoom(...camera.pos);
     return { x: px, y: py, radius: PLAYER_RADIUS };
   };
-  const combat = new CombatStats(); // total de monstros preenchido logo abaixo
-  const monsters = new MonsterSystem(spriteScene?.objects ?? [], monsterTable.entries,
-    (obj) => map.things[obj.index].type, rng, {
-      onSound: (name, m) => audio.play(name, { origin: `thing:${m.thingIndex}`, x: m.x, y: m.y }),
-      onKill: () => { combat.kills++; },
-      // Barril no quadro C: dano em raio a partir do centro dele (reação em cadeia acontece sozinha).
-      onExplode: (m) => radiusAttack(physicsWorld, m, BARREL_DAMAGE, m, monsters.monsters, rng, {
-        damage: (target, amount) => monsters.damage(target, amount),
-        onPlayerDamaged: (amount) => damagePlayer(amount, 'BAR1', 'explosion', null),
-        player: playerTarget(),
-      }),
-    });
-  combat.totalMonsters = monsters.totalMonsters;
-  console.log(`Combate: ${monsters.monsters.length} objetos atiráveis, ${combat.totalMonsters} monstros`);
-
-  // --- Itens e sólidos (etapa 16) ---
-  const thingType = (obj) => map.things[obj.index].type;
-  const floorAt = (x, y) => map.sectors[findSector(map, x, y)]?.floorHeight ?? 0;
-  const itemSystem = new ItemSystem(spriteScene?.objects ?? [], thingType, floorAt, PLAYER_RADIUS);
-  // Etapa 20: setor de cada item (elevadores mudam o floorZ) e objetos em setores móveis (sprites).
-  for (const it of itemSystem.items) { it.sector = findSector(map, it.x, it.y); it.origFloorZ = it.floorZ; }
-  const liftSectorOf = new Map();
-  for (const obj of spriteScene?.objects ?? []) {
-    const s = findSector(map, obj.x, obj.y);
-    if (dynSets.sectors.has(s)) liftSectorOf.set(obj.index, s);
-  }
-  const fixedSolids = staticSolids(spriteScene?.objects ?? [], thingType);
   const frameSolids = []; // reaproveitado a cada frame
-  const missingItemTypes = [...new Set(map.things.map((t) => t.type))]
-    .filter((type) => ITEM_TABLE[type] && !spriteScene?.types.has(type));
-  console.log(`Itens: ${itemSystem.items.length} no mapa, ${itemSystem.totalCountable} contáveis; ` +
-    `${fixedSolids.length} sólidos fixos` + (missingItemTypes.length ? `; sem sprite: ${missingItemTypes.join(', ')}` : ''));
-  // --- IA dos monstros (etapa 18) ---
-  // Pés do jogador: no modo andar, a física; voando, olho - 41.
+  // Pés do jogador (IA, projéteis e coleta): no modo andar, a física; voando, olho - 41.
   const playerFeet = () => {
     const [px, py, eyeZ] = worldToDoom(...camera.pos);
     // Andando, a física (o corpo ainda cai); voando, os pés guardados na morte ou olho - 41.
     const z = settings.get('moveMode') === 'walk' ? walker.z : stats.isDead ? deathFeet : eyeZ - EYE_HEIGHT;
     return { x: px, y: py, z, alive: !stats.isDead };
   };
-  // --- Projéteis (etapa 21) ---
-  // Decoração sólida como alvo de projétil: altura 64 por simplificação, no chão do setor.
-  const solidTargets = fixedSolids.map((s) => ({ x: s.x, y: s.y, radius: s.radius, height: 64,
-    z: map.sectors[findSector(map, s.x, s.y)]?.floorHeight ?? 0 }));
-  const missileSource = (p) => (p.ownerType === 3003 ? 'BOSS' : 'TROO');
-  const missiles = new MissileSystem(physicsWorld, rng, {
-    sectorAt: (x, y) => findSector(map, x, y),
-    // Regra de alvos em missileTargets (Missiles.js): sem infighting, decoração para todos.
-    targets: (p) => missileTargets(p, { player: stats.isDead ? null : playerFeet(), monsters: monsters.monsters, solids: solidTargets }),
-    hit: (p, target, amount) => {
-      if (target.kind === 'player') {
-        const owner = monsters.byObject.get(p.owner);
-        const attacker = owner && !owner.removed ? { x: owner.x, y: owner.y } : null; // posição atual do dono
-        damagePlayer(amount, missileSource(p), 'missile', attacker);
-      } else {
-        if (p.owner === 'player') combat.hits++; // acerto: dano direto em monstro ou barril
-        monsters.damage(target.ref, amount);
-      }
-    },
-    // A_Explode do foguete: monstros, barris e o próprio jogador (sem atacante).
-    blast: (p) => radiusAttack(physicsWorld, { x: p.x, y: p.y }, ROCKET_BLAST, null, monsters.monsters, rng, {
-      damage: (target, amount) => monsters.damage(target, amount),
-      onPlayerDamaged: (amount) => damagePlayer(amount, 'player', 'explosion', null),
-      player: playerTarget(),
-    }),
-    sound: (name, p) => audio.play(name, { origin: `missile:${p.id}`, x: p.x, y: p.y }),
-  });
-  function spawnMonsterMissile(m, type) {
-    missiles.spawnFromMonster(m, playerFeet(), type);
-  }
-
-  const monsterAI = new MonsterAI({
-    world: physicsWorld, rng, player: playerFeet,
-    spawnMissile: (m, type) => spawnMonsterMissile(m, type), // etapa 21: diabrete e barão
-    noTarget: () => settings.get('noTarget'), staticSolids: fixedSolids,
-    onSound: (name, m) => audio.play(name, { origin: `thing:${m.thingIndex}`, x: m.x, y: m.y }),
-    onPlayerDamaged: (amount, source, kind, attacker) => damagePlayer(amount, source, kind, attacker),
+  // Etapa 23: o que o nível (LevelRuntime) precisa do resto do jogo, sempre lido na hora.
+  const runtimeDeps = {
+    rng,
+    aiEnabled: () => settings.get('monsterAI'),
+    noTarget: () => settings.get('noTarget'),
+    sound: (name, opts) => audio.play(name, opts),
+    damagePlayer,
+    playerFeet,
+    playerTarget,
     useDoor: (m, li) => monsterOpensDoor(m, li), // etapa 20: só portas do especial 1
-  }).attach(monsters);
-  monsters.setAIEnabled(settings.get('monsterAI'));
-  settings.subscribe('monsterAI', (on) => monsters.setAIEnabled(on));
-  console.log(`IA: ${monsters.monsters.filter((m) => m.aiDef).length} monstros com IA; ` +
-    `${monsterAI.graph.edges.reduce((n, e) => n + e.length, 0) / 2} ligações de som entre setores`);
+  };
+  settings.subscribe('monsterAI', (on) => monsters?.setAIEnabled(on));
 
   let pickupMessage = '';  // mensagem de coleta mostrada na barra
   let messageTics = 0;     // tics restantes da mensagem (140 = 4 segundos)
@@ -695,6 +542,7 @@ async function main() {
     messageTics = 0;
   };
   const resetCombat = () => {
+    automap.reset(); // etapa 22 (NEW GAME, reinício e RESET MONSTERS)
     missiles.reset(); // etapa 21
     monsters.reset();
     effects.reset();
@@ -738,7 +586,7 @@ async function main() {
     return movingEnabled && monsterUseDoor(level, li, m, levelCtx);
   }
   function useAction() {
-    if (!menu.started || !movingEnabled) return;
+    if (!menu.started || !movingEnabled || session.phase !== 'playing') return;
     const [px, py] = worldToDoom(...camera.pos);
     useLines(level, physicsWorld, { x: px, y: py, angle: yawToDoomAngle(camera.yaw) }, levelCtx);
   }
@@ -769,6 +617,19 @@ async function main() {
       combat.hits++;
       if (ev.weapon === 1) audio.play('punch', { origin: 'player' }); // soco só soa quando acerta
     }
+  }
+
+  // Etapa 22: dados do automapa para a camada de HUD (as coisas só com IDDT nível 2).
+  function automapView() {
+    const [x, y] = worldToDoom(...camera.pos);
+    const things = [];
+    if (automap.cheat >= 2) {
+      for (const m of monsters.monsters) if (m.shootable && !m.removed) things.push({ x: m.x, y: m.y, angle: m.angle ?? 0 });
+      for (const it of itemSystem.items) if (!it.collected) things.push({ x: it.x, y: it.y, angle: map.things[it.objIndex]?.angle ?? 0 });
+      for (const d of itemSystem.drops) things.push({ x: d.x, y: d.y, angle: 0 });
+      for (const o of amSolids) things.push({ x: o.x, y: o.y, angle: o.angle });
+    }
+    return { state: automap, map, player: { x, y, angle: yawToDoomAngle(camera.yaw) }, things, name: map.name };
   }
 
   // Prefixo do sprite de cada tipo largado (2007 CLIP, 2001 SHOT, 2002 MGUN).
@@ -839,11 +700,16 @@ async function main() {
     reportError(err);
     hudAvailable = false;
   }
+  // Etapa 23: intermissão (WI*) e fim de episódio (flat FLOOR4_8 e a fonte STCFN).
+  const wiAssets = loadIntermissionAssets(wad);
+  if (wiAssets.missing.length) console.warn(`Intermissão: lumps ausentes: ${wiAssets.missing.join(', ')}`);
+  const finaleAssets = { palette, flat: loadFinaleFlat(wad), font: menuAssets.font };
+  if (!finaleAssets.flat) console.warn('Fim de episódio: flat FLOOR4_8 ausente (fundo preto)');
   const weapons = createWeapons({ available: hudAssets?.weaponSlots ?? [PISTOL] });
   const warnedUnusable = new Set(); // aviso único por arma não utilizável
   // Pedido de troca (tecla ou roda); só com o jogo iniciado.
   function selectWeapon(slot) {
-    if (!menu.started || level.intermission) return;
+    if (!menu.started || session.phase !== 'playing') return;
     if (!WEAPONS[slot].usable) {
       if (!warnedUnusable.has(slot)) console.warn(`Arma ${slot} (${WEAPONS[slot].name}) não é utilizável nesta etapa`);
       warnedUnusable.add(slot);
@@ -852,7 +718,6 @@ async function main() {
     requestWeapon(weapons, slot, stats);
   }
   let lastPistolTic = 0;
-  let statsClickArmed = false; // etapa 20: o clique só reinicia depois de soltar o botão
   let lastHudKey = '';
   const WEAPON_STATE_LABEL = { lower: 'descendo', raise: 'subindo', ready: 'parada', fire: 'atacando' };
 
@@ -882,35 +747,121 @@ async function main() {
   }
   const TURN_RATE = Math.PI / 2; // setas no modo de calibragem: 90 graus por segundo
 
-  // NEW GAME (menu) e reinício depois da morte (etapa 19): jogador, monstros, itens, largados, efeitos,
-  // alertas de som, contadores, rosto e arma subindo.
-  function newGame() {
-    lockReason = 'newGame';
-    level.reset(); // etapa 20: alturas, especiais, texturas, thinkers e fim de fase (antes do resto)
-    dynamic?.geo.markAll();
-    resetToSpawn();
-    stats.reset();
+  // --- Fluxo entre mapas (etapa 23) ---
+  let intermission = null; // Intermission (tela de estatísticas e "entering")
+  let pendingNext = null;  // { episode, map } do próximo mapa enquanto a intermissão aparece
+  let finale = null;       // Finale (texto de fim de episódio)
+  const T23 = MENU_TEXT[MENU_LANG];
+
+  // Estado do jogador ao entrar num mapa. 'keep': nada muda (RELOAD LEVEL); 'carry': saída da fase
+  // (G_PlayerFinishLevel: vida, armadura, armas, munição e mochila passam; chaves e flashes zeram);
+  // 'pistol': começo do zero (NEW GAME, IDCLEV e morte). resetCheats: NEW GAME e IDCLEV desligam o
+  // modo deus e o noclip (na morte e na troca de fase eles continuam).
+  function applyPlayerStart(kind, resetCheats) {
+    if (kind === 'carry' && stats.isDead) kind = 'pistol'; // NEXT/PREV MAP com o jogador morto
+    applyPlayerEntry(stats, kind);
+    if (resetCheats) {
+      noClip = false;
+      if (settings.get('godMode')) settings.set('godMode', false);
+    }
+    if (kind === 'keep') return;
     face.reset();
-    resetCombat();
-    resetItems();
-    startRaise(weapons, PISTOL);
+    playerDamage.reset();
+    startRaise(weapons, kind === 'pistol' ? PISTOL : weapons.current);
+    deathFeet = 0;
+    fireReleasedSinceDeath = false;
+  }
+
+  // Entra no mapa `entry` ({ name, episode, map }). opts: { player, resetCheats, phase (depois de
+  // carregar), failPhase (se falhar; padrão: a fase anterior) }. Devolve a promessa de startLevel.
+  function enterMap(entry, opts = {}) {
+    return startLevel(entry.name, { ...opts, entry });
+  }
+
+  // NEW GAME (menu, etapa 23: com episódio e dificuldade). Chamado dentro do handler do teclado ou do
+  // clique: o pedido de pointer lock é um gesto válido; o carregamento vem depois.
+  function newGame(episode = session.episode, newSkill = session.skill) {
+    lockReason = 'newGame';
+    setSkill(newSkill);
+    intermission = null;
+    finale = null;
+    menuOverlay = false;
+    session.secretReturn = null;
     controls.clear(); // estado de disparo (e de movimento) limpo
     controls.requestLock();
+    const entry = session.find(episode, 1) ?? session.maps.find((m) => m.episode === episode) ?? session.maps[0];
+    console.log(`NEW GAME: episódio ${entry.episode}, dificuldade ${session.skill}`);
+    enterMap(entry, { ...LEVEL_ENTRY.newGame, phase: 'playing', failPhase: 'playing' });
   }
-  // Reinício: morto, depois de 35 tics; ou na tela de estatísticas, depois de 35 tics nela (etapa 20).
+  // Reinício depois da morte (etapa 19), 35 tics depois: o mapa é montado de novo, começo do zero.
   const tryRestart = () => {
-    const fromDeath = stats.isDead && canRestart(stats.deathTics);
-    const fromStats = level.intermission && level.finishTics >= 2 * INTERMISSION_DELAY;
-    if (!menu.started || !(fromDeath || fromStats)) return false;
-    newGame();
+    if (!menu.started || session.phase !== 'playing' || !(stats.isDead && canRestart(stats.deathTics))) return false;
+    enterMap(session.current, { ...LEVEL_ENTRY.death, phase: 'playing' });
     return true;
   };
+
+  // Fim da fase (35 tics depois da saída): mapa 8 vai direto ao fim do episódio; senão, intermissão.
+  function completeLevel() {
+    const fromMap = session.map;
+    const next = nextMap(session.episode, fromMap, level.secretExit, (e, m) => session.has(e, m), session.secretReturn);
+    const ls = current.rt.levelStats();
+    console.log(`${map.name} concluído${level.secretExit ? ' (saída secreta)' : ''}: mortes ${ls.kills}/${ls.totalKills}, ` +
+      `itens ${ls.items}/${ls.totalItems}, segredos ${ls.secrets}/${ls.totalSecrets}, tempo ${mmss(ls.tics)}; ` +
+      `próximo: ${next.kind === 'map' ? `E${next.episode}M${next.map}` : 'fim do episódio'}`);
+    if (next.kind === 'map' && next.map === 9 && fromMap !== 9) session.secretReturn = secretReturnFrom(fromMap);
+    if (fromMap === 9) session.secretReturn = null;
+    audio.stopAll();
+    missiles.reset(); // a intermissão apaga os projéteis
+    if (next.kind === 'finale') { startFinale(session.episode); return; }
+    pendingNext = next;
+    if (!hudAvailable) { advanceFromIntermission(); return; } // sem a camada 320x200, segue direto
+    intermission = new Intermission({ episode: session.episode, last: fromMap, next: next.map, stats: ls,
+      sound: (n) => audio.play(n) });
+    session.phase = 'intermission';
+    menuOverlay = false;
+    if (controls.locked) document.exitPointerLock(); // o mouse fica solto, sem abrir o menu
+  }
+  function advanceFromIntermission() {
+    const entry = session.find(pendingNext.episode, pendingNext.map);
+    if (intermission) intermission.done = false; // se falhar, a tela "entering" espera de novo
+    enterMap(entry, { ...LEVEL_ENTRY.exit, phase: 'playing' }).then((ok) => { if (ok) intermission = null; });
+  }
+  function startFinale(episode) {
+    if (!hudAvailable) { backToTitle(); return; }
+    finale = new Finale(episode, T23.finaleText[episode] ?? T23.finaleText[1]);
+    session.phase = 'finale';
+    menuOverlay = false;
+    if (controls.locked) document.exitPointerLock();
+  }
+  function backToTitle() {
+    finale = null;
+    intermission = null;
+    session.phase = 'title';
+    menuOverlay = false;
+    menu.started = false;
+    menu.open({ silent: true });
+    if (controls.locked) document.exitPointerLock();
+  }
+  // Tecla ou clique nas telas de intermissão e fim. A tecla que conclui a intermissão já pede o mouse
+  // (gesto válido); o carregamento do próximo mapa começa no tic seguinte.
+  function screenPress() {
+    if (session.phase === 'intermission' && intermission) {
+      const last = intermission.phase === 'entering';
+      intermission.press();
+      if (last) { lockReason = 'newGame'; controls.requestLock(); }
+    } else if (session.phase === 'finale' && finale) {
+      finale.press();
+    }
+  }
+  const SCREEN_KEYS = new Set(['Enter', 'NumpadEnter', 'Space', ACTION_KEYS.use.code, ACTION_KEYS.fire.code]);
 
   menu = new Menu(settings, {
     // Chamados dentro do handler do teclado ou do clique: o pedido de pointer lock é um gesto válido.
     onSound: (name) => audio.play(name),
     newGame,
-    resume: () => { controls.requestLock(); },
+    episodes: () => session.episodes(), // etapa 23
+    // Etapa 23: na intermissão e no fim, "retomar" só fecha o menu (o mouse continua solto).
+    resume: () => { if (screenPhase()) { menuOverlay = false; menu.dirty = true; } else controls.requestLock(); },
     toggleFullscreen,
     isFullscreen: () => Boolean(document.fullscreenElement),
     openTuning: () => openTuning(),
@@ -932,6 +883,10 @@ async function main() {
           break;
         case 'resetMonsters': resetCombat(); resetItems(); break;
         case 'killAll': monsters.killAll(); break; // conta como morte, não como acerto
+        // Etapa 23: troca de nível pela depuração (o jogador passa como numa saída; RELOAD mantém tudo).
+        case 'reloadLevel': enterMap(session.current, LEVEL_ENTRY.reload); break;
+        case 'nextMap': enterMap(session.neighbor(+1), LEVEL_ENTRY.debugMap); break;
+        case 'prevMap': enterMap(session.neighbor(-1), LEVEL_ENTRY.debugMap); break;
         case 'giveKeys': for (const k of KEY_NAMES) stats.keys[k] = true; break;
         case 'giveAmmo': for (const type of AMMO_TYPES) stats.ammo[type] = stats.maxAmmoOf(type); break;
         case 'giveWeapons': // slots 3 a 7, mochila e munição cheia (com a mochila, o máximo dobra)
@@ -951,19 +906,88 @@ async function main() {
       closeTuning();
       return;
     }
+    // Etapa 23: intermissão e fim de episódio (mouse solto): Esc abre o menu por cima; as outras teclas avançam.
+    if (screenPhase() && !menuOverlay) {
+      if (e.repeat) return;
+      e.preventDefault();
+      if (e.code === 'Escape') { menuOverlay = true; menu.open(); return; }
+      if (session.phase === 'finale' || SCREEN_KEYS.has(e.code)) screenPress();
+      return;
+    }
     if (menuVisible() && menu.handleKey(e)) e.preventDefault();
     else if (!menuVisible() && e.code === 'Enter' && !e.repeat && tryRestart()) e.preventDefault(); // etapa 19
+    else if (!menuVisible() && menu.started && automap.visible && AUTOMAP_CODES.has(e.code)) {
+      // Etapa 22: dentro do automapa, F, G, + e -, 0 têm função própria (as ações globais são ignoradas).
+      e.preventDefault();
+      if (e.code === 'Equal' || e.code === 'Minus') { automapHeld.add(e.code); return; }
+      if (e.repeat) return;
+      if (e.code === 'KeyF') { automap.follow = !automap.follow; levelCtx.message(automap.follow ? 'amFollowOn' : 'amFollowOff'); }
+      if (e.code === 'KeyG') { automap.grid = !automap.grid; levelCtx.message(automap.grid ? 'amGridOn' : 'amGridOff'); }
+      if (e.code === 'Digit0') automap.toggleBigMode();
+    }
   });
+  window.addEventListener('keyup', (e) => automapHeld.delete(e.code));
+
+  // --- Códigos de trapaça (etapa 22): reconhecidos antes do despacho das ações ---
+  const cheats = new CheatReader();
+  window.addEventListener('blur', () => { automapHeld.clear(); cheats.clear(); });
+  function showText(text) {
+    pickupMessage = text;
+    messageTics = MESSAGE_TICS;
+  }
+  function applyCheat(name, arg) {
+    switch (name) {
+      case 'iddqd': {
+        const on = toggleGod(stats, settings.get('godMode'));
+        settings.set('godMode', on);
+        levelCtx.message(on ? 'cheatGodOn' : 'cheatGodOff');
+        break;
+      }
+      case 'idkfa': giveAll(stats, true); levelCtx.message('cheatKfa'); break;
+      case 'idfa': giveAll(stats, false); levelCtx.message('cheatFa'); break;
+      case 'idclip':
+      case 'idspispopd':
+        noClip = !noClip;
+        levelCtx.message(noClip ? 'cheatClipOn' : 'cheatClipOff');
+        break;
+      case 'iddt': automap.cycleCheat(); break;
+      // Etapa 23: IDCLEV + episódio + mapa (começo do zero, como o G_DeferedInitNew).
+      case 'idclevStart': levelCtx.message('clevPrompt'); break;
+      case 'idclevCancel': levelCtx.message('clevCancel'); break;
+      case 'idclev': {
+        const entry = session.find(Number(arg[0]), Number(arg[1]));
+        if (!entry || loadingLevel) { levelCtx.message('clevInvalid'); break; }
+        levelCtx.message('clevChanging');
+        session.secretReturn = null; // no mapa 9 por IDCLEV, a volta vem da tabela (GameFlow)
+        enterMap(entry, { ...LEVEL_ENTRY.idclev, phase: 'playing' });
+        break;
+      }
+      case 'idmypos': {
+        const [x, y] = worldToDoom(...camera.pos);
+        showText(myPosText(yawToDoomAngle(camera.yaw), x, y));
+        break;
+      }
+    }
+  }
+  // Devolve true se a tecla faz parte de um código em andamento (não dispara atalhos de alternância).
+  function cheatKey(e) {
+    if (!menu.started || menuVisible() || session.phase !== 'playing') { cheats.clear(); return false; }
+    const r = cheats.push(e.code, e.repeat);
+    if (r.cheat) applyCheat(r.cheat, r.arg);
+    return r.consume;
+  }
 
   controls = new Controls(canvas, {
     onLook: (dx, dy) => {
-      if (stats.isDead || level.intermission) return; // morto, a câmera só vira para o assassino
+      if (stats.isDead || session.phase !== 'playing') return; // morto, a câmera só vira para o assassino
       camera.look(dx, dy, BASE_MOUSE_SENS * levelScale(settings.get('mouseSensitivityLevel')));
     },
     isBlocked: menuVisible,
+    onKey: (e) => cheatKey(e), // etapa 22
     // Clique no canvas: antes do jogo começar equivale a NEW GAME; depois, retoma sem reposicionar.
     onClick: () => {
       if (tuningPanel.isOpen) return; // no modo de calibragem o mouse é do painel
+      if (screenPhase()) { if (!menuOverlay) screenPress(); return; } // etapa 23
       if (!menu.started) menu.activate({ type: 'action', id: 'newGame' });
       else controls.requestLock();
     },
@@ -974,9 +998,12 @@ async function main() {
         lockReason = 'resume';
       } else {
         // Perdeu o lock (inclusive por Esc): menu na tela principal, com "swtchn" se o jogo já começou.
-        // Ao abrir a calibragem o menu não aparece, então fica em silêncio.
-        menu.open({ silent: tuningPanel.isOpen });
+        // Ao abrir a calibragem o menu não aparece, então fica em silêncio. Etapa 23: na intermissão e
+        // no fim de episódio o mouse é solto de propósito e o menu não abre.
+        if (!screenPhase()) menu.open({ silent: tuningPanel.isOpen });
         setHelp(false);
+        if (cheats.clear() && session.phase === 'playing') levelCtx.message('clevCancel'); // etapa 22 e 23
+        automapHeld.clear();
       }
       applyHud();
     },
@@ -985,7 +1012,12 @@ async function main() {
       lockReason = 'resume'; // o próximo retorno ao jogo volta a ser um "retomar"
     },
     onAction: (action) => {
+      // Etapa 22: com o automapa aberto, F, G, + e -, 0 são dele (tratados no keydown acima).
+      if (automap.visible && AUTOMAP_CODES.has(ACTION_KEYS[action]?.code)) return;
       switch (action) {
+        case 'toggleAutomap':
+          if (menu.started) { automap.visible = !automap.visible; automapHeld.clear(); }
+          break;
         case 'fullscreen': toggleFullscreen(); break;
         case 'help': setHelp(helpPanel.style.display === 'none'); break;
         case 'tuning': if (tuningPanel.isOpen) closeTuning(); else openTuning(); break;
@@ -996,9 +1028,9 @@ async function main() {
         case 'speedDown': stepLevel('flySpeedLevel', -1); break;
         case 'speedUp': stepLevel('flySpeedLevel', +1); break;
         // Morto ou nas estatísticas: reinicia; senão, usa (portas, interruptores, saída).
-        case 'use': if (stats.isDead || level.intermission) tryRestart(); else useAction(); break;
-        case 'weaponNext': if (menu.started && !level.intermission) cycleWeapon(weapons, stats, +1); break;
-        case 'weaponPrev': if (menu.started && !level.intermission) cycleWeapon(weapons, stats, -1); break;
+        case 'use': if (stats.isDead) tryRestart(); else useAction(); break;
+        case 'weaponNext': if (menu.started && session.phase === 'playing') cycleWeapon(weapons, stats, +1); break;
+        case 'weaponPrev': if (menu.started && session.phase === 'playing') cycleWeapon(weapons, stats, -1); break;
         case 'weapon1': case 'weapon2': case 'weapon3': case 'weapon4':
         case 'weapon5': case 'weapon6': case 'weapon7':
           selectWeapon(ACTION_KEYS[action].slot);
@@ -1032,6 +1064,18 @@ async function main() {
       `mais próximo ${nearest === null ? '-' : nearest.toFixed(0)}  alertados ${monsterAI.alertedSectors().length}\n` +
       `dano recebido: hitscan ${d.hitscan}, corpo a corpo ${d.melee}, projétil ${d.missile ?? 0}, explosão ${d.explosion}, ` +
       `teste ${d.debug ?? 0}; absorvido pela armadura ${playerDamage.absorbed}\n`;
+  }
+  // Etapa 23: sessão, mapa, dificuldade, estatísticas da fase e objetos de GPU vivos dos níveis.
+  function levelHud() {
+    const ls = current.rt.levelStats();
+    return `sessão ${session.phase}  mapa ${map.name} (episódio ${session.episode}, mapa ${session.map})  ` +
+      `dificuldade ${session.skill} ${MENU_TEXT[MENU_LANG].skillShort[session.skill]}` +
+      `${skill.respawn ? `  respawns ${monsters.respawns}` : ''}
+` +
+      `mortes ${ls.kills}/${ls.totalKills}  itens ${ls.items}/${ls.totalItems}  segredos ${ls.secrets}/${ls.totalSecrets}  ` +
+      `tempo ${mmss(ls.tics)}  GPU viva: ${liveCounts.buffers} buffers, ${liveCounts.textures} texturas, ` +
+      `${liveCounts.bindGroups} bind groups
+`;
   }
   function updateHud(fps) {
     if (!settings.get('hud') || menuVisible()) return;
@@ -1069,8 +1113,12 @@ async function main() {
       `chaves ${KEY_NAMES.filter((k) => stats.keys[k]).join(' ') || '-'}\n` +
       `mortos ${combat.kills}/${combat.totalMonsters}  disparos ${combat.shots}  acertos ${combat.hits}\n` +
       monsterHud(x, y) +
+      `automapa ${automap.visible ? 'visível' : 'fechado'}  seguir ${onOff(automap.follow)}  grade ${onOff(automap.grid)}  ` +
+      `cheat ${automap.cheat}  escala ${automap.scale.toFixed(3)}  linhas ${automap.mappedCount()}/${automap.lineCount}\n` +
+      `códigos: godMode ${onOff(settings.get('godMode'))}  noclip ${onOff(noClip)}  IDDT ${automap.cheat}\n` +
       `projéteis ${missiles.list.length}  disparados: diabrete ${missiles.stats.fired.TROO}, barão ${missiles.stats.fired.BOSS}, ` +
       `jogador ${missiles.stats.fired.player}  acertaram o jogador ${missiles.stats.hitPlayer}\n` +
+      levelHud() +
       `fase: ${level.thinkers.size} setores em movimento  uso: ${level.lastUse}  ` +
       `não suportados: ${specialsInfo.unsupported.size} tipo(s), ${level.unsupportedUses} uso(s)  tempo ${mmss(level.levelTics)}` +
       `${movingEnabled ? '' : '  (setores móveis desligados)'}${level.finished ? '  FIM DA FASE' : ''}\n` +
@@ -1082,6 +1130,104 @@ async function main() {
       `fps  ${fps.toFixed(0)}   ${key('help')}: ajuda`;
   }
 
+  // --- Troca de nível (etapa 23) ---
+  // Instala um nível já montado (CPU, GPU e execução): só troca referências, nada aqui falha.
+  function installLevel(data, gpu, rt) {
+    ({ map, spawn, far, specialsInfo, spriteScene } = data);
+    sector = map.sectors[data.spawnSector];
+    ({ textureSet, walls, flats, staticBuffers, dynamic, movingEnabled, sprites } = gpu);
+    ({ level, automap, physicsWorld, effects, combat, monsters, itemSystem, liftSectorOf, fixedSolids, missiles,
+      monsterAI, amSolids } = rt);
+    // Mudanças de altura e de textura marcam só o que foi afetado.
+    level.onSectorChanged = (s) => dynamic?.geo.updateSector(s, level.sectorLines[s]);
+    level.onLineChanged = (li) => dynamic?.geo.updateLinedef(li);
+    current = { data, gpu, rt };
+    warnedLevel.clear();
+    automapHeld.clear();
+    resetToSpawn();
+  }
+
+  // Estatísticas do nível no console (as mesmas das etapas anteriores, agora por nível).
+  function logLevel(data, gpu, rt) {
+    console.log(`=== ${data.name}: montado em ${data.ms.toFixed(0)} ms; céu ${data.skyName}; dificuldade ${data.skill} ===`);
+    for (const w of [...data.warnings, ...gpu.warnings]) console.warn(`${data.name}: ${w}`);
+    printTextureStats(data.textures, data.used, gpu.textureSet.info);
+    printStats(gpu.walls, data.spawn, data.spawnSector, data.map.sectors[data.spawnSector]);
+    validateFlats(data.map, gpu.flats, data.spawn);
+    printLightingStats(colormap, litPalette, palette, gpu.textureSet, gpu.flats, data.map);
+    const sp = data.specialsInfo;
+    console.log(`Especiais: ${sp.movableSectors.size} setores móveis, ${data.dynSets.lines.size} linhas dinâmicas; ` +
+      `não suportados [${[...sp.unsupported.keys()].join(', ')}]`);
+    if (gpu.dynamic) console.log(`Setores móveis: ${gpu.dynamic.geo.vertexCount} vértices, ${gpu.dynamic.geo.indices.length} índices`);
+    console.log(`Física: ${rt.physicsWorld.lines.length} linhas de colisão; modo ${settings.get('moveMode')}`);
+    const mt = data.monsterTable;
+    if (mt.removed.length) console.warn(`Combate: quadros ausentes removidos: ${mt.removed.join(', ')}`);
+    if (mt.noAI.length) console.warn(`IA: tipos que ficam passivos: ${mt.noAI.join('; ')}`);
+    const scene = data.spriteScene;
+    if (scene) {
+      const st = scene.stats;
+      console.log(`Sprites: ${scene.objects.length} objetos, ${scene.types.size} tipos, ${scene.layers.length} camadas ` +
+        `(limite ${device.limits.maxTextureArrayLayers}), cerca de ${(st.texture.bytes / 1048576).toFixed(1)} MiB; ` +
+        `descartados por dificuldade ${st.discarded.skill}, só multiplayer ${st.discarded.multiplayer}; ` +
+        `instância de ${INSTANCE_STRIDE} bytes${gpu.sprites ? '' : '; SEM SPRITES neste nível'}`);
+      const missing = [...new Set(data.map.things.map((t) => t.type))].filter((type) => ITEM_TABLE[type] && !scene.types.has(type));
+      if (missing.length) console.warn(`Itens sem sprite: ${missing.join(', ')}`);
+    }
+    console.log(`Combate: ${rt.monsters.monsters.length} objetos atiráveis, ${rt.combat.totalMonsters} monstros; ` +
+      `itens ${rt.itemSystem.items.length} (${rt.itemSystem.totalCountable} contáveis); ${rt.fixedSolids.length} sólidos fixos; ` +
+      `IA: ${rt.monsterAI.graph.edges.reduce((n, e) => n + e.length, 0) / 2} ligações de som entre setores`);
+    console.log(`GPU do nível: ${gpu.counts.buffers} buffers, ${gpu.counts.textures} texturas, ${gpu.counts.bindGroups} bind groups; ` +
+      `vivos em todos os níveis: ${liveCounts.buffers}/${liveCounts.textures}/${liveCounts.bindGroups}`);
+  }
+
+  // Monta o nível `name` inteiro (CPU e GPU) com o atual ainda vivo; troca só no fim e então descarta o
+  // anterior. Se algo falhar, o nível atual continua (erro no console, no quadro vermelho e
+  // "FALHA AO CARREGAR <mapa>" na barra). Devolve true se trocou.
+  // opts: { entry ({ episode, map }), player ('keep' | 'carry' | 'pistol'), resetCheats, phase, failPhase }.
+  async function startLevel(name, opts = {}) {
+    if (loadingLevel) return false;
+    loadingLevel = true;
+    const T = MENU_TEXT[MENU_LANG];
+    const previousPhase = session.phase;
+    session.phase = 'loading';
+    loading.textContent = `${T.loading} ${name}`;
+    let gpu = null;
+    let data, rt;
+    try {
+      await nextPaint(); // o texto de carregamento aparece por cima do nível atual
+      data = buildLevelData(wad, name, { skill: session.skill, cache: levelCache, maxLayers: device.limits.maxTextureArrayLayers });
+      gpu = await uploadLevel(device, data, { textureLayout, paletteView: paletteTex.view, spritePipeline });
+      rt = createLevelRuntime(data, { ...runtimeDeps, skillParams: skill });
+    } catch (err) {
+      gpu?.dispose();
+      session.phase = opts.failPhase ?? previousPhase;
+      loadingLevel = false;
+      const message = `${T.loadFailed} ${name}`;
+      console.error(`${message}:`, err);
+      reportError(err, message);
+      showText(message);
+      return false;
+    }
+    const old = current;
+    installLevel(data, gpu, rt);
+    // destroy() é seguro com comandos já enviados: a GPU libera depois que eles terminam.
+    old?.rt.dispose();
+    old?.gpu.dispose();
+    if (opts.entry) { session.episode = opts.entry.episode; session.map = opts.entry.map; }
+    applyPlayerStart(opts.player ?? 'keep', Boolean(opts.resetCheats));
+    // Nada do nível anterior continua: sons, partículas, mensagem, trapaça em andamento e HUD.
+    audio.stopAll();
+    particleGeneration++;
+    pickupMessage = '';
+    messageTics = 0;
+    cheats.clear();
+    lastHudKey = '';
+    logLevel(data, gpu, rt);
+    session.phase = opts.phase ?? previousPhase;
+    loadingLevel = false;
+    return true;
+  }
+
   let last = performance.now();
   let fps = 60;
   let lastSkull = -1;
@@ -1091,27 +1237,29 @@ async function main() {
     if (dt > 0) fps += (1 / dt - fps) * 0.05; // média móvel para o número não pular
 
     display.update();
-    loading.style.display = 'none';
+    loading.style.display = session.phase === 'loading' ? '' : 'none'; // etapa 23
     const showMenu = menuVisible();
-    if (!showMenu) gameTime += dt;
+    // Etapa 23: a simulação só roda na fase 'playing'; o relógio também anda na intermissão e no fim.
+    const paused = showMenu || session.phase !== 'playing';
+    if (!showMenu && (session.phase === 'playing' || screenPhase())) gameTime += dt;
     if (tuningPanel.isOpen) {
       // Modo de calibragem: as setas giram a câmera (mesmo limite de pitch do mouse).
       const look = controls.lookVector();
       const turn = TURN_RATE * dt;
       camera.look(look.yaw * turn, -look.pitch * turn, 1);
     }
-    if (!showMenu) {
+    if (!paused) {
       const speed = BASE_FLY_SPEED * levelScale(settings.get('flySpeedLevel')) * (controls.running ? RUN_MULT : 1);
       if (settings.get('moveMode') === 'walk') {
         // Andar: WASD no plano horizontal (Space e C ignorados), com colisão e gravidade.
         // A física só roda com o jogo iniciado (o menu fechado já é garantido por showMenu).
-        if (menu.started && !level.intermission) {
+        if (menu.started) {
           const mv = stats.isDead ? { f: 0, s: 0, u: 0 } : controls.moveVector(); // morto: só gravidade
           const sinY = Math.sin(camera.yaw), cosY = Math.cos(camera.yaw);
           // No Doom: frente = (sin yaw, cos yaw), direita = (cos yaw, -sin yaw) (inverso de doomToWorld).
           const wish = { vx: (mv.f * sinY + mv.s * cosY) * speed, vy: (mv.f * cosY - mv.s * sinY) * speed };
           getSolids(frameSolids, monsters.monsters, fixedSolids); // monstros e barris vivos + decoração
-          for (const ev of stepPlayer(walker, wish, dt, physicsWorld, frameSolids)) {
+          for (const ev of stepPlayer(walker, wish, dt, physicsWorld, frameSolids, { noclip: noClip })) {
             if (ev.type === 'landed' && ev.impactSpeed > OOF_IMPACT_SPEED) audio.play('oof', { origin: 'player' });
           }
           // Etapa 20: linhas de cruzamento entre a posição anterior e a atual (só andando, vivo).
@@ -1121,14 +1269,16 @@ async function main() {
         }
       } else {
         crossTracker.invalidate();
-        if (!stats.isDead && !level.intermission) camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
+        if (!stats.isDead) camera.move(controls.moveVector(), speed, dt); // voar: comportamento da etapa 11
       }
     }
     const tics = gameTics(gameTime);
-    if (!showMenu && menu.started && level.intermission) {
-      for (let t = lastPistolTic; t < tics; t++) level.advanceClock(); // estatísticas: tudo congelado
-      if (missiles.list.length) missiles.reset(); // etapa 21: a tela de estatísticas apaga os projéteis
-    } else if (!showMenu && menu.started) {
+    if (!showMenu && screenPhase()) {
+      // Etapa 23: intermissão e fim de episódio avançam por tic; concluídas, seguem o fluxo.
+      for (let t = lastPistolTic; t < tics; t++) (intermission ?? finale)?.tick();
+      if (session.phase === 'intermission' && intermission?.done) advanceFromIntermission();
+      else if (session.phase === 'finale' && finale?.done) backToTitle();
+    } else if (!paused && menu.started) {
       // Balanço: velocidade horizontal real da física de andar; zero voando ou no ar.
       const walking = settings.get('moveMode') === 'walk';
       const onGround = walking && walker.z <= walker.floorz;
@@ -1145,6 +1295,19 @@ async function main() {
         if (level.intermission) { level.advanceClock(); continue; }
         if (movingEnabled) tickLevel(level, levelCtx);
         level.advanceClock();
+        if (cheats.tick()) levelCtx.message('clevCancel'); // etapa 23: IDCLEV sem os dígitos em 105 tics
+        // Etapa 23: setor secreto (vivo, com os pés no chão).
+        if (current.rt.checkSecret(px, py, feet.z, !stats.isDead)) levelCtx.message('secretFound');
+        // Etapa 22: automapa e linhas vistas (também com o automapa fechado, como no Doom).
+        {
+          const look = tuningPanel.isOpen ? { yaw: 0, pitch: 0 } : controls.lookVector();
+          automap.tick({ zoomIn: automap.visible && automapHeld.has('Equal'), zoomOut: automap.visible && automapHeld.has('Minus'),
+            panX: automap.visible ? look.yaw : 0, panY: automap.visible ? look.pitch : 0 }, { x: px, y: py });
+          if (!stats.isDead && level.levelTics % 2 === 0) {
+            markSeen(physicsWorld, automap.mapped, { x: px, y: py, z: feet.z, angle: yawToDoomAngle(camera.yaw) },
+              hfovDeg(display.projectionAspect), findSector(map, px, py));
+          }
+        }
         monsters.tick();
         missiles.update(); // etapa 21: depois da IA
         effects.tick();
@@ -1175,10 +1338,11 @@ async function main() {
         stats.tickBonus();
         if (messageTics > 0 && --messageTics === 0) pickupMessage = '';
       }
+      if (level.intermission) completeLevel(); // etapa 23: 35 tics depois da saída
     }
     lastPistolTic = tics;
     // Etapa 19: olho caindo na morte; clique (disparo solto e apertado de novo) reinicia.
-    if (menu.started && !showMenu) {
+    if (menu.started && !paused) {
       eyeOffset = stats.isDead ? deathEyeHeight(stats.deathTics, EYE_HEIGHT) : EYE_HEIGHT;
       if (stats.isDead) {
         if (settings.get('moveMode') === 'walk') syncCameraToWalker();
@@ -1189,13 +1353,6 @@ async function main() {
         if (!controls.firing) fireReleasedSinceDeath = true;
         else if (fireReleasedSinceDeath) tryRestart();
       }
-    }
-    // Etapa 20: na tela de estatísticas, clique (disparo solto e apertado de novo) reinicia.
-    if (menu.started && !showMenu && level.intermission) {
-      if (!controls.firing) statsClickArmed = true;
-      else if (statsClickArmed) tryRestart();
-    } else {
-      statsClickArmed = false;
     }
     // Flash de tela: dano tem prioridade sobre o bônus; desligado com FLASHES OFF.
     display.setTint(tintFor(tintTable, flashPalette(stats.damageCount, stats.bonusCount), settings.get('screenFlashes')));
@@ -1215,8 +1372,13 @@ async function main() {
         lastSkull = skull;
       }
     }
+    // Etapa 23: intermissão e fim de episódio ocupam a tela inteira (camada 320x200 do HUD), também
+    // enquanto o próximo mapa carrega (a tela nunca fica preta).
+    const screenImage = !hudAvailable ? null
+      : session.phase === 'finale' ? 'finale'
+        : (session.phase === 'intermission' || session.phase === 'loading') && intermission ? 'intermission' : null;
     // Tela de título com TITLEPIC: a cena 3D não é desenhada (o menu limpa de preto).
-    const drawScene = !(showMenu && !menu.started && menuAssets.patches.TITLEPIC);
+    const drawScene = !screenImage && !(showMenu && !menu.started && menuAssets.patches.TITLEPIC);
 
     const proj = perspective(FOVY, display.projectionAspect, NEAR, far);
     const view = camera.viewMatrix();
@@ -1275,12 +1437,12 @@ async function main() {
       pass.setPipeline(settings.get('culling') ? pipelines.back : pipelines.none);
       pass.setBindGroup(0, bindGroup);
       pass.setBindGroup(1, textureSet.bindGroup);
-      pass.setVertexBuffer(0, vertexBuffer);
-      pass.setIndexBuffer(indexBuffer, 'uint32');
+      pass.setVertexBuffer(0, staticBuffers.vertex);
+      pass.setIndexBuffer(staticBuffers.index, 'uint32');
       pass.drawIndexed(walls.indices.length);
       // Chão e teto: mesmo pipeline, outros buffers.
-      pass.setVertexBuffer(0, settings.get('sectorColors') ? flatVertexBuffers.sector : flatVertexBuffers.flat);
-      pass.setIndexBuffer(flatIndexBuffer, 'uint32');
+      pass.setVertexBuffer(0, settings.get('sectorColors') ? staticBuffers.sector : staticBuffers.flat);
+      pass.setIndexBuffer(staticBuffers.flatIndex, 'uint32');
       pass.drawIndexed(flats.indices.length);
       // Etapa 20: setores móveis, mesma pipeline e mesmos bind groups.
       if (dynamic) {
@@ -1303,8 +1465,20 @@ async function main() {
     if (drawParticles) {
       particles.encodeDraw(encoder, display.colorView, display.depthView, particleCount); // 3. depois da cena
     }
+    // Etapa 23: intermissão ou fim: fundo preto (fora da área 320x200) e a imagem composta na CPU.
+    if (screenImage) {
+      encoder.beginRenderPass({ colorAttachments: [{ view: display.colorView, clearValue: { r: 0, g: 0, b: 0, a: 1 },
+        loadOp: 'clear', storeOp: 'store' }] }).end();
+      const key = screenImage === 'finale' ? `F|${finale.visible}|${finale.typed}`
+        : `I|${intermission.phase}|${JSON.stringify(intermission.cnt)}`;
+      if (key !== lastHudKey) {
+        hudPass.upload(screenImage === 'finale' ? composeFinale(finale, finaleAssets, T23.finalePress) : composeIntermission(intermission, wiAssets));
+        lastHudKey = key;
+      }
+      hudPass.draw(encoder, display.colorView, display.internal.width, display.internal.height);
+    }
     // Pistola e barra: depois das partículas e antes do menu (o menu fica por cima).
-    if (hudAvailable && menu.started) {
+    if (hudAvailable && menu.started && !screenImage) {
       const [cx, cy] = worldToDoom(...camera.pos);
       const under = map.sectors[findSector(map, cx, cy)];
       const lightnum = under ? Math.min(15, Math.max(0, Math.floor(under.lightLevel / 16))) : 15;
@@ -1314,24 +1488,19 @@ async function main() {
       const [fx, fy] = worldToDoom(...camera.pos);
       const faceName = face.lump(stats, { x: fx, y: fy, angle: yawToDoomAngle(camera.yaw) }, settings.get('godMode'), hudAssets.patches);
       const restartText = stats.isDead && canRestart(stats.deathTics) ? MENU_TEXT[MENU_LANG].restartPrompt : '';
-      const T = MENU_TEXT[MENU_LANG];
-      const intermission = level.intermission ? {
-        title: MAP_NAME, subtitle: level.secretExit ? T.statsSecret : T.statsFinished, footer: T.statsFooter,
-        rows: [[T.statsKills, `${combat.kills}/${combat.totalMonsters}`],
-          [T.statsItems, `${itemSystem.collectedCountable}/${itemSystem.totalCountable}`], [T.statsTime, mmss(level.levelTics)]],
-      } : null;
-      const hudKey = [JSON.stringify(intermission), Math.max(0, stats.health), stats.armor, faceName, restartText, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
+      const amView = automap.visible ? automapView() : null;
+      const hudKey = [amView ? performance.now() : '', Math.max(0, stats.health), stats.armor, faceName, restartText, AMMO_TYPES.map((t) => `${stats.ammo[t]}/${stats.maxAmmoOf(t)}`).join(','),
         KEY_NAMES.map((k) => (stats.keys[k] ? 1 : 0)).join(''), [...stats.weaponsOwned].join(','), pickupMessage,
         weapon.prefix, weapon.frame, weapon.flash ? weapon.flash.prefix + weapon.flash.letter : '',
         weapon.sx.toFixed(2), weapon.sy.toFixed(2), weaponLevel].join('|');
       if (hudKey !== lastHudKey) {
-        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage, face: faceName, restartText, intermission }, hudAssets, tics));
+        hudPass.upload(composeHud({ stats, weapon, weaponLevel, message: pickupMessage, face: faceName, restartText, automap: amView }, hudAssets, tics));
         lastHudKey = hudKey;
       }
       hudPass.draw(encoder, display.colorView, display.internal.width, display.internal.height);
     }
     if (showMenu) {
-      menuPass.draw(encoder, display.colorView, display.internal.width, display.internal.height, !drawScene);
+      menuPass.draw(encoder, display.colorView, display.internal.width, display.internal.height, !drawScene && !screenImage);
     }
 
     display.blit(encoder);
@@ -1339,6 +1508,9 @@ async function main() {
 
     requestAnimationFrame(frame);
   }
+  // Etapa 23: primeiro nível pelo mesmo caminho da troca (sem nível anterior, a falha é fatal).
+  if (!(await startLevel(session.current.name))) throw new Error(`não foi possível carregar ${session.current.name}`);
+  applyHud();
   requestAnimationFrame(frame);
 }
 

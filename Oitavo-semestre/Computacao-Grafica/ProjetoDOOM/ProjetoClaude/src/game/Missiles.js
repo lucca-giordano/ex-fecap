@@ -112,13 +112,19 @@ export class MissileSystem {
   //   sectorAt(x, y) -> índice do setor,
   //   hit(proj, alvo, dano)  (dano direto; o projétil explode em seguida),
   //   blast(proj)            (dano em raio do foguete, ao entrar no quadro B),
-  //   sound(nome, proj), event(ev) (opcional, para a depuração) }.
+  //   sound(nome, proj), event(ev) (opcional, para a depuração),
+  //   speedOf(tipo) -> velocidade (etapa 23, opcional: Nightmare; undefined usa a da tabela) }.
   constructor(world, rng, ctx) {
     this.world = world;
     this.rng = rng;
     this.ctx = ctx;
     this.nextId = 1;
     this.reset();
+  }
+
+  // Velocidade do tipo (unidades por tic).
+  speedOf(type) {
+    return this.ctx.speedOf?.(type) ?? MISSILE_TYPES[type].speed;
   }
 
   reset() {
@@ -128,9 +134,8 @@ export class MissileSystem {
 
   // P_SpawnMissile: do monstro m (x, y, floorZ) até o alvo (pés: target.z).
   spawnFromMonster(m, target, type) {
-    const t = MISSILE_TYPES[type];
     const angle = Math.atan2(target.y - m.y, target.x - m.x) * 180 / Math.PI;
-    const dist = Math.max(1, aproxDist(target.x - m.x, target.y - m.y) / t.speed);
+    const dist = Math.max(1, aproxDist(target.x - m.x, target.y - m.y) / this.speedOf(type));
     const vz = (target.z - m.floorZ) / dist;
     this.stats.fired[type === 'bruiserShot' ? 'BOSS' : 'TROO']++;
     return this.spawn(type, m.x, m.y, m.floorZ + MISSILE_Z, angle, vz, m.thingIndex, m.type);
@@ -138,15 +143,15 @@ export class MissileSystem {
 
   // P_SpawnPlayerMissile: ângulo e pitch da câmera (sem mira automática).
   spawnFromPlayer(player, angleDeg, pitchDeg, type = 'rocket') {
-    const t = MISSILE_TYPES[type];
     this.stats.fired.player++;
-    return this.spawn(type, player.x, player.y, player.z + MISSILE_Z, angleDeg, t.speed * Math.tan(pitchDeg * Math.PI / 180), 'player', 'player');
+    return this.spawn(type, player.x, player.y, player.z + MISSILE_Z, angleDeg, this.speedOf(type) * Math.tan(pitchDeg * Math.PI / 180), 'player', 'player');
   }
 
   spawn(type, x, y, z, angleDeg, vz, owner, ownerType) {
     const t = MISSILE_TYPES[type];
     const a = angleDeg * Math.PI / 180;
-    const p = { id: this.nextId++, type, x, y, z, vx: t.speed * Math.cos(a), vy: t.speed * Math.sin(a), vz,
+    const speed = this.speedOf(type);
+    const p = { id: this.nextId++, type, x, y, z, vx: speed * Math.cos(a), vy: speed * Math.sin(a), vz,
       angle: ((angleDeg % 360) + 360) % 360, owner, ownerType, state: 'fly', frameIndex: 0, ticsLeft: 0, ticsAlive: 0, removed: false };
     this.list.push(p);
     if (this.list.length > MAX_MISSILES) this.list.shift(); // descarta o mais antigo

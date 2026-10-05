@@ -17,28 +17,7 @@ export class SpriteSet {
     let set = null;
     let error = null;
     try {
-      const pipeline = await device.createRenderPipelineAsync({
-        label: 'sprites: pipeline',
-        layout: 'auto',
-        vertex: {
-          module,
-          entryPoint: 'sp_vs',
-          buffers: [{
-            arrayStride: INSTANCE_STRIDE,
-            stepMode: 'instance',
-            attributes: [
-              { shaderLocation: 0, offset: INSTANCE_OFFSETS.base, format: 'float32x3' },
-              { shaderLocation: 1, offset: INSTANCE_OFFSETS.layer, format: 'uint32' },
-              { shaderLocation: 2, offset: INSTANCE_OFFSETS.lightnum, format: 'uint32' },
-              { shaderLocation: 3, offset: INSTANCE_OFFSETS.flags, format: 'uint32' },
-            ],
-          }],
-        },
-        // Sem blending: pixels opacos com teste e escrita de profundidade; os transparentes são descartados.
-        fragment: { module, entryPoint: 'sp_fs', targets: [{ format: SCENE_FORMAT }] },
-        primitive: { topology: 'triangle-list', cullMode: 'none' },
-        depthStencil: { format: DEPTH_FORMAT, depthWriteEnabled: true, depthCompare: 'less' },
-      });
+      const pipeline = await SpriteSet.createPipeline(device, module);
       set = new SpriteSet(device, pipeline, scene, litPaletteView, capacity);
     } catch (err) {
       error = err;
@@ -46,12 +25,48 @@ export class SpriteSet {
     const scopeError = await device.popErrorScope();
     error = error ?? scopeError;
     if (error) {
+      set?.destroy();
       const message = `Sprites desligados nesta sessão: ${error.message ?? error}`;
       console.error(message, error);
       report?.(new Error(message));
       return null;
     }
     return set;
+  }
+
+  // Etapa 23: a pipeline é global (criada uma vez); cada nível cria só os recursos (new SpriteSet).
+  static createPipeline(device, module) {
+    return device.createRenderPipelineAsync({
+      label: 'sprites: pipeline',
+      layout: 'auto',
+      vertex: {
+        module,
+        entryPoint: 'sp_vs',
+        buffers: [{
+          arrayStride: INSTANCE_STRIDE,
+          stepMode: 'instance',
+          attributes: [
+            { shaderLocation: 0, offset: INSTANCE_OFFSETS.base, format: 'float32x3' },
+            { shaderLocation: 1, offset: INSTANCE_OFFSETS.layer, format: 'uint32' },
+            { shaderLocation: 2, offset: INSTANCE_OFFSETS.lightnum, format: 'uint32' },
+            { shaderLocation: 3, offset: INSTANCE_OFFSETS.flags, format: 'uint32' },
+          ],
+        }],
+      },
+      // Sem blending: pixels opacos com teste e escrita de profundidade; os transparentes são descartados.
+      fragment: { module, entryPoint: 'sp_fs', targets: [{ format: SCENE_FORMAT }] },
+      primitive: { topology: 'triangle-list', cullMode: 'none' },
+      depthStencil: { format: DEPTH_FORMAT, depthWriteEnabled: true, depthCompare: 'less' },
+    });
+  }
+
+  // Recursos do nível (texture array, metadados, instâncias, uniform e bind group).
+  destroy() {
+    for (const o of [this.texture, this.metaBuffer, this.instanceBuffer, this.uniformBuffer]) o?.destroy();
+  }
+
+  get counts() {
+    return { textures: 1, buffers: 3, bindGroups: 1 };
   }
 
   constructor(device, pipeline, scene, litPaletteView, capacity) {
@@ -66,6 +81,16 @@ export class SpriteSet {
     if (layers.length > maxTextureArrayLayers || layerW > maxTextureDimension2D || layerH > maxTextureDimension2D) {
       throw new Error(`Sprites: ${layers.length} camadas de ${layerW}x${layerH} excedem os limites do dispositivo ` +
         `(${maxTextureArrayLayers} camadas, ${maxTextureDimension2D} px)`);
+    }
+    // Limites conferidos ANTES de criar qualquer objeto (etapa 23: uma falha não deixa nada vivo).
+    const metaBytes = Math.max(1, layers.length) * 4 * 4;
+    const instanceBytes = Math.max(1, capacity) * INSTANCE_STRIDE;
+    const { maxStorageBufferBindingSize, maxBufferSize } = device.limits;
+    for (const [name, bytes] of [['metadados', metaBytes], ['instâncias', instanceBytes]]) {
+      if (bytes > maxStorageBufferBindingSize || bytes > maxBufferSize) {
+        throw new Error(`Sprites: buffer de ${name} com ${bytes} bytes excede maxStorageBufferBindingSize ` +
+          `(${maxStorageBufferBindingSize}) ou maxBufferSize (${maxBufferSize})`);
+      }
     }
     this.texture = device.createTexture({
       label: 'sprites: texture array',
@@ -88,14 +113,7 @@ export class SpriteSet {
       meta.set([patch.width, patch.height, patch.leftOffset, patch.topOffset], i * 4);
     });
     // Instâncias: objetos do mapa + efeitos (capacity), reescritas a cada frame.
-    this.instanceData = new ArrayBuffer(Math.max(1, capacity) * INSTANCE_STRIDE);
-    const { maxStorageBufferBindingSize, maxBufferSize } = device.limits;
-    for (const [name, bytes] of [['metadados', meta.byteLength], ['instâncias', this.instanceData.byteLength]]) {
-      if (bytes > maxStorageBufferBindingSize || bytes > maxBufferSize) {
-        throw new Error(`Sprites: buffer de ${name} com ${bytes} bytes excede maxStorageBufferBindingSize ` +
-          `(${maxStorageBufferBindingSize}) ou maxBufferSize (${maxBufferSize})`);
-      }
-    }
+    this.instanceData = new ArrayBuffer(instanceBytes);
     this.metaBuffer = device.createBuffer({
       label: 'sprites: metadados', size: meta.byteLength,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,

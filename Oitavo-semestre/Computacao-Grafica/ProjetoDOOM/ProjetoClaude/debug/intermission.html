@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intermissão e fim de episódio (debug)</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px 16px 8px; font-size: 14px; }
+    .row { display: flex; flex-wrap: wrap; gap: 16px; padding: 0 16px 16px; align-items: flex-start; }
+    canvas { display: block; image-rendering: pixelated; }
+    label { display: block; margin: 4px 0; }
+    input[type=number] { width: 70px; font: 12px monospace; }
+    button, select { font: 12px monospace; margin: 2px 0; }
+    #state, #sounds { white-space: pre; color: #9c9; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div id="msg"></div>
+  <h2>Intermissão (Intermission + composeIntermission, as mesmas do jogo)</h2>
+  <div class="row">
+    <canvas id="wi"></canvas>
+    <div>
+      <label>Episódio <select id="ep"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+      <label>Mapa que terminou <input id="last" type="number" min="1" max="9" value="1"></label>
+      <label>Próximo mapa <input id="next" type="number" min="1" max="9" value="2"></label>
+      <label>Mortes <input id="kills" type="number" value="12"> / <input id="totalKills" type="number" value="20"></label>
+      <label>Itens <input id="items" type="number" value="5"> / <input id="totalItems" type="number" value="9"></label>
+      <label>Segredos <input id="secrets" type="number" value="1"> / <input id="totalSecrets" type="number" value="3"></label>
+      <label>Tempo (s) <input id="time" type="number" value="95"></label>
+      <button id="restart">Recomeçar</button>
+      <button id="press">Acelerar (tecla)</button>
+      <label><input id="play" type="checkbox" checked> rodar a 35 tics/s</label>
+      <div id="state"></div>
+      <b>Sons</b>
+      <div id="sounds"></div>
+    </div>
+  </div>
+  <h2>Fim de episódio (Finale + composeFinale)</h2>
+  <div class="row">
+    <canvas id="fin"></canvas>
+    <div>
+      <label>Episódio <select id="fep"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+      <label>Idioma <select id="lang"><option>en</option><option>pt</option></select></label>
+      <button id="frestart">Recomeçar</button>
+      <button id="fpress">Tecla</button>
+      <div id="fstate"></div>
+    </div>
+  </div>
+  <script type="module" src="intermission.js"></script>
+</body>
+</html>

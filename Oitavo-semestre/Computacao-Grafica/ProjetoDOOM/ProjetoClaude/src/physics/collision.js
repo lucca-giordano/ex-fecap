@@ -137,7 +137,10 @@ function recover(state, world, reason) {
 // queda (impactSpeed = velocidade vertical positiva, em u/s, logo antes de zerá-la). Subir degraus
 // não gera evento. O movimento é o mesmo da etapa 12.
 // solids (etapa 16): objetos sólidos { x, y, radius } (padrão: nenhum, comportamento da etapa 12).
-export function stepPlayer(state, wish, dt, world, solids = []) {
+// options.noclip (etapa 22, IDCLIP): sem empurrão contra linhas e sólidos, z = chão do setor sob o
+// centro (sem limite de degrau) e sem a volta à última posição válida.
+export function stepPlayer(state, wish, dt, world, solids = [], options = {}) {
+  if (options.noclip) return stepNoclip(state, wish, dt, world);
   const events = [];
   dt = Math.min(Math.max(dt, 0), MAX_PHYSICS_DT);
   if (dt === 0) return events;
@@ -178,6 +181,20 @@ export function stepPlayer(state, wish, dt, world, solids = []) {
   // Velocidade horizontal real do quadro (u/s), depois da colisão (etapa 13: balanço da arma).
   state.hspeed = Math.hypot(state.x - startX, state.y - startY) / dt;
   return events;
+}
+
+// Noclip: anda livre; fora do mapa, mantém o último chão conhecido.
+function stepNoclip(state, wish, dt, world) {
+  dt = Math.min(Math.max(dt, 0), MAX_PHYSICS_DT);
+  if (dt === 0) return [];
+  const startX = state.x, startY = state.y;
+  state.x += wish.vx * dt;
+  state.y += wish.vy * dt;
+  updateSector(state, world);
+  state.z = state.floorz;
+  state.vz = 0;
+  state.hspeed = Math.hypot(state.x - startX, state.y - startY) / dt;
+  return [];
 }
 
 // Troca de "voar" para "andar": pés abaixo do olho, nunca abaixo do chão; se a posição estiver fora

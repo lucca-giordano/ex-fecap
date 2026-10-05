@@ -46,6 +46,8 @@ export const ACTION_KEYS = {
   toggleMute: { code: 'KeyM', label: 'M', desc: 'som ligado / mudo', kind: 'toggle' },
   // Etapa 19: "usar"; por enquanto só reinicia depois da morte (portas ainda não existem).
   use: { code: 'KeyE', label: 'E', desc: 'usar / reiniciar', kind: 'press' },
+  // Etapa 22: automapa (dentro dele, F, G, + e -, 0 e as setas têm função própria).
+  toggleAutomap: { code: 'Tab', label: 'Tab', desc: 'automapa', kind: 'toggle' },
   // Setas: giram a câmera só no modo de calibragem (o mouse fica livre para o painel).
   // group 'tuning': a tela READ THIS! mostra as quatro numa linha só.
   lookLeft: { code: 'ArrowLeft', label: '←', desc: 'girar à esquerda (calibragem)', kind: 'hold', group: 'tuning' },
@@ -93,7 +95,9 @@ export class Controls {
   // onLockError(): pedido de pointer lock recusado (evento pointerlockerror ou promise rejeitada).
   // onClick(): clique no canvas sem o pointer lock (padrão: pedir o lock).
   // isBlocked(): true enquanto o menu está aberto; as teclas do jogo são ignoradas.
-  constructor(canvas, { onAction, onLook, onLockChange, onLockError, onClick, isBlocked }) {
+  // onKey(e) (etapa 22): chamado em toda tecla do jogo ANTES do despacho; devolvendo true, a tecla não
+  // dispara ações de alternância nem de pressão (as de segurar, como andar, continuam).
+  constructor(canvas, { onAction, onLook, onLockChange, onLockError, onClick, isBlocked, onKey }) {
     this.canvas = canvas;
     this.held = new Set(); // ações 'hold' pressionadas
     this.running = false;
@@ -102,6 +106,7 @@ export class Controls {
     this.onLockChange = onLockChange;
     this.onLockError = onLockError;
     this.isBlocked = isBlocked;
+    this.onKey = onKey;
     this.lockModeLogged = false;
 
     window.addEventListener('keydown', (e) => this.keyDown(e));
@@ -169,6 +174,7 @@ export class Controls {
     if (this.isBlocked?.()) return;
     // Seletor de cor do painel de calibragem com foco: a tecla é dele.
     if (e.target?.tagName === 'INPUT' && e.target.type === 'color') return;
+    const consumed = this.onKey?.(e) === true; // códigos de trapaça em andamento
     const action = ACTION_BY_CODE.get(e.code);
     if (!action) return;
     e.preventDefault(); // Space não rola a página; demais teclas mapeadas foram tratadas pelo jogo
@@ -178,6 +184,7 @@ export class Controls {
       this.held.add(action);
       return;
     }
+    if (consumed) return;
     if (kind === 'toggle' && e.repeat) return; // segurar não fica ligando e desligando
     if (action === 'run') {
       this.running = !this.running;

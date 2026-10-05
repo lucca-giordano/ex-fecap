@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import { WadFile } from '../src/wad/WadFile.js';
 import { loadMenuAssets } from '../src/menu/MenuAssets.js';
-import { composeMenu, measureText, helpEntries, helpPages, MENU_WIDTH, MENU_HEIGHT, MENU_LAYOUT } from '../src/menu/MenuRenderer.js';
+import { composeMenu, measureText, helpEntries, helpPages, creditsPages, MENU_WIDTH, MENU_HEIGHT, MENU_LAYOUT } from '../src/menu/MenuRenderer.js';
 import { SCREENS } from '../src/menu/Menu.js';
 import { MENU_TEXT } from '../src/menu/menuText.js';
 
@@ -40,6 +40,11 @@ for (const lang of ['en', 'pt']) {
   cases.push([`${lang} opções (volume 15)`, { lang, screen: 'options', selected: 4, started: true, resumeFailed: false,
     values: { ...values(10), sfxVolumeLevel: 15 } }]);
   // Etapa 17: uma composição por página da ajuda.
+  // Etapa 22: uma composição por página de créditos (e o principal com o 4º item selecionado).
+  creditsPages(MENU_TEXT[lang]).forEach((_, page) => {
+    cases.push([`${lang} créditos página ${page + 1}`, { lang, screen: 'credits', helpPage: page, selected: 0, started: true, resumeFailed: false, values: values(5) }]);
+  });
+  cases.push([`${lang} principal com CREDITS selecionado`, { lang, screen: 'main', selected: 3, started: false, resumeFailed: false, values: values(5) }]);
   helpPages(MENU_TEXT[lang]).forEach((_, page) => {
     cases.push([`${lang} read this página ${page + 1}`, { lang, screen: 'help', helpPage: page, selected: 0, started: true, resumeFailed: true, values: values(5) }]);
   });
@@ -129,6 +134,17 @@ for (const screen of ['options', 'extras', 'debug', 'gameDebug', 'monsterDebug']
 const thermoH = assets.patches.M_THERMM?.height ?? 0;
 if (OPTIONS.thermoDy + thermoH > OPTIONS.thermoStep) {
   fail(`termômetro termina em y + ${OPTIONS.thermoDy + thermoH}, depois do próximo item (y + ${OPTIONS.thermoStep})`);
+}
+
+// Créditos (etapa 22): nenhuma linha passa de y = 180 em nenhuma página, nos dois idiomas.
+for (const lang of ['en', 'pt']) {
+  creditsPages(MENU_TEXT[lang]).forEach((_, page) => {
+    const report = [];
+    composeMenu({ lang, screen: 'credits', helpPage: page, selected: 0, started: true, resumeFailed: false, values: values(5) }, assets, 0, report);
+    const list = report.filter((r) => r.y < HELP.footerY);
+    const bottom = Math.max(...list.map((r) => r.bottom));
+    if (bottom > HELP.maxBottom) fail(`${lang} créditos página ${page + 1}: termina em y = ${bottom}`);
+  });
 }
 
 console.log(failures ? `${failures} falha(s)` : 'Tudo certo');

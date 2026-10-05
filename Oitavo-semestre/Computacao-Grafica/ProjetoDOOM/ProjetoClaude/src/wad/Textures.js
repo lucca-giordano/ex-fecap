@@ -125,7 +125,9 @@ export function usedTextureNames(map) {
 }
 
 // Carrega paleta, flats e texturas de parede com os nomes pedidos.
-export function loadTextures(wad, wallNames, flatNames) {
+// cache (etapa 23, opcional): TextureCache (src/wad/TextureCache.js) compartilhado entre níveis; guarda
+// PNAMES, TEXTURE1/2, patches, texturas montadas e flats já decodificados. Sem ele, igual à etapa 5.
+export function loadTextures(wad, wallNames, flatNames, cache = null) {
   const stats = {
     wallsRequested: wallNames.size,
     flatsRequested: flatNames.size,
@@ -142,15 +144,18 @@ export function loadTextures(wad, wallNames, flatNames) {
   for (const name of flatNames) {
     if (name === SKY) continue;
     // Exige 4096 bytes: ignora marcadores (tamanho 0) e lumps homônimos de outro tipo.
+    if (cache?.flats.has(name)) { flats.set(name, cache.flats.get(name)); continue; }
     const li = findLastLump(wad, name, (l) => l.size === FLAT_SIZE);
     if (li < 0) { stats.missingFlats.push(name); continue; }
     flats.set(name, wad.getLumpBytes(li).slice());
+    cache?.flats.set(name, flats.get(name));
   }
 
   // --- Texturas de parede ---
-  const pnames = readPnames(wad);
-  const defs = readTextureDefs(wad);
-  const patchCache = new Map(); // patchIndex -> imagem decodificada (ou null)
+  if (cache && !cache.pnames) { cache.pnames = readPnames(wad); cache.defs = readTextureDefs(wad); }
+  const pnames = cache?.pnames ?? readPnames(wad);
+  const defs = cache?.defs ?? readTextureDefs(wad);
+  const patchCache = cache?.patches ?? new Map(); // patchIndex -> imagem decodificada (ou null)
 
   const getPatch = (texName, patchIndex) => {
     if (patchCache.has(patchIndex)) return patchCache.get(patchIndex);
@@ -173,6 +178,15 @@ export function loadTextures(wad, wallNames, flatNames) {
   for (const name of wallNames) {
     const def = defs.get(name);
     if (!def) { stats.missingWalls.push(name); continue; }
+    const hit = cache?.walls.get(name);
+    if (hit) {
+      // Já montada em outro nível: mesmos dados e os mesmos registros no relatório.
+      wallTextures.set(name, hit.texture);
+      if (hit.holes) stats.transparent.push({ name, count: hit.holes });
+      stats.badPatchRefs.push(...hit.badRefs);
+      continue;
+    }
+    const badBefore = stats.badPatchRefs.length;
 
     const { width, height } = def;
     const indices = new Uint8Array(width * height);
@@ -200,6 +214,7 @@ export function loadTextures(wad, wallNames, flatNames) {
     if (holes) stats.transparent.push({ name, count: holes });
 
     wallTextures.set(name, { width, height, indices, opacity });
+    cache?.walls.set(name, { texture: wallTextures.get(name), holes, badRefs: stats.badPatchRefs.slice(badBefore) });
   }
 
   stats.wallsLoaded = wallTextures.size;

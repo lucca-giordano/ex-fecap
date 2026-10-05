@@ -146,6 +146,11 @@ export class MonsterAI {
     return this;
   }
 
+  // Etapa 23: monstro reposto (Nightmare): recalcula o setor.
+  placed(m) {
+    m.sector = sectorAt(this.world, m.x, m.y);
+  }
+
   reset() {
     this.alerted.fill(false);
     if (this.system) for (const m of this.system.monsters) m.sector = sectorAt(this.world, m.x, m.y);
@@ -301,9 +306,10 @@ export class MonsterAI {
       this.system.setState(m, 'stand');
       return;
     }
+    const fast = Boolean(this.ctx.skillParams?.fast); // etapa 23: Nightmare
     if (m.justAttacked) {
       m.justAttacked = false;
-      this.newChaseDir(m); // dificuldade abaixo de pesadelo
+      if (!fast) this.newChaseDir(m); // abaixo de Nightmare
       return;
     }
     if (m.aiDef.melee && this.checkMeleeRange(m)) {
@@ -312,7 +318,7 @@ export class MonsterAI {
       this.system.setState(m, 'melee');
       return;
     }
-    if (m.aiDef.missile && m.movecount === 0 && this.checkMissileRange(m)) {
+    if (m.aiDef.missile && (fast || m.movecount === 0) && this.checkMissileRange(m)) {
       this.event({ type: 'attack', thingIndex: m.thingIndex, kind: 'missile' });
       this.system.setState(m, 'missile');
       m.justAttacked = true;

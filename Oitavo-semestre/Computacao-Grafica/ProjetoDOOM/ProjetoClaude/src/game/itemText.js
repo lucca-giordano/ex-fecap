@@ -4,6 +4,15 @@ export const ITEM_TEXT = {
   en: {
     // Etapa 20: portas de chave (mensagem no mesmo lugar das de coleta).
     needBlueKey: 'You need a blue key to open this door.',
+    // Etapa 22: códigos de trapaça e automapa (textos do Doom, de memória).
+    cheatGodOn: 'Degreelessness Mode On', cheatGodOff: 'Degreelessness Mode Off',
+    cheatKfa: 'Very Happy Ammo Added', cheatFa: 'Ammo (no keys) Added',
+    cheatClipOn: 'No Clipping Mode ON', cheatClipOff: 'No Clipping Mode OFF',
+    // Etapa 23: segredo, IDCLEV (o Doom mostra 'Changing Level...'; o resto é texto do projeto).
+    secretFound: 'A secret is revealed!',
+    clevPrompt: 'Change level: type episode and map', clevChanging: 'Changing Level...',
+    clevInvalid: 'No such level', clevCancel: 'Level change cancelled',
+    amFollowOn: 'Follow Mode ON', amFollowOff: 'Follow Mode OFF', amGridOn: 'Grid ON', amGridOff: 'Grid OFF',
     needYellowKey: 'You need a yellow key to open this door.',
     needRedKey: 'You need a red key to open this door.',
     stimpack: 'Picked up a stimpack.',
@@ -38,6 +47,13 @@ export const ITEM_TEXT = {
   },
   pt: {
     needBlueKey: 'VOCE PRECISA DE UMA CHAVE AZUL PARA ABRIR ESTA PORTA.',
+    cheatGodOn: 'MODO INVENCIVEL LIGADO', cheatGodOff: 'MODO INVENCIVEL DESLIGADO',
+    cheatKfa: 'MUNICAO, ARMAS E CHAVES ADICIONADAS', cheatFa: 'MUNICAO E ARMAS ADICIONADAS (SEM CHAVES)',
+    cheatClipOn: 'ATRAVESSAR PAREDES LIGADO', cheatClipOff: 'ATRAVESSAR PAREDES DESLIGADO',
+    secretFound: 'UM SEGREDO FOI REVELADO!',
+    clevPrompt: 'MUDAR DE FASE: DIGITE EPISODIO E MAPA', clevChanging: 'MUDANDO DE FASE...',
+    clevInvalid: 'FASE INEXISTENTE', clevCancel: 'MUDANCA DE FASE CANCELADA',
+    amFollowOn: 'SEGUIR LIGADO', amFollowOff: 'SEGUIR DESLIGADO', amGridOn: 'GRADE LIGADA', amGridOff: 'GRADE DESLIGADA',
     needYellowKey: 'VOCE PRECISA DE UMA CHAVE AMARELA PARA ABRIR ESTA PORTA.',
     needRedKey: 'VOCE PRECISA DE UMA CHAVE VERMELHA PARA ABRIR ESTA PORTA.',
     stimpack: 'Pegou um estimulante.',

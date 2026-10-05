@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapas e dificuldade (debug)</title>
+  <style>
+    html, body { margin: 0; background: #181818; color: #ddd; font: 12px monospace; }
+    h2 { margin: 16px 16px 8px; font-size: 14px; }
+    p { margin: 4px 16px; color: #aaa; }
+    table { border-collapse: collapse; margin: 8px 16px 16px; }
+    th, td { border: 1px solid #333; padding: 2px 6px; text-align: right; }
+    th { background: #262626; }
+    td.l, th.l { text-align: left; }
+    tr.bad td { color: #f66; }
+    .warn { color: #fc6; }
+    #msg { color: #f44; padding: 16px; font-size: 16px; }
+    #status { color: #9c9; margin: 8px 16px; }
+  </style>
+</head>
+<body>
+  <div id="msg"></div>
+  <h2>Mapas do WAD (LevelData, mesmo caminho do jogo, sem GPU)</h2>
+  <p>Camadas com o limite escolhido; monstros, itens e segredos depois do filtro de dificuldade.</p>
+  <p>
+    Limite de camadas
+    <select id="limit"><option value="256">256 (padrão do WebGPU)</option><option value="1024" selected>1024</option></select>
+    Dificuldade <select id="skill"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+    <button id="run">Montar todos</button>
+  </p>
+  <div id="status"></div>
+  <table id="maps"></table>
+  <h2>Monstros por dificuldade (THINGS com o bit da dificuldade)</h2>
+  <table id="skills"></table>
+  <h2>Progressão (GameFlow.nextMap)</h2>
+  <table id="flow"></table>
+  <script type="module" src="levels.js"></script>
+</body>
+</html>

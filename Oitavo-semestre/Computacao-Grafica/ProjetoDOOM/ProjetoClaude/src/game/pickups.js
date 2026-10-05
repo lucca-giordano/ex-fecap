@@ -4,9 +4,10 @@
 import { CLIP_AMMO, AMMO_TYPES, BONUS_ADD, MAX_HEALTH, MAX_ARMOR, ARMOR_GREEN, ARMOR_BLUE } from './PlayerStats.js';
 
 // Dá munição: n clips (0 = meio clip, como o P_GiveAmmo). Devolve false se já estava no máximo.
+// Etapa 23: stats.ammoScale (2 nas dificuldades 1 e 5, como o num <<= 1 do P_GiveAmmo).
 export function giveAmmo(stats, type, clips) {
   if (stats.ammo[type] >= stats.maxAmmoOf(type)) return false;
-  const amount = clips > 0 ? clips * CLIP_AMMO[type] : Math.floor(CLIP_AMMO[type] / 2);
+  const amount = (clips > 0 ? clips * CLIP_AMMO[type] : Math.floor(CLIP_AMMO[type] / 2)) * (stats.ammoScale ?? 1);
   stats.addAmmo(amount, type);
   return true;
 }

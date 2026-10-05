@@ -4,6 +4,7 @@
 // esfacelada), dead. Sem IA (tipo sem tabela, ou IA desligada), "stand" é a animação da etapa 11.
 
 import { NODIR, REACTION_TIME } from './aiTable.js';
+import { SARG_TYPES, RESPAWN_TICS, RESPAWN_CHANCE, RESPAWN_REACTION } from './skill.js';
 
 export const TERMINAL = -1;
 export const MTF_AMBUSH = 0x0008;
@@ -11,7 +12,8 @@ export const MTF_AMBUSH = 0x0008;
 export class MonsterSystem {
   // objects: objetos do mapa ({ index, x, y, angle, flags, base: [wx, wy, wz] }, de buildSpriteScene);
   // entries: Map tipo -> entrada resolvida (resolveMonsterTable); typeOf(obj) -> número do tipo.
-  // callbacks: { onSound(nome, monstro), onKill(monstro), onExplode(monstro) }; rng: Rng.
+  // callbacks: { onSound(nome, monstro), onKill(monstro), onExplode(monstro), skillParams (etapa 23, opcional),
+  //   canRespawn(monstro) e onRespawn(monstro, { x, y }) (Nightmare) }; rng: Rng.
   constructor(objects, entries, typeOf, rng, callbacks = {}) {
     this.rng = rng;
     this.cb = callbacks;
@@ -23,6 +25,8 @@ export class MonsterSystem {
     this.events = [];
     this.ai = null;          // MonsterAI ligado por attach() (etapa 18)
     this.aiEnabled = true;   // settings.monsterAI
+    this.skill = callbacks.skillParams ?? null; // etapa 23
+    this.respawns = 0;       // etapa 23: monstros que voltaram (Nightmare)
     for (const obj of objects) {
       const entry = entries.get(typeOf(obj));
       if (!entry) continue;
@@ -55,10 +59,11 @@ export class MonsterSystem {
         x: m.spawn.x, y: m.spawn.y, angle: m.spawn.angle, floorZ: m.spawn.floorZ,
         health: m.entry.health, state: 'stand', frameIndex: 0, shootable: true, removed: false, died: null,
         ticsLeft: m.aiDef ? m.aiDef.spawn[0][1] : 0, stateTic: -1,
-        movedir: NODIR, movecount: 0, reactionTime: REACTION_TIME, target: null,
-        justHit: false, justAttacked: false, ambush: m.ambushFlag,
+        movedir: NODIR, movecount: 0, reactionTime: this.skill?.fast ? 0 : REACTION_TIME, target: null, // etapa 23
+        justHit: false, justAttacked: false, ambush: m.ambushFlag, deadTics: 0,
       });
     }
+    this.respawns = 0;
     this.ai?.reset();
   }
 
@@ -129,7 +134,9 @@ export class MonsterSystem {
       }
     }
     m.frameIndex = index;
-    const tics = frames[index][1];
+    let tics = frames[index][1];
+    // Etapa 23 (Nightmare): corrida, ataque e dor do demônio e do espectro com metade dos tics.
+    if (this.skill?.fast && tics > 1 && SARG_TYPES.has(m.type) && (m.state === 'chase' || m.state === 'melee' || m.state === 'pain')) tics >>= 1;
     m.ticsLeft = tics === TERMINAL ? Infinity : tics;
     if (tics === TERMINAL) m.state = 'dead'; // corpo: permanece no último quadro
     if (m.state === 'die' || m.state === 'xdie' || m.state === 'dead') {
@@ -154,6 +161,7 @@ export class MonsterSystem {
     m.died = m.state;
     m.shootable = false;
     m.target = null;
+    m.deadTics = 0; // etapa 23: tempo como corpo (Nightmare)
     if (xdeath) this.cb.onSound?.('slop', m);
     else this.sound(m.entry.sounds.death, m); // o primeiro quadro de morte toca o som de morte
     if (m.entry.isMonster) this.cb.onKill?.(m);
@@ -207,6 +215,28 @@ export class MonsterSystem {
     }
   }
 
+  // Etapa 23: P_NightmareRespawn. Corpo de monstro (não barril) há RESPAWN_TICS tics; testado quando
+  // leveltime & 31 == 0 e P_Random <= 4; volta ao ponto de início se o lugar estiver livre, parado,
+  // com reactionTime 18. Não conta de novo no total de monstros.
+  respawnTick(m) {
+    if (!this.skill?.respawn || !m.entry.isMonster) return;
+    if (++m.deadTics < RESPAWN_TICS) return;
+    if (this.tickCount & 31) return;
+    if (this.rng.next255() > RESPAWN_CHANCE) return;
+    if (this.cb.canRespawn && !this.cb.canRespawn(m)) return;
+    const from = { x: m.x, y: m.y, floorZ: m.floorZ };
+    Object.assign(m, {
+      x: m.spawn.x, y: m.spawn.y, angle: m.spawn.angle, floorZ: m.spawn.floorZ,
+      health: m.entry.health, state: 'stand', frameIndex: 0, shootable: true, removed: false, died: null,
+      ticsLeft: m.aiDef ? m.aiDef.spawn[0][1] : 0, stateTic: this.tickCount,
+      movedir: NODIR, movecount: 0, reactionTime: RESPAWN_REACTION, target: null,
+      justHit: false, justAttacked: false, ambush: m.ambushFlag, deadTics: 0,
+    });
+    this.respawns++;
+    this.ai?.placed?.(m);
+    this.cb.onRespawn?.(m, from);
+  }
+
   // Um tic de jogo, na ordem do índice do THING. Um monstro que mudou de estado DURANTE este tic
   // (morto ou ferido pela explosão de outro que vem antes na lista) só começa a contar no tic seguinte,
   // para a duração não depender da ordem da lista: um barril morto por outro explode exatamente 10
@@ -214,6 +244,7 @@ export class MonsterSystem {
   tick() {
     this.tickCount++;
     for (const m of this.monsters) {
+      if (m.ticsLeft === Infinity && !m.removed && m.state === 'dead') { this.respawnTick(m); continue; }
       if (m.removed || m.ticsLeft === Infinity) continue;
       if (m.state === 'stand' && !this.hasAI(m)) continue;
       if (m.stateTic === this.tickCount) continue;

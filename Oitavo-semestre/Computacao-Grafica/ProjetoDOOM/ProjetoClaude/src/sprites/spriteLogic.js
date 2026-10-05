@@ -94,7 +94,9 @@ export function buildSpriteScene(wad, map, { skill = SKILL, maxLayers = Infinity
   };
   const fits = (layerOf) => layerOf.size <= maxLayers && textureOf(layerOf).bytes <= maxBytes;
   let layerOf = assignLayers([]);
-  for (const category of ['xdeath', 'pain', 'runExtra']) {
+  // Etapa 23: 'attack' por último (E4M6 e E4M7 não cabem em 256 camadas só com as três primeiras); sem os
+  // quadros de ataque, o monstro mostra a animação de parado enquanto ataca.
+  for (const category of ['xdeath', 'pain', 'runExtra', 'attack']) {
     if (fits(layerOf)) break;
     stats.droppedCategories.push(category);
     layerOf = assignLayers(stats.droppedCategories);

@@ -5,6 +5,8 @@ import { decodePatch, findLastLump, readPalette } from '../wad/Textures.js';
 export const MENU_PATCHES = [
   'M_DOOM', 'M_OPTTTL', 'M_NEWG', 'M_OPTION', 'M_RDTHIS',
   'M_SKULL1', 'M_SKULL2', 'M_THERML', 'M_THERMM', 'M_THERMR', 'M_THERMO', 'TITLEPIC',
+  // Etapa 23: episódio e dificuldade.
+  'M_EPISOD', 'M_EPI1', 'M_EPI2', 'M_EPI3', 'M_EPI4', 'M_SKILL', 'M_JKILL', 'M_ROUGH', 'M_HURT', 'M_ULTRA', 'M_NMARE',
 ];
 export const FONT_FIRST = 33; // '!'
 export const FONT_COUNT = 63; // até '_' (STCFN095)

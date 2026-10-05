@@ -1,0 +1,1517 @@
+{
+  "createdAt": "2026-10-04T22:58:33.183Z",
+  "maps": {
+    "E1M1": {
+      "ok": true,
+      "ms": 60,
+      "static": {
+        "walls": {
+          "vertexCount": 5156,
+          "indexCount": 7734,
+          "vertices": "286c434d97e1447db55cbb967463d5e5a64bfe19937621d4f9314129996a44eb",
+          "indices": "31d73880ce2584bd87c8f23a48a73d6859b3326a0092c07e57d7db81a20983e9"
+        },
+        "flats": {
+          "vertexCount": 5420,
+          "indexCount": 8076,
+          "vertices": "8f306522f18d5e752589d36ce9b39d1935c8577376f9c85330c3616fc4508b06",
+          "indices": "b51041a4b65deb2f1135698d195ad4c76db6ba34fa304a24bec75b7f6311a322"
+        }
+      },
+      "excluded": {
+        "walls": "b579f1ee793134089ceec202b7ba0c7084adb9db0326bee0fc48e17f5263d4ac",
+        "wallIndices": "c16fe4754caa6b46fc464bee069d283b57790ef02ddb6dcbc604a3837d360c62",
+        "flats": "3ccec773dd7b95876eb13c3220344fe8a161a0c994baea52ead43f4f876b64dc",
+        "flatIndices": "ab83a6a0a17d6d7fa4001a1b13f98e8a5f9e80159669aa7fc6f5460b0ece3797"
+      },
+      "dynamic": {
+        "vertexCount": 1516,
+        "indexCount": 2274,
+        "vertices": "7c426e746b1f5e7f97bb59b0b09c1384fecfa20ef583841b1fdafbe61da6e985",
+        "sectorVertices": "b5dd4942a3fb1ca80c343cf89c654e81e2d5cf34442850357a5e5df68ca5407d",
+        "indices": "759433bb9aa516091bef28c9e095babe137d278cb8612df86a2fe5286d987063"
+      },
+      "counts": {
+        "linedefs": 1175,
+        "sectors": 182,
+        "objects": 209,
+        "collisionLines": 1175,
+        "movableSectors": 17,
+        "layers": 302,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M2": {
+      "ok": true,
+      "ms": 48,
+      "static": {
+        "walls": {
+          "vertexCount": 8284,
+          "indexCount": 12426,
+          "vertices": "e68401b76f85a609d470178f48bebf9de8886c57b61b61c5ed2a1ca5d3288db5",
+          "indices": "64e43c1bbdfa8c21b476873a7067edc564047d07fa1701f9f895a82521bc15fc"
+        },
+        "flats": {
+          "vertexCount": 8648,
+          "indexCount": 12696,
+          "vertices": "f9c804495bbc95708d288d141ee8eb93a79c1d6c2ab9c1bac02b42daac5116c0",
+          "indices": "ed6662abf80db95a666162d05172528bc7203b7c5e1d1cd897ba1b124a208e86"
+        }
+      },
+      "excluded": {
+        "walls": "c3752a27bb668bc71de87752e9443e5455db89156fd620cef14fe4360aad887d",
+        "wallIndices": "8eebd5980fe862beaaeacc93439f1f13036e89ec1b0011581c77990243b9c478",
+        "flats": "180b4e4b049eef0d4b63ec4777b29a8bb57bcf53d891c69c61f02ceaa0dafa4f",
+        "flatIndices": "2452306757587c7c5ee6b24f8a23313c1c0b025f969754f75f542d157b36c150"
+      },
+      "dynamic": {
+        "vertexCount": 1860,
+        "indexCount": 2778,
+        "vertices": "d7d965138577dd0dd821786ad58d781eac6ade60eab81ab170697f1698ad01ee",
+        "sectorVertices": "7346f2b1bebc3914116ad9073fbe53462cba64e693e3148f46716231b0b1aaff",
+        "indices": "614a571b19921c592c560ad771f6446891a7f19d9ab64f51798a362f7bd56c68"
+      },
+      "counts": {
+        "linedefs": 2290,
+        "sectors": 380,
+        "objects": 269,
+        "collisionLines": 2290,
+        "movableSectors": 14,
+        "layers": 304,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M3": {
+      "ok": true,
+      "ms": 45,
+      "static": {
+        "walls": {
+          "vertexCount": 8760,
+          "indexCount": 13140,
+          "vertices": "d0f10a8196c7eb3b54c6ca1a3b95a0cc7e1d091d069b592eeb192d9acb36031a",
+          "indices": "151d648b1d1559a0915bf8905c3fab2a16388c94c8667e0d596df6e87a0d47ba"
+        },
+        "flats": {
+          "vertexCount": 6506,
+          "indexCount": 9666,
+          "vertices": "f8a48d3c2e00ee18f30c3575b8a14b78b029f57655d088990cca3139f2a76d14",
+          "indices": "328865ac1b1296319eed4feea5383f4fbb6d1d0a97e3e72f938916f1c53ffe83"
+        }
+      },
+      "excluded": {
+        "walls": "e8dcc094572057fb73f43ff986c43ba1ec721d5e780e0b5dd12b4a1b61bf2f09",
+        "wallIndices": "bf1f9057df75cfd5d9a7caee6937e6f8320304de866c4ebf933e316e886568d5",
+        "flats": "b715e1d3fb2f2c3b91dc7de800b38062923c84fa6fc2dd3f564f3edfa5afeb4c",
+        "flatIndices": "0d1a609e0bf196284b75dabb6ce9bd8563429b44bdc1cddacd6875203c574f61"
+      },
+      "dynamic": {
+        "vertexCount": 4378,
+        "indexCount": 6564,
+        "vertices": "58e35af53429097dbdae24ce08704f314d560a39665869359075c877768724d5",
+        "sectorVertices": "c6e27534ed2a5ac08537a741a1f0899946bc79c267627f8d61dd67c8bcaba467",
+        "indices": "9e75ef8bfbc08300bd407dc96b536e237b83608b1d74f6e8afae43880caeba86"
+      },
+      "counts": {
+        "linedefs": 2169,
+        "sectors": 330,
+        "objects": 309,
+        "collisionLines": 2169,
+        "movableSectors": 38,
+        "layers": 296,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M4": {
+      "ok": true,
+      "ms": 29,
+      "static": {
+        "walls": {
+          "vertexCount": 9660,
+          "indexCount": 14490,
+          "vertices": "b829dc2f5bb71c4df7e8726abdc7539cab93ebc9f1f7420e998be96ed662405b",
+          "indices": "46d0fb8e08deb57cfc995391ae6f77aa15bb4e153119ffb77922f962fd769cf4"
+        },
+        "flats": {
+          "vertexCount": 9518,
+          "indexCount": 14130,
+          "vertices": "8dbc2d20230aa4af229b81e1b93eca6ffc32fff24a9192639fb2e245b0fb555d",
+          "indices": "f4706d2c8c03d320363fe0ad7caece746adf1a6bf3002882ada4fa68a7f8ea5e"
+        }
+      },
+      "excluded": {
+        "walls": "83d0d2ff834f292df9f7180dd8ac76fbc230ca390979d9d42c7c28a08867aa53",
+        "wallIndices": "49dbf4143aac38bf47e14d2605f3589896ab70402acf4ca89a97b72d24b99914",
+        "flats": "de918324dd32f576268a0d77d6a8e7dc455f017655f974b0c17201d068a21a42",
+        "flatIndices": "86527d6b47ce030222981dcf0e61e0d9eed1ee1ac395a3809e975be9f6cc5830"
+      },
+      "dynamic": {
+        "vertexCount": 2220,
+        "indexCount": 3330,
+        "vertices": "6ed672b276eef91b696786d80d3199aaa445c460cdd8fbb452a13dc337287d0a",
+        "sectorVertices": "c24bec9c8937463674e699e75c2d659d86f3ef8fcdfd1cb2feafb28d7d09a250",
+        "indices": "21a3f2d5660a55207d7697c11f8a6442c1e700b557ef3edec5a077623fad0f1f"
+      },
+      "counts": {
+        "linedefs": 2283,
+        "sectors": 274,
+        "objects": 296,
+        "collisionLines": 2283,
+        "movableSectors": 19,
+        "layers": 291,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M5": {
+      "ok": true,
+      "ms": 28,
+      "static": {
+        "walls": {
+          "vertexCount": 4632,
+          "indexCount": 6948,
+          "vertices": "7e4161ebc883c47b16ce866a28aa33a22119403ec5140ae01ebf7581e21423bd",
+          "indices": "bb477540c6da0641d0332e39125010af0d531729e6f5be182a60fb118c82dca8"
+        },
+        "flats": {
+          "vertexCount": 3980,
+          "indexCount": 5928,
+          "vertices": "ab19c62c773076235cb8dbdee03afacd93a9393a49c5298b611eeed9eba86554",
+          "indices": "33e239f4a08fb6312422da3741307a3e31b6ddc1eb1f499beaa272085181ba14"
+        }
+      },
+      "excluded": {
+        "walls": "c706099b0b0a443f70ebc4c7b7d0d2f10bb9d312f348abd06197cf66108a90a7",
+        "wallIndices": "e1a2cec2ee43c97bc180cd33dde2e73f932156132cf61ebebb9c159f01bbc5f9",
+        "flats": "3728d8d7dda9b70f3bf1dfc97d2f7e6697e198c8bed7916bd314ce1055f3b8e2",
+        "flatIndices": "de068c23c183fe09cdb3f57d55105c124a8f97083237fe6c17a78cf97e89f0e2"
+      },
+      "dynamic": {
+        "vertexCount": 932,
+        "indexCount": 1398,
+        "vertices": "e44bd227d515ed0a6119cac908eb626bea9cc1b74706cab01d082346eb381e71",
+        "sectorVertices": "4f75f50978f67fae4d5b4399e79dbbf480a520ff40750c98087440d7e64f0c35",
+        "indices": "bf0d3ec218f035c43f0ad6bf0b7dcd09b649e66eca4f45779854d4bffff34d8b"
+      },
+      "counts": {
+        "linedefs": 1215,
+        "sectors": 214,
+        "objects": 253,
+        "collisionLines": 1215,
+        "movableSectors": 7,
+        "layers": 304,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M6": {
+      "ok": true,
+      "ms": 37,
+      "static": {
+        "walls": {
+          "vertexCount": 11216,
+          "indexCount": 16824,
+          "vertices": "50bf93af175e5c18682b7740738009946d1dbd32d44503472fd6f58e717fed88",
+          "indices": "5ba97e27c2ce4d43e55da0a3b9fdbb5f6f2bac383631cf121466c0968c3a22ff"
+        },
+        "flats": {
+          "vertexCount": 11080,
+          "indexCount": 16464,
+          "vertices": "55d934f082ebd1e4467b65012e196f81cb6b9a2ca1240fcc41410ee67424c7ec",
+          "indices": "7e67a4c860d7e34a688748720376ae4155d28b255502fe80ca4cc265c77806d7"
+        }
+      },
+      "excluded": {
+        "walls": "6792613bbfeec0d84c63bce8b69ab7e107654eba8b40c897e188b49ed803b60b",
+        "wallIndices": "086da1296a520125964094d875f00a33640dd02718f932e4e2b0f78f9e0f2208",
+        "flats": "8b88adf403094a798a04c94471b69a2eba5268d4a655753f7e92cff1dd4342b3",
+        "flatIndices": "74a7c9bd033a7e46ce38d1a036aca4a2c2f5f4c73edfee9a9ac3e3078a1e678e"
+      },
+      "dynamic": {
+        "vertexCount": 1460,
+        "indexCount": 2190,
+        "vertices": "e32ab463f9bb2bc21089373582ee0f7d410c037701743cb0f120a4e1a3bdcf5a",
+        "sectorVertices": "56d74c59af523f271faf93a5696bb7b159226ccc3512fde2fa210d65c9c77caf",
+        "indices": "88356965e419be7aa8676ef876434d9e5303f6f8436f7e7b635ac9bb53bdf55a"
+      },
+      "counts": {
+        "linedefs": 2818,
+        "sectors": 395,
+        "objects": 367,
+        "collisionLines": 2818,
+        "movableSectors": 14,
+        "layers": 324,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M7": {
+      "ok": true,
+      "ms": 50,
+      "static": {
+        "walls": {
+          "vertexCount": 16264,
+          "indexCount": 24396,
+          "vertices": "3b7bc6f66cd2d0662aec912f17783f55308bed88ec2f8d5afbc5fea0b47d29ea",
+          "indices": "4cb41cb8cc90457fd913b671048a1c272d5b6beed8be568de90dd4710effbddf"
+        },
+        "flats": {
+          "vertexCount": 16404,
+          "indexCount": 24444,
+          "vertices": "68fc5843d64ed6373f4b2d47240ae4694e43a19813ed46f65c9bcabb9c3a1b3a",
+          "indices": "34528c89cce24b75aaa34b0816aca05915c8691b466db51dc84b1debc8042f41"
+        }
+      },
+      "excluded": {
+        "walls": "065e0169fe89ffd3fde64f79f9c9deaedd2a050ecb6b17bcd92c11055b0b1561",
+        "wallIndices": "f8b4cd3052849b62236b04ee99440c4bf31184834c2359cddf2a4ba9e2c0d409",
+        "flats": "5fb0424cb1bc0ab55147044b3f8affeb162514fba580d9c19dcf9b542a19e372",
+        "flatIndices": "b8d922eead7a922900db9c498e57b0162151b964e49940f1653eb8d3a50dd0c8"
+      },
+      "dynamic": {
+        "vertexCount": 4128,
+        "indexCount": 6186,
+        "vertices": "171afc10430effcbad1960f4de89a3c68cf0853d864cd26ea8176b1cbfbb2332",
+        "sectorVertices": "d15bf8efb68c34cca256d87934e8cc559d8b22ac31a51161346b05608bdc357b",
+        "indices": "f0f28e81b6bb9794b8adc6889816266fe3fc6844709d172ad11ae7dcdd079db8"
+      },
+      "counts": {
+        "linedefs": 4337,
+        "sectors": 699,
+        "objects": 544,
+        "collisionLines": 4337,
+        "movableSectors": 37,
+        "layers": 335,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M8": {
+      "ok": true,
+      "ms": 19,
+      "static": {
+        "walls": {
+          "vertexCount": 3872,
+          "indexCount": 5808,
+          "vertices": "7c2e74185e8bdc04e6cd267e2b39f8b81a3ef80b1496e50686dfc9197c03a245",
+          "indices": "5b1477cc929cd4192b5defb55503c870682c8f910827cf78367633ce0c98adfc"
+        },
+        "flats": {
+          "vertexCount": 5016,
+          "indexCount": 7524,
+          "vertices": "7045d3fe70abf12c2d83854b6485e5c9a7ff709b40dd44c666bc8d060a3aeb0e",
+          "indices": "fe31b2f692f6d8eae94be6ec3030b4cff8391a6604f382d160837044c1247fd1"
+        }
+      },
+      "excluded": {
+        "walls": "ba692c2eb9c462c7602b396bc4ffca0d4cfe163a2b59d2996e8dd99f958530d9",
+        "wallIndices": "e09fae338d9183101f9370f6c37873410f6f1b822c5c9cd2fa8c3d586ac5250d",
+        "flats": "91a52be992dd0935fc230b4df98b968ebeba48486def367b2ba2e84631a2f2a0",
+        "flatIndices": "dd67c7267fd24dd1562a86b35aeebbca8e77d6f54f0fbe350189e9e9bf4ae1d8"
+      },
+      "dynamic": {
+        "vertexCount": 88,
+        "indexCount": 132,
+        "vertices": "6a2c15605b613a940967117821c658134a64781622bfdb1e9868fa940d05aefd",
+        "sectorVertices": "5e4d51c3daf18be6eacfcea96f7ddebc597dc686bf60f580d547765a86ef102f",
+        "indices": "975e3b2f44a2688cb4193fbc10e642a296702437985d52652479fa424ced276b"
+      },
+      "counts": {
+        "linedefs": 930,
+        "sectors": 97,
+        "objects": 41,
+        "collisionLines": 930,
+        "movableSectors": 1,
+        "layers": 134,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E1M9": {
+      "ok": true,
+      "ms": 31,
+      "static": {
+        "walls": {
+          "vertexCount": 7616,
+          "indexCount": 11424,
+          "vertices": "783e0c4f9c74a8ea21359a26b753ac3b73ae89682eda457f6a85fdcf47599304",
+          "indices": "cdcc9f9ce04deb7fb2bda99f8f164ed512bb61e858a0501245775065a02f3209"
+        },
+        "flats": {
+          "vertexCount": 7242,
+          "indexCount": 10770,
+          "vertices": "a64d3a48377ed7a6198f6b9077c701b31ce6b1c49b66f3c80c6eef421cba0a57",
+          "indices": "5bc14d04a0add1128e75d2d2c9e60dbd8080b4bf199e3de007be1284249af8d0"
+        }
+      },
+      "excluded": {
+        "walls": "96600b008f89cc92db706228e03e73fc0b6418b7a033e2b19c3645a805297254",
+        "wallIndices": "00b51ca4a0ff13d1f097c8100c2685c6444094485c6fa1ae38e19374e53b4348",
+        "flats": "637b9c9d6c1a4ffb7fe09b76699735d3fbbcd4a03ff0bbc7f9fc968ac26e3278",
+        "flatIndices": "c67cb7d2ce263a85c36dec81c59c5439c296c458a99f661e0c76905e57165a27"
+      },
+      "dynamic": {
+        "vertexCount": 2972,
+        "indexCount": 4452,
+        "vertices": "b1088bd566dcbd80bf6093df6fe2002cec4f7fdf12b8d0b4e2a4cb2cf7465556",
+        "sectorVertices": "b159073d3008f3642bc714884311dbd759943b13a605ed19bd8265b84ea9bbbd",
+        "indices": "47719793a286a191b5515adc7bfa084ce680a8bfce4df462978e4fd720ba67d8"
+      },
+      "counts": {
+        "linedefs": 1935,
+        "sectors": 297,
+        "objects": 289,
+        "collisionLines": 1935,
+        "movableSectors": 21,
+        "layers": 304,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M1": {
+      "ok": true,
+      "ms": 30,
+      "static": {
+        "walls": {
+          "vertexCount": 7704,
+          "indexCount": 11556,
+          "vertices": "aec09c185dffbaf1e4103094bd4290869c522e1825cc28747618082d85723f69",
+          "indices": "c021b10e4e1903b4f135f9e54ae63c0aaf0a68b42962f72f55c5cdb4296829c1"
+        },
+        "flats": {
+          "vertexCount": 8150,
+          "indexCount": 11946,
+          "vertices": "51fe42dcfc1d02d6b5a9ade72e24f4b11c57e664b5b0417edb930173414578fd",
+          "indices": "3384d655a630640f78ae0fca67c3eb8b89f63a56c43e53e2ce4a37f84a989f7a"
+        }
+      },
+      "excluded": {
+        "walls": "142c5ba03e878f9d07bcec7311b4ad609de97d6b7b52d8f09eb0abce6b56c970",
+        "wallIndices": "eb5348e1260d7745e6432667e942ef3062ceffb989d2231d5df34dbd8fd2d39b",
+        "flats": "41b5e33206c6415d36ca642e2b06b93b26218d3d7d7a550cdb679c535ad63e87",
+        "flatIndices": "9e5da83f353006346f148feee5569470581c24fc4af2f3780eae9427c6724597"
+      },
+      "dynamic": {
+        "vertexCount": 1636,
+        "indexCount": 2454,
+        "vertices": "d8c3865ae74c59837a8821bf1e9e54d5d1021d9d04c4c5ca26dd80d30fef3f06",
+        "sectorVertices": "75be14509907c9293d6e0954b6dbc79d458d03167039a9f448dbeb524e16b280",
+        "indices": "8882464ff09019c269d9c3d456ef5f8f111d5b555eee337ebaa125d5c23bf528"
+      },
+      "counts": {
+        "linedefs": 1784,
+        "sectors": 256,
+        "objects": 239,
+        "collisionLines": 1784,
+        "movableSectors": 12,
+        "layers": 335,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M2": {
+      "ok": true,
+      "ms": 13,
+      "static": {
+        "walls": {
+          "vertexCount": 3088,
+          "indexCount": 4632,
+          "vertices": "5957569808efe80dc44f66b9af10f593ee0ba7b51e3c950a1bd5d6f345cb7020",
+          "indices": "b08ab0a1a243760a5ac2373412479dea2a95c55fb0133f52b0b37ec8c41cd704"
+        },
+        "flats": {
+          "vertexCount": 3194,
+          "indexCount": 4746,
+          "vertices": "8df502f5b66d7c83c55a70a6ac269eb5254be2927d83b6c54a7229ecd843e32f",
+          "indices": "6cb656a020230e5019a7270a3787539b47891173ef1a52f214489f239bd60b27"
+        }
+      },
+      "excluded": {
+        "walls": "35c992f7d6a81c8cd16d7e89872dfa4106661afe655c301f27239b10f49473da",
+        "wallIndices": "039ad4d6ad28dd8923a7362558a61a07df90d70ea86b262cc3e477a2291fd6fe",
+        "flats": "89602281edd130fb89dc4b243a524d56d45fce4bbb6a50ceb9697ed4ddb15977",
+        "flatIndices": "6bb6e8f71b042f985cef4e7a1d05cec99348bf622bf07956d07e19d96731b18f"
+      },
+      "dynamic": {
+        "vertexCount": 440,
+        "indexCount": 672,
+        "vertices": "9a43790a8479fe6fd3154b7069ffe61795916e238cf42c5249ce26992f40c015",
+        "sectorVertices": "ddc0e95dffc62308df51bdd7ca19e8c9d81a14bd22780e45d0f0bc29ba60d6c8",
+        "indices": "500e6e996409dfd31238be0cd3a4aed8313890f251dd015a8ecc91c85891199a"
+      },
+      "counts": {
+        "linedefs": 812,
+        "sectors": 133,
+        "objects": 66,
+        "collisionLines": 812,
+        "movableSectors": 4,
+        "layers": 299,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M3": {
+      "ok": true,
+      "ms": 28,
+      "static": {
+        "walls": {
+          "vertexCount": 5804,
+          "indexCount": 8706,
+          "vertices": "46dbd14345b1a6218442110fb104303bb48f0eeac28090f47bdf7159ebae70af",
+          "indices": "e04b0cd658542b7eb28beddd722515755e93004103465b1ec32a3c686d378b4b"
+        },
+        "flats": {
+          "vertexCount": 6874,
+          "indexCount": 10170,
+          "vertices": "a5611840afdc0581452706788cd8d6736edfe919863a25c55d8e3d45f50e1cb3",
+          "indices": "578db8ca6e558857955ba326e2ce46d92e888e809446c6ab2228f15e9ace75db"
+        }
+      },
+      "excluded": {
+        "walls": "5e479fbb471bd9527915a20264d3b02633eca1d12e3fb73d85940198f1ea71d0",
+        "wallIndices": "8ff321ac15e481ae464921191439ae76e819f0665c1e32456de38ca8bba30107",
+        "flats": "27521d5d4a3d4d91c4c032c9eec77b7c1c064814bda1205039d3ba302479f261",
+        "flatIndices": "4986f836903934eaacd8e9656b28ec2f1ca1428dcdf7cf0085673890fe362ba9"
+      },
+      "dynamic": {
+        "vertexCount": 1418,
+        "indexCount": 2124,
+        "vertices": "b15b8fe5dcf90670949db8f05041022dadc86434214ec421aee1344a319ecc6b",
+        "sectorVertices": "262040ee718e0133374deb97f7fd66700a9d14cc25e08ebabc90459920f4dffd",
+        "indices": "551cfb14fd9e91be3412e494509006b195b071e67764465fc284edf2ae8c4321"
+      },
+      "counts": {
+        "linedefs": 1609,
+        "sectors": 331,
+        "objects": 185,
+        "collisionLines": 1609,
+        "movableSectors": 14,
+        "layers": 417,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M4": {
+      "ok": true,
+      "ms": 34,
+      "static": {
+        "walls": {
+          "vertexCount": 12976,
+          "indexCount": 19464,
+          "vertices": "3e96433f1f65619313833637761eb91e2245cc1af7cab36a907e731202d205f5",
+          "indices": "c56e4885482c5bd269cbae2b3207b8b5645ab7c182fad8c0c467b620e634fae5"
+        },
+        "flats": {
+          "vertexCount": 12348,
+          "indexCount": 18204,
+          "vertices": "d699615eaa062ce29c70fcb517fee2be73372cb6b24baf7f5399f34e91bde690",
+          "indices": "f31ebff1058fa2e6f18d009dff45e617078bec4f742371d8808892dfb4498706"
+        }
+      },
+      "excluded": {
+        "walls": "9a981bea8ed07390b85c9cb8bc409c4681d9585d946f3f2ec52a137226532b47",
+        "wallIndices": "55f1853f44cf6e4f3a05155c2546205871aa3c6a8ebe7bd9ad9d17bff2f678af",
+        "flats": "b07fc8125736515d42f10cd18a97646aab050e18c6806618e04b7a7135bdd2ec",
+        "flatIndices": "4a49c20067c79fb0e40eeec9c0f3c67238aa8211c52f3ac96570efca4ecca475"
+      },
+      "dynamic": {
+        "vertexCount": 1056,
+        "indexCount": 1584,
+        "vertices": "ecb1b94c6d21ed73f09a0fd14f99887893ca5b305407ecebf98872086e3d8b83",
+        "sectorVertices": "7b358bd25f02948bbe91b9b11b602a3b3a0ddd80c03b3f0a33cc0788250ab3ae",
+        "indices": "50ea71c126f5ffb6cfe71ddd130841bfbc6d84deb2dcb2291643f23265b8e188"
+      },
+      "counts": {
+        "linedefs": 3484,
+        "sectors": 702,
+        "objects": 298,
+        "collisionLines": 3484,
+        "movableSectors": 10,
+        "layers": 424,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M5": {
+      "ok": true,
+      "ms": 28,
+      "static": {
+        "walls": {
+          "vertexCount": 7004,
+          "indexCount": 10506,
+          "vertices": "733926e64bc12891ce44c9f0e09d5cf9d82b7b708cff8b671550def4b8f0f1d4",
+          "indices": "5b0639075c96b31b924350a90000842e9a3aff612f0197a6975f9d49f18fbd7c"
+        },
+        "flats": {
+          "vertexCount": 8136,
+          "indexCount": 12120,
+          "vertices": "290695ba86b56d700ea43dd07123c0af996a377dcdfa06f9e35058601bf9f6dc",
+          "indices": "33c98dd9aac50a3499ff00e5c5b8d7bf1a1e0060c8063e80f040cc24220cde06"
+        }
+      },
+      "excluded": {
+        "walls": "f1f5b8efaf088d40f6980b921d63e4a5eae56086668ef42c3fcfc123edb8958a",
+        "wallIndices": "49f7cf2bd7623daa6fdb6bd2852815cf0f54cae0460de42b27064e5b425f570f",
+        "flats": "aa029da016ca2394426a0b08752c1f688909996afef6475da4068f4e87454b7b",
+        "flatIndices": "a279569dfb8f5aa82d9e06fcfc2b8333f718d5572192e043d83f7750fe7c4529"
+      },
+      "dynamic": {
+        "vertexCount": 1564,
+        "indexCount": 2340,
+        "vertices": "5b9ca179975408c54a4accc5ce745e58013cdad898da0c25c177239186f8caff",
+        "sectorVertices": "7d1e1d9f7b4d7264eeda99f8f64558386c4e139101dede01613f44758b59947d",
+        "indices": "f2b641a5df7d9668ce091e6ee8adac27fef7974111d0df1315d21671a49f2539"
+      },
+      "counts": {
+        "linedefs": 2023,
+        "sectors": 422,
+        "objects": 333,
+        "collisionLines": 2023,
+        "movableSectors": 14,
+        "layers": 417,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M6": {
+      "ok": true,
+      "ms": 39,
+      "static": {
+        "walls": {
+          "vertexCount": 7608,
+          "indexCount": 11412,
+          "vertices": "6ca8c0401ea70f41d344998df202b1452e95cef01fa914243cd7f5e7acb6adef",
+          "indices": "012588b554010155097961b8e94590bd4d5ce855d9b16d4eb2fc9c39dbafbf45"
+        },
+        "flats": {
+          "vertexCount": 7482,
+          "indexCount": 11238,
+          "vertices": "ada85772aae50652152430c94c82e415c43b43ef378416d00167bb4d4b25420f",
+          "indices": "10be2496b75b3d5a7a62cceb7862a7220453b85ffb61558f7f457967a71b69b9"
+        }
+      },
+      "excluded": {
+        "walls": "31f23bfc09ca52ff99503e909648d6c81b307cba63b48d844b2e36e177b628ab",
+        "wallIndices": "fefc120d1203cc2f1c53dd74a277360149d22ebcba9c48edef27e3ac56829692",
+        "flats": "abd96b10f4f4cf5ad0ca26783380c7b7a1565c6f897eec2e67181c31a2a0d3f7",
+        "flatIndices": "c927961c592b99e90a54946dfee5deb491529c9fd42fc028cf186c44ad73fbd1"
+      },
+      "dynamic": {
+        "vertexCount": 2928,
+        "indexCount": 4392,
+        "vertices": "ba844d8956c9c130f3915f05df1725b3a8e08a1bc8d6429a3e7374da63fba66a",
+        "sectorVertices": "60e08102d8aa7c3bbffa49ff2e71fabf65584e3563d192a67e959c6be36d35fa",
+        "indices": "55c8c2894a099951a0975541ad04e930beee5065cebb58ac2c49b945dc3c49e3"
+      },
+      "counts": {
+        "linedefs": 2146,
+        "sectors": 393,
+        "objects": 338,
+        "collisionLines": 2146,
+        "movableSectors": 26,
+        "layers": 417,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M7": {
+      "ok": true,
+      "ms": 59,
+      "static": {
+        "walls": {
+          "vertexCount": 17092,
+          "indexCount": 25638,
+          "vertices": "1993ed59d37e41ab763e52b36d09b981d1b87c7dce7e0ef8fd975e845baf6a0e",
+          "indices": "42aa85cfa28299a3dad65d9902d2ab2172a6951b402701663b0ea6f09db230fd"
+        },
+        "flats": {
+          "vertexCount": 17970,
+          "indexCount": 26706,
+          "vertices": "a5693ec718601dc0f7f0ea322f8a97c5e2afa91c56c26a310596aaffcb2f979d",
+          "indices": "4378e533ed41d4af8bd0ccbdd4b0fb79c91561523a258180ba8144f3082a37a9"
+        }
+      },
+      "excluded": {
+        "walls": "a5e52323f0491ef68963b7ad3d782bee946f0a3151f93c3bff8e09b25af37471",
+        "wallIndices": "d95c80d134ad0db377c1c74465638d4356cd294fe632f89acc609897edcb72a5",
+        "flats": "7c3a28e7ae172de2f793e0009f9a8377c1a0c029e90a5e941f8caa8b736ce29b",
+        "flatIndices": "c77e895af8a7fe5e6e28693347ecd6ceb6e0ffab9336b51d9fa60969750324b2"
+      },
+      "dynamic": {
+        "vertexCount": 3068,
+        "indexCount": 4596,
+        "vertices": "7986c81a0937d58f8018dfe51565fbe081d3f7c34193ab1b3fe27b0fe5733a30",
+        "sectorVertices": "de103894ab866c160f7868d0bd3a2ac1a85a09c52acde28936f4857b4c60547f",
+        "indices": "4d5914c658a5314e588a96a288eb5805594dd5e1608fdb2893d7252d4ae9ccb2"
+      },
+      "counts": {
+        "linedefs": 4432,
+        "sectors": 863,
+        "objects": 404,
+        "collisionLines": 4432,
+        "movableSectors": 28,
+        "layers": 394,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M8": {
+      "ok": true,
+      "ms": 6,
+      "static": {
+        "walls": {
+          "vertexCount": 1528,
+          "indexCount": 2292,
+          "vertices": "d7459334256e3b19801aaf2d5cfe90de6cb2958e4c5e85ff2f59b910c3c53a75",
+          "indices": "97e354c9ef0273cdb5ed75575ba996df5a12748bf0df78a5bb69fe6ff680cfd2"
+        },
+        "flats": {
+          "vertexCount": 1176,
+          "indexCount": 1788,
+          "vertices": "8714caf8ac80c237f1e2872215a6b1d891f23e976c55791a4f7636470372bae3",
+          "indices": "f6385897d204d58186b9d70b4dd44022b66bbc157bf7ae49d24b091455328811"
+        }
+      },
+      "excluded": {
+        "walls": "fdfbb103f1883bbc624a3a1edf7509392e7476e7b85416593356f2178719e58b",
+        "wallIndices": "2550ba62653904f270e0671f169c4a5ae2506b6229701b0bd21b32e0142e0f66",
+        "flats": "00828764edaf8af83d00bd381d01a9cf8c4448dda4c3b87c0a177920082a479a",
+        "flatIndices": "f45b7a12500f80caf74a68cb9101fa50d593c34168f94e74f3f3c24ebc5b01ba"
+      },
+      "dynamic": {
+        "vertexCount": 276,
+        "indexCount": 414,
+        "vertices": "393e9da435862e5fe7a241295b9db168bc1b63c0e6464560e2703969c8cc7b11",
+        "sectorVertices": "6c21680232b2b79d946c2216424ac5f128c081bdcc4a35cb213b60554b4a384d",
+        "indices": "d6a76ae5717a84ce4bc7a22c317694bbd5aafdb2496fda84967238e7b72365c3"
+      },
+      "counts": {
+        "linedefs": 364,
+        "sectors": 54,
+        "objects": 39,
+        "collisionLines": 364,
+        "movableSectors": 2,
+        "layers": 55,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E2M9": {
+      "ok": true,
+      "ms": 71,
+      "static": {
+        "walls": {
+          "vertexCount": 25668,
+          "indexCount": 38502,
+          "vertices": "7b70e8c66202ebbf5c653fb3a1bc47cae6685d207dc2c0068beaf3510824b058",
+          "indices": "b6fb4c04c05785292d7474a62b05950db62a4d219affda85ae8a6eaa3d45ac85"
+        },
+        "flats": {
+          "vertexCount": 23936,
+          "indexCount": 35376,
+          "vertices": "279c7bae43f117c41370c6b7d3b12a5f5b9cb097d2df78663185c8169a422253",
+          "indices": "074b17eafbd27372a4dea2cc6cc19d82fa3615731277447363ef5779ed28af11"
+        }
+      },
+      "excluded": {
+        "walls": "e4b0f117f2fa305031ed932208760deccead65c9540c4e830c37fc7d0b19f774",
+        "wallIndices": "fe4f163a988dd17f1070dc6922260db7394e2df3a1ab17e703f474931ef1dbd2",
+        "flats": "539b8afa2cbbb897db06cb23400a1d1df29ab0b15640a2c39aa9fc1f297f63c4",
+        "flatIndices": "c2903fc02ccdb87f9fb09aac6f1431c0868ce33f832b50f4757060d55929f001"
+      },
+      "dynamic": {
+        "vertexCount": 5348,
+        "indexCount": 8034,
+        "vertices": "2a7deb9e0abb22f9228d12bd821d8b1df939a2d547657adf544fad56c9e26d9f",
+        "sectorVertices": "05c86ba73f080ba1dc5750771691357cec2c90ad690a5e7fece1b0b1026457cf",
+        "indices": "60dc3d5b729decda72345b224f6c126c14239b8ee57533cb8d6c35060a237e40"
+      },
+      "counts": {
+        "linedefs": 6274,
+        "sectors": 780,
+        "objects": 438,
+        "collisionLines": 6274,
+        "movableSectors": 47,
+        "layers": 408,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M1": {
+      "ok": true,
+      "ms": 17,
+      "static": {
+        "walls": {
+          "vertexCount": 3068,
+          "indexCount": 4602,
+          "vertices": "c5a8777c49d43575c66bb8ba673278edda85a4e9ebeb01dcb51bfee1fdcfabc7",
+          "indices": "5ac687801378792850465290a3bd7219a96a2c48cbd67d0dafcc296b2dbe4781"
+        },
+        "flats": {
+          "vertexCount": 4368,
+          "indexCount": 6372,
+          "vertices": "248c046efb246f54f755269ccd95419aab0c8dc7e2619ebfde6e1e9ffa93f63e",
+          "indices": "bf67c8d2e111a8b396f9a2fb89cb4402681f737668064624dbbc6a19578f24d6"
+        }
+      },
+      "excluded": {
+        "walls": "6a72927d87aca2d7d5da6c4730027cb15f62433f86d1aa08131793065adc6f65",
+        "wallIndices": "e2b4b4565e4e5e9d275970cbeef96c80bba15a2efd77cc4e5f16afb115896876",
+        "flats": "8dd7903e5364adbc6454ee1811248a055f766f89c56696d1f751e8fe9510b2e8",
+        "flatIndices": "20ed01f85c7d04d918ac20b6b88ca07f69e007b5136c7efa9532a3f6ca71685b"
+      },
+      "dynamic": {
+        "vertexCount": 88,
+        "indexCount": 132,
+        "vertices": "6c1ae0219d4e7c5da2457f9c7b0a7d500441f6400a01bb53b9f4790ecb402d7d",
+        "sectorVertices": "1b434627191212e0fc45fd05d069be42ad8ce5b394e6f89b1ac2a12043a4f887",
+        "indices": "975e3b2f44a2688cb4193fbc10e642a296702437985d52652479fa424ced276b"
+      },
+      "counts": {
+        "linedefs": 766,
+        "sectors": 111,
+        "objects": 114,
+        "collisionLines": 766,
+        "movableSectors": 1,
+        "layers": 188,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M2": {
+      "ok": true,
+      "ms": 18,
+      "static": {
+        "walls": {
+          "vertexCount": 2664,
+          "indexCount": 3996,
+          "vertices": "3c58efb1b5a954f86cc7517d00c0ca3a5246d82fe5be511e0299e82e7eb887a5",
+          "indices": "8b601c9567ec8892baa01a4af85c2ff375a92d6fe6936a9f4e73822722400384"
+        },
+        "flats": {
+          "vertexCount": 2670,
+          "indexCount": 3978,
+          "vertices": "66182d3be0cdba47545d893ff50f302bc6d6e3995e1ebaa6b942a44c4dc2c8a3",
+          "indices": "28bde6e7b638e47ebefdf20359235e913d0697a6d69ca3525c4ea084f74e8806"
+        }
+      },
+      "excluded": {
+        "walls": "a82824994c478aafc7c6db5735232852fb1acbeea7f0332334640c1d59ce62cc",
+        "wallIndices": "1eb62d295e9b9d9d97460968c88793df43b9b1b190bd46edfe84ebe0f89775f5",
+        "flats": "2e80a01fd496f797099ae365c7cbb3726eb1d7cce9d883f0755001122b420c6a",
+        "flatIndices": "b58b27a2719d13f69c3562224ec65417c32fab0e84c382c89fbd2c2b7e2a0678"
+      },
+      "dynamic": {
+        "vertexCount": 1570,
+        "indexCount": 2352,
+        "vertices": "191c0034af938fe19f1b600027bd892244cd88fa4f4aac51fd7a7a470f3510ac",
+        "sectorVertices": "c48e7261b9a06ee58ae19813c1907468e6c742f4945a9057c319e4d93ce921c0",
+        "indices": "e79f777d488b32a6d76a4baa39a315dd2eec970d212e2ac9169eb1d094b38cc3"
+      },
+      "counts": {
+        "linedefs": 625,
+        "sectors": 139,
+        "objects": 163,
+        "collisionLines": 625,
+        "movableSectors": 13,
+        "layers": 412,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M3": {
+      "ok": true,
+      "ms": 61,
+      "static": {
+        "walls": {
+          "vertexCount": 16580,
+          "indexCount": 24870,
+          "vertices": "8ba64b0532067be40ce9b474fa79256f60387433d11c3b9205cef60604bc412c",
+          "indices": "717b55400dbcfa0a4f0cb31c497f2865e7d2df977f45a0f0b4188e707093822f"
+        },
+        "flats": {
+          "vertexCount": 17336,
+          "indexCount": 25716,
+          "vertices": "65c75b286e8a233bf695b1a747bd3e4e375356932385291b3d717617caea58b9",
+          "indices": "6171a3e997312d69c0cc909e40ce446a7b96e1dbfb4d6b420a5c3442c1d0944f"
+        }
+      },
+      "excluded": {
+        "walls": "21b5054229e58694be7d9d683c95b05de1d50d96e0a8046db680347402509872",
+        "wallIndices": "4278dfcf1da28dfb69729fd054da3ff76ed7a49c680aa9ff0d1d2b86f58e2056",
+        "flats": "f965090f3040389125ff865e2ef7b36c5e6dacb26dfacdb8b6711fe4c193638f",
+        "flatIndices": "7de8925f76fc84fe593eaced59ad9d0bd516b2a4462f167b13711cbb91833c7e"
+      },
+      "dynamic": {
+        "vertexCount": 2216,
+        "indexCount": 3324,
+        "vertices": "776657bfacc5fc70dc0f8cd89532113d03a4999a1bc49bea9bcd249d7ea90b85",
+        "sectorVertices": "0026632c6901b16299499108387c3b63fe209176c458cc0e8f84ab2cd4757a03",
+        "indices": "f8c8e71ce249997ba9229f3a798e0365a2d43df8e83361de4043061abe98c8e7"
+      },
+      "counts": {
+        "linedefs": 3994,
+        "sectors": 735,
+        "objects": 490,
+        "collisionLines": 3994,
+        "movableSectors": 20,
+        "layers": 436,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M4": {
+      "ok": true,
+      "ms": 24,
+      "static": {
+        "walls": {
+          "vertexCount": 8452,
+          "indexCount": 12678,
+          "vertices": "fe91b6b5370a0f228312bc2ffc57a9a725b4f94e4e5d555ab1cf82285153e38d",
+          "indices": "503d68d39a44ac48d5b7f7748892e94f816ff01724bd59597ebd5c04bbfecb71"
+        },
+        "flats": {
+          "vertexCount": 8444,
+          "indexCount": 12540,
+          "vertices": "ed8c9d9f71b5446e31ca73d6ddcf22c499a4fb78398978df2bd8675687ade40b",
+          "indices": "5ca12933372bcb0d7f3ba212bc3e0ac589e0ade870604e4618a3498eb1a5b938"
+        }
+      },
+      "excluded": {
+        "walls": "a9e49b156f8c1074fc4167e35e0914062335c1987077362eeb18efdbcdfcb451",
+        "wallIndices": "326aebaa314c7cb955f6cf5dc670ded9a35a2617063465c73bb232f0d61624d0",
+        "flats": "9e0c16c7f46fcf3646140e3084acc12e4d960d0b9e7bb17aabd51757e55baccb",
+        "flatIndices": "67d194c704e9a1e92ca5466719b638b50a09c8d043985f7e34aadacf77c7f352"
+      },
+      "dynamic": {
+        "vertexCount": 1724,
+        "indexCount": 2586,
+        "vertices": "6d713575a77ade230573cdf64f5e024bb6d31e031156ac835cf3eddfbefe7828",
+        "sectorVertices": "c9b451b7f94d0aec7d3c4cbd4b41437be714fd963bca98fefbc7d77c843c68d2",
+        "indices": "b57f3faabf57b41487c5f02db3cc4e0d9bed510239714cfe6772f07dca39788a"
+      },
+      "counts": {
+        "linedefs": 2155,
+        "sectors": 424,
+        "objects": 387,
+        "collisionLines": 2155,
+        "movableSectors": 16,
+        "layers": 438,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M5": {
+      "ok": true,
+      "ms": 37,
+      "static": {
+        "walls": {
+          "vertexCount": 11864,
+          "indexCount": 17796,
+          "vertices": "2865b70a8e3c3514341fa089275a51677d2219880e03ecf988d3979cccc26ea4",
+          "indices": "31638f9d8179ca41608cb2859776bf9c27f3f07d60efe04af6df5614f0ea36ec"
+        },
+        "flats": {
+          "vertexCount": 12096,
+          "indexCount": 18228,
+          "vertices": "f1eaaec2876853d99c6ad1a527d358f1c99c83d02e347f6a9aab38dc13ebf967",
+          "indices": "2655b3c5eb1a2cfa4f5818c882277e8e45d78717d238e3c882fb0b02e233d12f"
+        }
+      },
+      "excluded": {
+        "walls": "b307113cfbcaca42200dcd758c0fd74e545879fdfc13716ef4352ec4f6f6358c",
+        "wallIndices": "a43a04ca5b3398496a6b46d52e12f3787f310c58b347935ebbd4b3cd3bd4bb6e",
+        "flats": "7248617721a3171d079442efa2445f510bcd6a27ec9021b4f66437d9ac6b16e1",
+        "flatIndices": "669cdf450471d05405a596a1de292f750f1007b2d5742dd1a1b13131e1d55275"
+      },
+      "dynamic": {
+        "vertexCount": 1856,
+        "indexCount": 2784,
+        "vertices": "5e26f0306b11fe6f5e224282a2b624c835c542325d652ce43372070491cad3d3",
+        "sectorVertices": "a0d269c5e8c9047bdbc8dc2f2114eabb07bf29310e4bf3e63f87380ec31b0230",
+        "indices": "1c82a4901e52706c81b73de7bcf394934ef6c30f7e0203b9fc967342ac16d642"
+      },
+      "counts": {
+        "linedefs": 3029,
+        "sectors": 439,
+        "objects": 333,
+        "collisionLines": 3029,
+        "movableSectors": 18,
+        "layers": 442,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M6": {
+      "ok": true,
+      "ms": 19,
+      "static": {
+        "walls": {
+          "vertexCount": 5284,
+          "indexCount": 7926,
+          "vertices": "7676035994f4e82f0fb0ea277a8aa64d79dcae0571b0d40d406b186473d9754b",
+          "indices": "bd9967584d1b7111301315f26110cba4ccc95268ca0a04c81ce50da34c0ecb3e"
+        },
+        "flats": {
+          "vertexCount": 6164,
+          "indexCount": 9156,
+          "vertices": "7e53c28dfcb83b0ed31a0133fb66108436d703ba5288005879e1f08a7b001e06",
+          "indices": "33591e687f936ce1d214c0ff7610e92762f36957b82afde845c26f39cbefd528"
+        }
+      },
+      "excluded": {
+        "walls": "0f4091511681efe0b149211ba0a1dfa5db9ea759192a57249588b5efe6f19644",
+        "wallIndices": "c5229685457f71e643d070d5bc4ac1e92d0e1b7f44bc764c19cc99104777b1de",
+        "flats": "1bee039da0521f300c9cbf474e169b29874cacbc7ed086eda98b1b3a4ceb4a77",
+        "flatIndices": "b96d15bd8545d7db4b2e5c3352a04b9392964cbccafc552061e6d571c68f697c"
+      },
+      "dynamic": {
+        "vertexCount": 942,
+        "indexCount": 1410,
+        "vertices": "655db19d0395833caf01d780d1ada27732b3855291180729be4c21254020cfbd",
+        "sectorVertices": "1f4954e2790932645592a92296e5ad5690524e12279a0d5a808e349807434bb8",
+        "indices": "4d83fa7d19aaa1423b0c210df10a3a8d8454cc642d5723a408b7e6780b161116"
+      },
+      "counts": {
+        "linedefs": 1326,
+        "sectors": 183,
+        "objects": 192,
+        "collisionLines": 1326,
+        "movableSectors": 8,
+        "layers": 308,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M7": {
+      "ok": true,
+      "ms": 25,
+      "static": {
+        "walls": {
+          "vertexCount": 9208,
+          "indexCount": 13812,
+          "vertices": "c322666d4b5db980efd251a4601b52b47823526de77836f873ef3154ab2f6252",
+          "indices": "88c10385e7bce287093d5ff39d21a2cb213b8c8afa1c62c46248ee604af2a13a"
+        },
+        "flats": {
+          "vertexCount": 12438,
+          "indexCount": 18306,
+          "vertices": "da254134d512051d69d60e69e1f572e7f011de4b1c7b5f2f478169e317142008",
+          "indices": "c6c958e57caaac7cdfbb8dc475332390856fb1129b9dc1e6455ea3f195e63035"
+        }
+      },
+      "excluded": {
+        "walls": "47a01f341f68a7c9f3456f47474647a982675659b1db7e6ef2c73661ddf6a58d",
+        "wallIndices": "689a3af4353c336b94496c9e0f810f0175b35ddad1d6ad27fb4509b81d3575a1",
+        "flats": "55bd3930f767aea4027bc93c8d983b7106116451004e11d319d35917772fd1a2",
+        "flatIndices": "045bd481626dd48f19643dbae2ebfec508d55eb40e5b38dbe8918105c9ed444a"
+      },
+      "dynamic": {
+        "vertexCount": 1594,
+        "indexCount": 2388,
+        "vertices": "3b52be80577045ac2ab6d43fa4e63c2b277378867b9df3ca701171532510fbe0",
+        "sectorVertices": "232532a57e17ff10fcf177520d725a71bb7041090f8ee50f7342d5f51e4b3df2",
+        "indices": "6addccd0a1d3fcb6e05c80442cfbaff619ffd2e91fdc0c91fdace0d547972a6a"
+      },
+      "counts": {
+        "linedefs": 2474,
+        "sectors": 288,
+        "objects": 327,
+        "collisionLines": 2474,
+        "movableSectors": 16,
+        "layers": 422,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M8": {
+      "ok": true,
+      "ms": 9,
+      "static": {
+        "walls": {
+          "vertexCount": 1964,
+          "indexCount": 2946,
+          "vertices": "d932d441b79d53b88e7775fab67440f75ea6d9e0e2deccbd49afa176a87db1cd",
+          "indices": "429e713789850e6a493da4b43a4cdcd10f3593f194c2d3ca726998c3b846035a"
+        },
+        "flats": {
+          "vertexCount": 1772,
+          "indexCount": 2580,
+          "vertices": "6b866a80edfd80554a4e6f3713f95c4aef25429edff3c174f9b61cb0a001c4d5",
+          "indices": "9c2ab38aa1175259133392198fa86885f144ea8acd39e77a82037a7e2daebf37"
+        }
+      },
+      "excluded": {
+        "walls": "641c9376f4254a762d822e7cb8e0852cb9e819d756c2a8036b7264e633d808fc",
+        "wallIndices": "9687a2d7efe4037b9355f65d44416b502f8a7c74b101de48f4de76cb41acc29f",
+        "flats": "1a5ef10a7263c27a342706a5e4486638eb5e0dd42d682eca9855787b5c21f50a",
+        "flatIndices": "4575be3a1829429e5cd758fd3bac2567455b50187b9fc83af11cc84fcbab8fdc"
+      },
+      "dynamic": {
+        "vertexCount": 1096,
+        "indexCount": 1644,
+        "vertices": "4d4de74ba7e07abe460c35d86a3368d8c77a3d0165e9fc967a0c73aef418a35d",
+        "sectorVertices": "44eccaea9cae6a127817c7bffb9a06409de5a4ea8590d5336a375f161e55f896",
+        "indices": "be342e72bd95b0dce773b9d8edbe80c78652aa06488a7df8234c12dc6f59cce0"
+      },
+      "counts": {
+        "linedefs": 444,
+        "sectors": 33,
+        "objects": 89,
+        "collisionLines": 444,
+        "movableSectors": 4,
+        "layers": 248,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E3M9": {
+      "ok": true,
+      "ms": 47,
+      "static": {
+        "walls": {
+          "vertexCount": 18720,
+          "indexCount": 28080,
+          "vertices": "f5f66400625fa4e666a13e19cc7399ab05a98e993cc3a2e1080e0e76f61b484f",
+          "indices": "5524100686a9da767dc7f08715af61277cacebacc19f369f11e804fe7d4250dd"
+        },
+        "flats": {
+          "vertexCount": 20840,
+          "indexCount": 31176,
+          "vertices": "310fc0877244e50c1a8c56144f0a0c094351bf54bf6e6798cb1aab6767ac7ceb",
+          "indices": "afb75426f7f7c36bc23b06052040762f8a81b5097ed01cf9b109aa4c2899aae3"
+        }
+      },
+      "excluded": {
+        "walls": "9a4ea642635d0f85fa486833656be40e205d7a6849161230ba7a12122eb5eda1",
+        "wallIndices": "9cbf2026569b4db3f36a75543326acd16a0d6da54c8fc7a7646112b7d8c1202b",
+        "flats": "2d41d08e988cb2f3055dc28a81b6122bf6acb8e5262c5917753745e731c3fb8b",
+        "flatIndices": "56092390a3b5396462c83e75ae17d1ae83946005357173253f5c752743d3360d"
+      },
+      "dynamic": {
+        "vertexCount": 1504,
+        "indexCount": 2256,
+        "vertices": "d724baf1211ea567dbd655b37896aaaa689a0a9cd0a371802dc1f5c05215eab4",
+        "sectorVertices": "0df352a73cd793d58dcb4df4c579101bcf64c591ab787cc0a38d6a30242cdf66",
+        "indices": "6bfcabda2f85d30fe0faf290736a9f9d8a671d83517e5242be889f5f03b5a49c"
+      },
+      "counts": {
+        "linedefs": 4550,
+        "sectors": 535,
+        "objects": 483,
+        "collisionLines": 4550,
+        "movableSectors": 17,
+        "layers": 421,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M1": {
+      "ok": true,
+      "ms": 28,
+      "static": {
+        "walls": {
+          "vertexCount": 7296,
+          "indexCount": 10944,
+          "vertices": "3836766bbd313fc3b61dc957855c02d8bb9b7223074d345b682cf0de2c97f637",
+          "indices": "93b562d11e6752540c7360524503313dd051686750d4c5e92af9bff5b7f51929"
+        },
+        "flats": {
+          "vertexCount": 7812,
+          "indexCount": 11628,
+          "vertices": "f9ed80e341ae2f5ba92bc8409792a076e7c921720c1261a23f5951127ddacaa0",
+          "indices": "22dc294a3efad21c7416f6b5381b34ffecc299af33ae3f1b65a17054e00b2a99"
+        }
+      },
+      "excluded": {
+        "walls": "6a3fec6271ba45638df170a263c0ec5182e68082b9ab2a9cd81d76e592cc961d",
+        "wallIndices": "938faa2dde29bd9da07f1a106edb7850db35d6dbe5d8e5cfe5d0d96d53723dc6",
+        "flats": "029b81e3567186178ec9a710df76f062f18efba01f21e14dd5bd834a97076478",
+        "flatIndices": "859187881a72184474b01d3bab4c3109890b260f8e6c9496f0d8d8a12fce61f6"
+      },
+      "dynamic": {
+        "vertexCount": 1656,
+        "indexCount": 2484,
+        "vertices": "7d55da3ee00ab2a0c466fde63764080a86e4f6a540fa991214ad57c7fc5db4c0",
+        "sectorVertices": "53a0a69aed37d759522fe4da8ca2e518a61960292f2f41d4a9bd8fe19c522db0",
+        "indices": "987ad84036f1f4225705b112993c782c2fe178efea90b8a7274698d8f11804ab"
+      },
+      "counts": {
+        "linedefs": 1975,
+        "sectors": 324,
+        "objects": 256,
+        "collisionLines": 1975,
+        "movableSectors": 16,
+        "layers": 286,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M2": {
+      "ok": true,
+      "ms": 43,
+      "static": {
+        "walls": {
+          "vertexCount": 17592,
+          "indexCount": 26388,
+          "vertices": "43f5ee08f9dfa8bff880700138b3b0837708add72dc9dfb38516d823b642aad0",
+          "indices": "6d57c704da9676d224b3a38c4e54aa9771fa7ab04fa06bdadc3025cede4a2408"
+        },
+        "flats": {
+          "vertexCount": 15414,
+          "indexCount": 22938,
+          "vertices": "4dce345146d4e65d91d2e7e5b596e1e2f9044d2470b7d1535893595c6c03c533",
+          "indices": "c1ce6f8827dcabcc9248944e35f61913891dc84ee3d8fb77593abe6402aaaf8f"
+        }
+      },
+      "excluded": {
+        "walls": "90b368ad674325aa2211fd16ca7f6110551b8a425d1106785cdc821d16b93546",
+        "wallIndices": "374db80d2f896cbd2e4923a65e00ad72ba65fe0c93c0b088d1bbd51dd4a676ac",
+        "flats": "aa4e37e247cf10c613b3ed56da811afb65c01e1d597fcfb7d3a1b39255a1f5ff",
+        "flatIndices": "601ae4b91ad55cc21407252beedea6946a6302fcd052ecdc8cb06d557bd0057a"
+      },
+      "dynamic": {
+        "vertexCount": 6380,
+        "indexCount": 9570,
+        "vertices": "49af952bf93ca87b68daa206f51d6b0cb965c17888513e583ef290e6439071bf",
+        "sectorVertices": "04bfcd0cdc89edbf5978e34e13d277295c933528e53a19d53ba0ae5df52f7822",
+        "indices": "5000487f7c9db294bc65de9c1e21693abe554d4057b965a775b344a8486892a6"
+      },
+      "counts": {
+        "linedefs": 4426,
+        "sectors": 830,
+        "objects": 666,
+        "collisionLines": 4426,
+        "movableSectors": 59,
+        "layers": 344,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M3": {
+      "ok": true,
+      "ms": 23,
+      "static": {
+        "walls": {
+          "vertexCount": 8288,
+          "indexCount": 12432,
+          "vertices": "6a3c69af9d282b26a48b99331f6b408f974709943291278defc05b8c17a99f91",
+          "indices": "8f8a09322ac06104a6a5cdd5ce041946c62262b1d2c9835253bb4dd8949016b8"
+        },
+        "flats": {
+          "vertexCount": 7600,
+          "indexCount": 11352,
+          "vertices": "535ee174e2645d650a91295608dc2d628095d324bab7fc1f6e3d8a0ede30a69b",
+          "indices": "f9ce461bc323819ec9d8da9b76fafdc6705e1c8117da07e37217520b1fa95dfd"
+        }
+      },
+      "excluded": {
+        "walls": "16f85e5fc45562f3db02cdceb2d644814c1d5a080080055736250c56d9636011",
+        "wallIndices": "de8708a83258bcf85c4f36e389f308fc1f65ed3b98c5834cd0aff8ad36f205b1",
+        "flats": "7ad72e36c6c36940a7ec4c4764a9c8aa01ea1a3b293acbbbc357190ec9e69a84",
+        "flatIndices": "0e18408a2c59356dd9c0f7eb06decb1c027e0417d1fc125718794245ab0f0b4d"
+      },
+      "dynamic": {
+        "vertexCount": 2932,
+        "indexCount": 4398,
+        "vertices": "5793613aea9156b23b225667ca64372c6b1bcdbd3a9411b2684103f9f5fc0d6e",
+        "sectorVertices": "c04c92cb508f8489781ed59c892ca587897854460789766ac8453dea0ee1d6b4",
+        "indices": "5561e17e077ea22432fd896d41065651647134bd46d10426bd48e2cf8ed91a35"
+      },
+      "counts": {
+        "linedefs": 2152,
+        "sectors": 417,
+        "objects": 381,
+        "collisionLines": 2152,
+        "movableSectors": 25,
+        "layers": 301,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M4": {
+      "ok": true,
+      "ms": 21,
+      "static": {
+        "walls": {
+          "vertexCount": 6660,
+          "indexCount": 9990,
+          "vertices": "68a5fc8184f46bbccc4bf6124a287d612ebd94a9e4f3944c721c4c58a3d05b27",
+          "indices": "218edbed30228cd80642813880247c3f93d58aa5cf3fc3e94fddb40cf8e30676"
+        },
+        "flats": {
+          "vertexCount": 6670,
+          "indexCount": 9786,
+          "vertices": "341ecc679f3548657fcddc57aa3c40da18a962e3549d8bb8301ae7f17d024b76",
+          "indices": "e615422de9c0eb7bc55de84b173b50ce34c008930390dce785921fe103051b93"
+        }
+      },
+      "excluded": {
+        "walls": "28c00d8ab16cc8bdb4c559d18f31785d4b7118f31bd847c0e76a729a460727d8",
+        "wallIndices": "75ed62d37c17761b6721e3fb1b406e5f9b2d3e1dff1cfb18a99ac63c3743deda",
+        "flats": "7c5bae60dee62e207be23c81aadcbe3f9b6930fc098f380dff6f6eb0086d7210",
+        "flatIndices": "219177311ac93656c379dd97b12c819e7b49567cfd5aefaa48f439b890f9ec35"
+      },
+      "dynamic": {
+        "vertexCount": 2048,
+        "indexCount": 3072,
+        "vertices": "f364aec4d1ba4aa2e395880c46e57ba6de10157006920385b048b74b5ec3e0bc",
+        "sectorVertices": "d7c7d19dcbff1b743a83b853bd51982f3f851ec8eeff5aa63ec5a16089c42662",
+        "indices": "df6f1cc900c5ba9c389f4da6c1ce571823060771330e51b134434941a9f42607"
+      },
+      "counts": {
+        "linedefs": 1814,
+        "sectors": 395,
+        "objects": 445,
+        "collisionLines": 1814,
+        "movableSectors": 20,
+        "layers": 342,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M5": {
+      "ok": true,
+      "ms": 20,
+      "static": {
+        "walls": {
+          "vertexCount": 7768,
+          "indexCount": 11652,
+          "vertices": "786253d8cb881726eb074cd2fc65d832c07bd1f842e5578b628d09108c7b037d",
+          "indices": "2277f503800c549d29a4df1c5db652cf4ffafcdd0184ee6b85dfa23639b53370"
+        },
+        "flats": {
+          "vertexCount": 7498,
+          "indexCount": 10950,
+          "vertices": "291b9f01836af48b9cd742e8eb88a11e2fd2739a087cb7553895c752cd120560",
+          "indices": "ecd4aab2e41d13b005e5ca76f1e982e57effbb8feb5db3e1dd582ad5c8dd12e0"
+        }
+      },
+      "excluded": {
+        "walls": "d3e9a8b30d2f78149b057dafb6d181018a436bd6829cdc3574a8ae51258c645f",
+        "wallIndices": "bd0c9cf194bba38f50a058a259d76319615853edb8fddf211df5d435030ef344",
+        "flats": "60bcb356c3c422d4379ee86bc288192d77bfdefe45ee9c27b7b39049544898e4",
+        "flatIndices": "d9a870fca7d9250aa1d2a3c583eca93fbc5210e56326586bf3bd267f5fa84a74"
+      },
+      "dynamic": {
+        "vertexCount": 2706,
+        "indexCount": 4056,
+        "vertices": "d21153341d49232cc3971d7e5ba8113a955bcf34679535c243a0ace08784da07",
+        "sectorVertices": "f21ebf7c553f86ff01a27c6fcbed7188fe39daa3c6cdf49c8be3722fa20c6ff4",
+        "indices": "82f477dab26194d76d5f0d74f96623215a59d85975dfc5ece26e0cfb9135d26b"
+      },
+      "counts": {
+        "linedefs": 2042,
+        "sectors": 401,
+        "objects": 400,
+        "collisionLines": 2042,
+        "movableSectors": 25,
+        "layers": 339,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M6": {
+      "ok": true,
+      "ms": 27,
+      "static": {
+        "walls": {
+          "vertexCount": 11168,
+          "indexCount": 16752,
+          "vertices": "6c60862c0ba4d4106b4c39b2d37b1b056b4c02e5f2139eeccf25b8d33b637ad9",
+          "indices": "14090eebb82d340ce82b882e83f72e26d757500cbdb929b4fd928a5d3bf96964"
+        },
+        "flats": {
+          "vertexCount": 9962,
+          "indexCount": 14778,
+          "vertices": "1d78f9b741ab60fde976435ca298e34f080e7535a9bfd6a61b5c27703cc099d4",
+          "indices": "3163ccef75a795cca6b4b25fd05b506af13b76af999e72599d0b07c6197e7905"
+        }
+      },
+      "excluded": {
+        "walls": "03f0f7200808cf21e60e893a4069ff4b3f9149c9bfaacc5a73e48631fd9dd9bb",
+        "wallIndices": "d724124f6bcfe24dfea09c547877d1599ee62a0077c3d1357fefb7c59aa2955c",
+        "flats": "b96527f83abe02189247aceb45b18c79b791b24d8fcafaa99b4b9e7a5c190421",
+        "flatIndices": "244ca3a21ecfe0472e2f9d550566a3243064bc39317b28e88e744857a95817d3"
+      },
+      "dynamic": {
+        "vertexCount": 4218,
+        "indexCount": 6324,
+        "vertices": "e2e38e45ad6ac876934ad5d1621f3759767fa2674ce55583eb3c7a07815d38be",
+        "sectorVertices": "c4c9576bc7fa84a22b0bde7ee857cdc7e338464469f7399f6dfb7bc8827f76aa",
+        "indices": "cad4225153561ba4092e64fcca325e45306a2631828773fdae38d1ab7401a843"
+      },
+      "counts": {
+        "linedefs": 2871,
+        "sectors": 518,
+        "objects": 550,
+        "collisionLines": 2871,
+        "movableSectors": 30,
+        "layers": 417,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M7": {
+      "ok": true,
+      "ms": 46,
+      "static": {
+        "walls": {
+          "vertexCount": 20044,
+          "indexCount": 30066,
+          "vertices": "cb0bd68bd7d31b63f6fd71506a8b77b3d4f9a43f0abf6a949660149752db1e4d",
+          "indices": "445d8174640cda230d0c7fa8c3417fa8638bfaae4d8c04aa540664040ee57c4c"
+        },
+        "flats": {
+          "vertexCount": 21634,
+          "indexCount": 32118,
+          "vertices": "4b722d04d52f0fc6b1fd467c4173ebe8cbd04f75fce692f9b359401567c302ca",
+          "indices": "3b4f36ceee59a807853814aca7d0e2d42c0b51851a7259200224a2583c32ca5f"
+        }
+      },
+      "excluded": {
+        "walls": "d0748139ae9332f20bb4748f2df2a06df070d7ff5b8801257cfe5fd7fb266240",
+        "wallIndices": "0d11abcf303983e360462c01afd2fc74698e7aa471510f3203b5cde5f9aed325",
+        "flats": "d414e49a770a28c70065a7703478783a16b3a6a57bcd6c4e38503198a6eab47d",
+        "flatIndices": "49090cac36a35d8dd595cc3b72ce463277b66f368ffb39ccb6b511e1761ce1ab"
+      },
+      "dynamic": {
+        "vertexCount": 6432,
+        "indexCount": 9660,
+        "vertices": "88aa40ee9e476b63fc6d47167c14f63be35afb9163fcc5b67be532f03027685f",
+        "sectorVertices": "1bb831c1887d70031f7541611786e2082e0f437c053a87639c6800fe5b77cb3d",
+        "indices": "25c28715b410e759cab6cd5a335ffd7ed1aee95724dedfc938fbf82266f827be"
+      },
+      "counts": {
+        "linedefs": 5329,
+        "sectors": 983,
+        "objects": 948,
+        "collisionLines": 5329,
+        "movableSectors": 53,
+        "layers": 419,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M8": {
+      "ok": true,
+      "ms": 33,
+      "static": {
+        "walls": {
+          "vertexCount": 7776,
+          "indexCount": 11664,
+          "vertices": "3051435877c0c30e4639a981b977a66daead357f22683d4f8a37a66508ea2869",
+          "indices": "dc2a720b4beb650cec56d8cd6ea9d90308286cd15bae212ed423defa0f7c3486"
+        },
+        "flats": {
+          "vertexCount": 7004,
+          "indexCount": 10440,
+          "vertices": "87ddb7d745ec558724d5dd804ac4f31038926686ecae0fc49c2f29e9c97a961e",
+          "indices": "1c8de01f686e784e2cb75494d7247c9f4c384da59ca6e6a6379d287d41af7d9c"
+        }
+      },
+      "excluded": {
+        "walls": "37941d9ef67b1e0ae158764096375e62f0d34840d997624f0975a7d0d6dbcded",
+        "wallIndices": "27f921dc76679139e61dd514f99c224a49b7ffbac283da8a0223ea2edfab021f",
+        "flats": "45c1f36dfc5a56c8b57f67f59bc2613c55eaa4f57dce1e5a7fa6343f33d058ed",
+        "flatIndices": "8e0671366a628518066b6f0ffc1e3e0fe82b0bb150987639ba540e3a72f3d3b7"
+      },
+      "dynamic": {
+        "vertexCount": 2972,
+        "indexCount": 4458,
+        "vertices": "fc866086b48510bd938560d57d17a4ebc95d24a90311c8e49b9f6b3e5f4f738b",
+        "sectorVertices": "5628ec972092956f0d8953791390338f75cd24b2f4ce38367fd4257d0f3c5069",
+        "indices": "61e98fe17e80a0d183f01ef3e8742f1c665cfa35192c29da191d168e36541d25"
+      },
+      "counts": {
+        "linedefs": 2097,
+        "sectors": 348,
+        "objects": 323,
+        "collisionLines": 2097,
+        "movableSectors": 30,
+        "layers": 341,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    },
+    "E4M9": {
+      "ok": true,
+      "ms": 41,
+      "static": {
+        "walls": {
+          "vertexCount": 14784,
+          "indexCount": 22176,
+          "vertices": "37c2f6615adb7847ac99d9c3d82635497fb8bbe867508caf6444d0c9675ad527",
+          "indices": "b9d7c6ce477a599f4381f2040891586b10963ed8f660911123f4d08061d208e5"
+        },
+        "flats": {
+          "vertexCount": 15186,
+          "indexCount": 22590,
+          "vertices": "7472e9d5660658c57343f6d586af5fe6db4ab062fe6a918865fa0c5abe3d9a56",
+          "indices": "e93f7e8b8522232c289136a661a29acbeaa0d1a739cd0e522424e3d1ab230ce4"
+        }
+      },
+      "excluded": {
+        "walls": "b1b510a31cf451644e6effa769149ddbeb3ac7489f3636b6cd9a32c588e078b5",
+        "wallIndices": "d849fac6353fefbfc39a3c1961eec03401186ce29a36338b0a84e02e02c39e6d",
+        "flats": "3a4e11ef63ce68fa0ae673192409cbf348a2424f860fd8e678f1f0bbadd0d350",
+        "flatIndices": "67f64008e8e0e16b1eb04a75bc23566be97610979bc1af8289f3edff5997bd5c"
+      },
+      "dynamic": {
+        "vertexCount": 4700,
+        "indexCount": 7050,
+        "vertices": "a62238cffa6af493b74562d863c1ebcf9d36aebe98a73917e09e1cd5e93d3c9d",
+        "sectorVertices": "96c5b599ea9cc14fd2349511dedfe78a129181ff9dc7ad41c6ba4a521896a0d8",
+        "indices": "6fb2329b64eb514830c1d863ddfa14182b74d367e86aecc72fc456a0e693b6da"
+      },
+      "counts": {
+        "linedefs": 3867,
+        "sectors": 651,
+        "objects": 760,
+        "collisionLines": 3867,
+        "movableSectors": 43,
+        "layers": 357,
+        "missingWalls": 0,
+        "missingFlats": 0,
+        "spawn": true
+      }
+    }
+  }
+}

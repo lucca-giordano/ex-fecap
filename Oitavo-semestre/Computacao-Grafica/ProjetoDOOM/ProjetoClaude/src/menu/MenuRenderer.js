@@ -3,10 +3,10 @@
 
 import { SCREENS, LEVEL_MIN } from './Menu.js';
 import { MENU_TEXT, MENU_LANG } from './menuText.js';
-import { HELP, helpEntries, helpPages } from './helpPages.js';
+import { HELP, CREDITS, helpEntries, helpPages, creditsPages } from './helpPages.js';
 import { FONT_FIRST, FONT_COUNT } from './MenuAssets.js';
 
-export { helpEntries, helpPages }; // reexportados para as verificações
+export { helpEntries, helpPages, creditsPages }; // reexportados para as verificações
 
 export const MENU_WIDTH = 320;
 export const MENU_HEIGHT = 200;
@@ -20,10 +20,15 @@ const MAIN = { logoX: 94, logoY: 2, x: 97, y: 64 };
 // thermoStep: 22 no ponto de partida; 24 para o termômetro (altura 13 em y + 10) não encostar no item seguinte.
 const OPTIONS = { titleX: 108, titleY: 15, x: 60, y: 36, valueX: 210, line: 12, thermoDy: 10, thermoStep: 24 };
 const FOOTER_Y = 185;
+// Etapa 23 (m_menu.c): EpiDef em (48, 63) com o título M_EPISOD em (54, 38); NewDef em (48, 63) com
+// M_NEWG em (96, 14) e M_SKILL em (54, 38); linhas de 16 pixels.
+const EPISODE = { titleX: 54, titleY: 38, x: 48, y: 63 };
+const SKILL = { newGameX: 96, newGameY: 14, titleX: 54, titleY: 38, x: 48, y: 63 };
+const SKILL_PATCHES = ['M_JKILL', 'M_ROUGH', 'M_HURT', 'M_ULTRA', 'M_NMARE'];
 const THERMO_WIDTH = 10; // células padrão; cada item pode definir `cells` (o volume usa 16)
 
 // Exportado só para verificações (tools/check-menu.mjs).
-export const MENU_LAYOUT = { MAIN, OPTIONS, HELP, SKULLXOFF };
+export const MENU_LAYOUT = { MAIN, OPTIONS, HELP, SKULLXOFF, EPISODE, SKILL };
 
 // Quadro da caveira: alterna a cada 8 tics do Doom (35 tics por segundo).
 export const skullFrame = (time) => Math.floor(time * 35 / 8) % 2;
@@ -179,6 +184,19 @@ function drawHelp(buffer, assets, T, report, page = 0) {
   drawText(buffer, assets.font, footer, centeredX(assets.font, footer), HELP.footerY, report);
 }
 
+// Créditos (etapa 22): fundo preto, título, uma coluna de linhas e o rodapé da ajuda.
+function drawCredits(buffer, assets, T, report, page = 0) {
+  fillBlack(buffer);
+  drawText(buffer, assets.font, T.creditsTitle, centeredX(assets.font, T.creditsTitle), HELP.titleY, report);
+  const pages = creditsPages(T);
+  const p = Math.min(Math.max(0, page), pages.length - 1);
+  pages[p].forEach((line, i) => {
+    if (line) drawText(buffer, assets.font, line, CREDITS.x, CREDITS.y + i * CREDITS.line, report);
+  });
+  const footer = pages.length > 1 ? T.helpFooterPaged.replace('{page}', `${p + 1}/${pages.length}`) : T.helpFooter;
+  drawText(buffer, assets.font, footer, centeredX(assets.font, footer), HELP.footerY, report);
+}
+
 // Única função que sabe o que cada tela contém.
 // state: Menu.snapshot() (+ lang opcional); time em segundos; report: lista opcional de limites de texto.
 export function composeMenu(state, assets, time, report) {
@@ -188,6 +206,10 @@ export function composeMenu(state, assets, time, report) {
 
   if (state.screen === 'help') {
     drawHelp(buffer, assets, T, report, state.helpPage ?? 0);
+    return buffer.data;
+  }
+  if (state.screen === 'credits') {
+    drawCredits(buffer, assets, T, report, state.helpPage ?? 0);
     return buffer.data;
   }
 
@@ -216,6 +238,31 @@ export function composeMenu(state, assets, time, report) {
   } else if (state.screen === 'monsterDebug') {
     drawText(buffer, assets.font, T.monsterDebugTitle, centeredX(assets.font, T.monsterDebugTitle), OPTIONS.titleY, report);
     drawList(buffer, assets, T, 'monsterDebug', state, time, report);
+  } else if (state.screen === 'episode') { // etapa 23
+    drawLabel(buffer, assets, 'M_EPISOD', T.episodeTitle, EPISODE.titleX, EPISODE.titleY, graphics, report);
+    SCREENS.episode.items.forEach((item, i) => {
+      const y = EPISODE.y + i * LINEHEIGHT;
+      drawLabel(buffer, assets, `M_EPI${item.episode}`, T[item.id], EPISODE.x, y, graphics, report);
+      if (i === state.selected) drawSkull(buffer, assets, time, EPISODE.x + SKULLXOFF, y - 5);
+    });
+  } else if (state.screen === 'skill' || state.screen === 'nightmare') { // etapa 23
+    drawLabel(buffer, assets, 'M_NEWG', T.newGame, SKILL.newGameX, SKILL.newGameY, graphics, report);
+    drawLabel(buffer, assets, 'M_SKILL', T.skillTitle, SKILL.titleX, SKILL.titleY, graphics, report);
+    const selected = state.screen === 'nightmare' ? SCREENS.skill.items.length - 1 : state.selected;
+    SCREENS.skill.items.forEach((item, i) => {
+      const y = SKILL.y + i * LINEHEIGHT;
+      drawLabel(buffer, assets, SKILL_PATCHES[i], T[item.id], SKILL.x, y, graphics, report);
+      if (i === selected) drawSkull(buffer, assets, time, SKILL.x + SKULLXOFF, y - 5);
+    });
+    // Confirmação (M_StartMessage): linhas centradas, o bloco centrado na vertical, por cima do menu.
+    if (state.screen === 'nightmare') {
+      const lines = T.nightmareConfirm.split('\n');
+      const top = Math.floor((MENU_HEIGHT - lines.length * TEXT_NEWLINE) / 2);
+      lines.forEach((line, i) => { if (line) drawText(buffer, assets.font, line, centeredX(assets.font, line), top + i * TEXT_NEWLINE, report); });
+    }
+  } else if (state.screen === 'levelDebug') { // etapa 23
+    drawText(buffer, assets.font, T.levelDebugTitle, centeredX(assets.font, T.levelDebugTitle), OPTIONS.titleY, report);
+    drawList(buffer, assets, T, 'levelDebug', state, time, report);
   } else if (state.screen === 'debug') {
     drawText(buffer, assets.font, T.debugTitle, centeredX(assets.font, T.debugTitle), OPTIONS.titleY, report);
     drawList(buffer, assets, T, 'debug', state, time, report);

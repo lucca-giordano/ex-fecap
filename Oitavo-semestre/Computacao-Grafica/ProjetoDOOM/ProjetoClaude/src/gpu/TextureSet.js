@@ -83,9 +83,37 @@ export function createTextureBindGroupLayout(device) {
   });
 }
 
+// Mapas nome -> camada, sem GPU (etapa 23: a geometria de um nível é montada antes do upload).
+// Mesma regra de createTextureSet: camada 0 = xadrez de reserva, depois uma por textura, na ordem do Map.
+export function textureLayerMaps(textures) {
+  const wallLayers = new Map();
+  let n = 1;
+  for (const [name, t] of textures.wallTextures) wallLayers.set(name, { layer: n++, width: t.width, height: t.height });
+  const flatLayers = new Map();
+  n = 1;
+  for (const name of textures.flats.keys()) flatLayers.set(name, { layer: n++, width: FLAT_SIZE, height: FLAT_SIZE });
+  return { wallLayers, flatLayers };
+}
+
+// Paleta iluminada 256x32 rgba8unorm (etapa 23: global, criada uma vez e compartilhada pelos níveis,
+// pelos sprites e pelas partículas). Devolve { texture, view }.
+export function createLitPaletteTexture(device, litPalette) {
+  const levels = litPalette.length / (256 * 4);
+  const texture = device.createTexture({
+    label: 'paleta iluminada',
+    size: [256, levels],
+    format: 'rgba8unorm',
+    usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+  });
+  device.queue.writeTexture({ texture }, litPalette, { bytesPerRow: 256 * 4 }, [256, levels]);
+  return { texture, view: texture.createView({ label: 'paleta iluminada: view' }) };
+}
+
 // textures: resultado de loadTextures (palette, flats, wallTextures).
 // litPalette: imagem 256x32 RGBA de buildLitPalette. skyName: textura de parede do céu.
-export function createTextureSet(device, layout, textures, litPalette, skyName) {
+// options.paletteView (etapa 23): paleta global já criada; sem ela, a paleta é criada aqui (etapa 5).
+// O resultado tem destroy(), que libera os texture arrays, o buffer de tamanhos e a paleta própria.
+export function createTextureSet(device, layout, textures, litPalette, skyName, options = {}) {
   const { palette, flats, wallTextures } = textures;
   const fallback = checker(nearestPaletteIndex(palette, 255, 0, 255));
 
@@ -127,17 +155,10 @@ export function createTextureSet(device, layout, textures, litPalette, skyName) 
 
   // --- Paleta iluminada: 256x32 rgba8unorm, valores sRGB enviados sem conversão ---
   // Substitui a paleta 256x1 da etapa 5: a linha 0 é a paleta original.
-  const levels = litPalette.length / (256 * 4);
-  const paletteTex = device.createTexture({
-    label: 'paleta iluminada',
-    size: [256, levels],
-    format: 'rgba8unorm',
-    usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
-  });
-  device.queue.writeTexture({ texture: paletteTex }, litPalette, { bytesPerRow: 256 * 4 }, [256, levels]);
-
-  const litPaletteView = paletteTex.createView();
+  const own = options.paletteView ? null : createLitPaletteTexture(device, litPalette);
+  const litPaletteView = options.paletteView ?? own.view;
   const bindGroup = device.createBindGroup({
+    label: 'texturas do nível: bind group',
     layout,
     entries: [
       { binding: 0, resource: wallArray.createView({ dimension: '2d-array' }) },
@@ -156,6 +177,14 @@ export function createTextureSet(device, layout, textures, litPalette, skyName) 
     flatLayers,
     sky: { name: skyName, ...sky },
     litPaletteView, // também usada pelas partículas (etapa 10)
+    // Etapa 23: GPU do nível (a paleta global não é destruída aqui).
+    destroy() {
+      wallArray.destroy();
+      flatArray.destroy();
+      sizeBuffer.destroy();
+      own?.texture.destroy();
+    },
+    counts: { textures: 2 + (own ? 1 : 0), buffers: 1, bindGroups: 1 },
     info: {
       walls: { width: layerW, height: layerH, layers: wallData.length },
       flats: { width: FLAT_SIZE, height: FLAT_SIZE, layers: flatData.length },

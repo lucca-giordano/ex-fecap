@@ -22,8 +22,19 @@ export function helpEntries(T) {
     }
     entries.push([T.keyLabels[k.code] ?? k.label, T.actions[action]]);
   }
+  // Etapa 22: teclas que só valem com o automapa aberto.
+  entries.push([T.amFollowKey, T.amFollow], [T.amGridKey, T.amGrid], [T.amZoomKey, T.amZoom], [T.amBigKey, T.amBig], [T.arrowsKey, T.amPan]);
   entries.push([T.escKey, T.escAction]);
   return entries;
+}
+
+// Páginas de créditos (etapa 22): uma coluna, até CREDITS_ROWS linhas de 10 pixels por página.
+export const CREDITS = { y: 28, line: 10, x: 8 };
+export const CREDITS_ROWS = Math.floor((HELP.maxBottom - HELP.glyphH - CREDITS.y) / CREDITS.line) + 1;
+export function creditsPages(T) {
+  const out = [];
+  for (const page of T.creditsPages) for (let i = 0; i < page.length; i += CREDITS_ROWS) out.push(page.slice(i, i + CREDITS_ROWS));
+  return out;
 }
 
 // Páginas equilibradas: cada uma com até 2 * HELP_ROWS linhas.

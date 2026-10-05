@@ -1,0 +1,2871 @@
+{
+  "wad": "freedoom1.wad",
+  "maps": [
+    {
+      "name": "E1M1",
+      "linedefs": 1175,
+      "sectors": 182,
+      "things": 292,
+      "skill3": 218,
+      "monsters": {
+        "9": 13,
+        "58": 1,
+        "3001": 18,
+        "3002": 9,
+        "3004": 12
+      },
+      "items": 122,
+      "secrets": 4,
+      "score": 1,
+      "unsupportedSpecials": [
+        23
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M2",
+      "linedefs": 2290,
+      "sectors": 380,
+      "things": 356,
+      "skill3": 285,
+      "monsters": {
+        "9": 28,
+        "58": 12,
+        "3001": 42,
+        "3002": 21,
+        "3004": 26
+      },
+      "items": 153,
+      "secrets": 7,
+      "score": 11,
+      "unsupportedSpecials": [
+        19,
+        23,
+        38,
+        48,
+        58,
+        71,
+        97,
+        102,
+        109,
+        120,
+        123
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M3",
+      "linedefs": 2169,
+      "sectors": 330,
+      "things": 382,
+      "skill3": 319,
+      "monsters": {
+        "9": 49,
+        "58": 3,
+        "3001": 54,
+        "3002": 8,
+        "3004": 38
+      },
+      "items": 172,
+      "secrets": 8,
+      "score": 4,
+      "unsupportedSpecials": [
+        7,
+        20,
+        23,
+        138
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M4",
+      "linedefs": 2283,
+      "sectors": 274,
+      "things": 378,
+      "skill3": 308,
+      "monsters": {
+        "9": 49,
+        "58": 7,
+        "3001": 51,
+        "3002": 13,
+        "3004": 63
+      },
+      "items": 142,
+      "secrets": 2,
+      "score": 4,
+      "unsupportedSpecials": [
+        19,
+        36,
+        97,
+        126
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M5",
+      "linedefs": 1215,
+      "sectors": 214,
+      "things": 364,
+      "skill3": 266,
+      "monsters": {
+        "9": 53,
+        "58": 10,
+        "3001": 43,
+        "3002": 15,
+        "3004": 68
+      },
+      "items": 148,
+      "secrets": 2,
+      "score": 2,
+      "unsupportedSpecials": [
+        123,
+        126
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M6",
+      "linedefs": 2818,
+      "sectors": 395,
+      "things": 490,
+      "skill3": 381,
+      "monsters": {
+        "9": 99,
+        "58": 25,
+        "3001": 72,
+        "3002": 30,
+        "3004": 65,
+        "3006": 3
+      },
+      "items": 151,
+      "secrets": 4,
+      "score": 12,
+      "unsupportedSpecials": [
+        20,
+        22,
+        38,
+        48,
+        97,
+        105,
+        107,
+        114,
+        120,
+        123,
+        126
+      ],
+      "unsupportedMonsters": [
+        3006
+      ]
+    },
+    {
+      "name": "E1M7",
+      "linedefs": 4337,
+      "sectors": 699,
+      "things": 714,
+      "skill3": 573,
+      "monsters": {
+        "9": 55,
+        "58": 30,
+        "3001": 110,
+        "3002": 53,
+        "3004": 33,
+        "3006": 8
+      },
+      "items": 288,
+      "secrets": 8,
+      "score": 10,
+      "unsupportedSpecials": [
+        23,
+        36,
+        38,
+        53,
+        71,
+        97,
+        123,
+        125,
+        133
+      ],
+      "unsupportedMonsters": [
+        3006
+      ]
+    },
+    {
+      "name": "E1M8",
+      "linedefs": 930,
+      "sectors": 97,
+      "things": 123,
+      "skill3": 50,
+      "monsters": {
+        "3003": 4
+      },
+      "items": 88,
+      "secrets": 1,
+      "score": 1,
+      "unsupportedSpecials": [
+        19
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E1M9",
+      "linedefs": 1935,
+      "sectors": 297,
+      "things": 368,
+      "skill3": 312,
+      "monsters": {
+        "9": 34,
+        "58": 11,
+        "3001": 48,
+        "3002": 17,
+        "3004": 35
+      },
+      "items": 117,
+      "secrets": 5,
+      "score": 4,
+      "unsupportedSpecials": [
+        46,
+        71,
+        112,
+        123
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E2M1",
+      "linedefs": 1784,
+      "sectors": 256,
+      "things": 340,
+      "skill3": 260,
+      "monsters": {
+        "9": 16,
+        "58": 3,
+        "3001": 32,
+        "3004": 34,
+        "3005": 2,
+        "3006": 9
+      },
+      "items": 183,
+      "secrets": 5,
+      "score": 10,
+      "unsupportedSpecials": [
+        8,
+        18,
+        97,
+        101,
+        120,
+        123,
+        126,
+        137
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E2M2",
+      "linedefs": 812,
+      "sectors": 133,
+      "things": 107,
+      "skill3": 76,
+      "monsters": {
+        "9": 3,
+        "58": 3,
+        "3001": 22,
+        "3002": 2,
+        "3004": 8,
+        "3005": 4
+      },
+      "items": 47,
+      "secrets": 2,
+      "score": 11,
+      "unsupportedSpecials": [
+        13,
+        18,
+        36,
+        48,
+        97,
+        105,
+        109,
+        112,
+        114,
+        125
+      ],
+      "unsupportedMonsters": [
+        3005
+      ]
+    },
+    {
+      "name": "E2M3",
+      "linedefs": 1609,
+      "sectors": 331,
+      "things": 243,
+      "skill3": 202,
+      "monsters": {
+        "9": 17,
+        "58": 5,
+        "3001": 32,
+        "3002": 7,
+        "3003": 1,
+        "3004": 19,
+        "3005": 3,
+        "3006": 15
+      },
+      "items": 83,
+      "secrets": 5,
+      "score": 13,
+      "unsupportedSpecials": [
+        12,
+        13,
+        23,
+        35,
+        38,
+        48,
+        77,
+        97,
+        123,
+        126,
+        127
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E2M4",
+      "linedefs": 3484,
+      "sectors": 702,
+      "things": 381,
+      "skill3": 316,
+      "monsters": {
+        "9": 36,
+        "58": 15,
+        "3001": 59,
+        "3002": 8,
+        "3003": 6,
+        "3004": 32,
+        "3005": 17,
+        "3006": 3
+      },
+      "items": 141,
+      "secrets": 5,
+      "score": 18,
+      "unsupportedSpecials": [
+        19,
+        23,
+        36,
+        37,
+        38,
+        71,
+        97,
+        100,
+        109,
+        112,
+        123,
+        126,
+        127,
+        130,
+        131,
+        135
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E2M5",
+      "linedefs": 2023,
+      "sectors": 422,
+      "things": 407,
+      "skill3": 348,
+      "monsters": {
+        "9": 26,
+        "58": 18,
+        "3001": 48,
+        "3002": 13,
+        "3003": 3,
+        "3004": 36,
+        "3005": 19,
+        "3006": 28
+      },
+      "items": 142,
+      "secrets": 6,
+      "score": 19,
+      "unsupportedSpecials": [
+        5,
+        7,
+        19,
+        22,
+        23,
+        36,
+        38,
+        53,
+        97,
+        102,
+        112,
+        120,
+        123,
+        126,
+        127,
+        135,
+        141
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E2M6",
+      "linedefs": 2146,
+      "sectors": 393,
+      "things": 397,
+      "skill3": 351,
+      "monsters": {
+        "9": 30,
+        "58": 9,
+        "3001": 68,
+        "3002": 12,
+        "3003": 5,
+        "3004": 12,
+        "3005": 8,
+        "3006": 13
+      },
+      "items": 154,
+      "secrets": 4,
+      "score": 15,
+      "unsupportedSpecials": [
+        7,
+        19,
+        23,
+        36,
+        38,
+        48,
+        71,
+        97,
+        106,
+        120,
+        123,
+        126,
+        137
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E2M7",
+      "linedefs": 4432,
+      "sectors": 863,
+      "things": 578,
+      "skill3": 432,
+      "monsters": {
+        "9": 59,
+        "58": 18,
+        "3001": 103,
+        "3002": 24,
+        "3003": 3,
+        "3004": 79,
+        "3005": 21
+      },
+      "items": 189,
+      "secrets": 4,
+      "score": 19,
+      "unsupportedSpecials": [
+        5,
+        19,
+        23,
+        36,
+        38,
+        40,
+        46,
+        48,
+        71,
+        102,
+        110,
+        112,
+        120,
+        123,
+        125,
+        126,
+        133,
+        135
+      ],
+      "unsupportedMonsters": [
+        3005
+      ]
+    },
+    {
+      "name": "E2M8",
+      "linedefs": 364,
+      "sectors": 54,
+      "things": 70,
+      "skill3": 51,
+      "monsters": {
+        "16": 2
+      },
+      "items": 58,
+      "secrets": 1,
+      "score": 5,
+      "unsupportedSpecials": [
+        23,
+        40,
+        46,
+        48
+      ],
+      "unsupportedMonsters": [
+        16
+      ]
+    },
+    {
+      "name": "E2M9",
+      "linedefs": 6274,
+      "sectors": 780,
+      "things": 589,
+      "skill3": 461,
+      "monsters": {
+        "9": 51,
+        "58": 1,
+        "3001": 94,
+        "3002": 11,
+        "3003": 5,
+        "3004": 24,
+        "3005": 10,
+        "3006": 31
+      },
+      "items": 267,
+      "secrets": 5,
+      "score": 10,
+      "unsupportedSpecials": [
+        6,
+        18,
+        23,
+        38,
+        109,
+        126,
+        133,
+        135
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E3M1",
+      "linedefs": 766,
+      "sectors": 111,
+      "things": 156,
+      "skill3": 145,
+      "monsters": {
+        "58": 1,
+        "3001": 13,
+        "3002": 9,
+        "3005": 5
+      },
+      "items": 29,
+      "secrets": 1,
+      "score": 4,
+      "unsupportedSpecials": [
+        5,
+        48,
+        125
+      ],
+      "unsupportedMonsters": [
+        3005
+      ]
+    },
+    {
+      "name": "E3M2",
+      "linedefs": 625,
+      "sectors": 139,
+      "things": 195,
+      "skill3": 178,
+      "monsters": {
+        "9": 17,
+        "58": 9,
+        "3001": 19,
+        "3002": 8,
+        "3003": 2,
+        "3004": 5,
+        "3005": 2,
+        "3006": 9
+      },
+      "items": 96,
+      "secrets": 4,
+      "score": 9,
+      "unsupportedSpecials": [
+        19,
+        37,
+        71,
+        110,
+        120,
+        123,
+        126
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E3M3",
+      "linedefs": 3994,
+      "sectors": 735,
+      "things": 677,
+      "skill3": 547,
+      "monsters": {
+        "9": 55,
+        "58": 5,
+        "3001": 106,
+        "3002": 18,
+        "3003": 8,
+        "3004": 41,
+        "3005": 17,
+        "3006": 14
+      },
+      "items": 288,
+      "secrets": 7,
+      "score": 17,
+      "unsupportedSpecials": [
+        18,
+        19,
+        20,
+        23,
+        25,
+        36,
+        38,
+        48,
+        53,
+        71,
+        97,
+        109,
+        110,
+        123,
+        126
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E3M4",
+      "linedefs": 2155,
+      "sectors": 424,
+      "things": 560,
+      "skill3": 420,
+      "monsters": {
+        "9": 38,
+        "16": 1,
+        "58": 22,
+        "3001": 53,
+        "3002": 8,
+        "3003": 15,
+        "3004": 21,
+        "3005": 29,
+        "3006": 22
+      },
+      "items": 226,
+      "secrets": 7,
+      "score": 19,
+      "unsupportedSpecials": [
+        18,
+        23,
+        36,
+        37,
+        38,
+        46,
+        47,
+        48,
+        71,
+        97,
+        109,
+        112,
+        119,
+        123,
+        125,
+        126
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005,
+        16
+      ]
+    },
+    {
+      "name": "E3M5",
+      "linedefs": 3029,
+      "sectors": 439,
+      "things": 462,
+      "skill3": 354,
+      "monsters": {
+        "9": 34,
+        "16": 1,
+        "58": 5,
+        "3001": 51,
+        "3002": 20,
+        "3003": 11,
+        "3004": 38,
+        "3005": 10,
+        "3006": 22
+      },
+      "items": 160,
+      "secrets": 4,
+      "score": 10,
+      "unsupportedSpecials": [
+        37,
+        48,
+        97,
+        120,
+        123,
+        126,
+        127
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005,
+        16
+      ]
+    },
+    {
+      "name": "E3M6",
+      "linedefs": 1326,
+      "sectors": 183,
+      "things": 225,
+      "skill3": 220,
+      "monsters": {
+        "16": 1,
+        "58": 4,
+        "3001": 31,
+        "3002": 9,
+        "3003": 11,
+        "3005": 5,
+        "3006": 17
+      },
+      "items": 58,
+      "secrets": 3,
+      "score": 15,
+      "unsupportedSpecials": [
+        6,
+        18,
+        22,
+        23,
+        37,
+        40,
+        48,
+        97,
+        119,
+        126,
+        127,
+        137
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005,
+        16
+      ]
+    },
+    {
+      "name": "E3M7",
+      "linedefs": 2474,
+      "sectors": 288,
+      "things": 455,
+      "skill3": 359,
+      "monsters": {
+        "9": 33,
+        "16": 1,
+        "58": 10,
+        "3001": 51,
+        "3002": 23,
+        "3003": 12,
+        "3004": 21,
+        "3005": 18,
+        "3006": 2
+      },
+      "items": 191,
+      "secrets": 4,
+      "score": 14,
+      "unsupportedSpecials": [
+        23,
+        37,
+        38,
+        48,
+        97,
+        105,
+        109,
+        110,
+        114,
+        123,
+        130
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005,
+        16
+      ]
+    },
+    {
+      "name": "E3M8",
+      "linedefs": 444,
+      "sectors": 33,
+      "things": 149,
+      "skill3": 104,
+      "monsters": {
+        "7": 1,
+        "58": 4,
+        "3001": 14,
+        "3002": 8,
+        "3003": 4,
+        "3005": 4
+      },
+      "items": 86,
+      "secrets": 0,
+      "score": 6,
+      "unsupportedSpecials": [
+        23,
+        40,
+        48,
+        126
+      ],
+      "unsupportedMonsters": [
+        3005,
+        7
+      ]
+    },
+    {
+      "name": "E3M9",
+      "linedefs": 4550,
+      "sectors": 535,
+      "things": 584,
+      "skill3": 541,
+      "monsters": {
+        "9": 28,
+        "58": 6,
+        "3001": 88,
+        "3002": 9,
+        "3003": 6,
+        "3004": 8,
+        "3005": 18,
+        "3006": 10
+      },
+      "items": 203,
+      "secrets": 0,
+      "score": 6,
+      "unsupportedSpecials": [
+        38,
+        48,
+        82,
+        97
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E4M1",
+      "linedefs": 1975,
+      "sectors": 324,
+      "things": 333,
+      "skill3": 272,
+      "monsters": {
+        "9": 27,
+        "58": 3,
+        "3001": 43,
+        "3002": 9,
+        "3004": 72
+      },
+      "items": 109,
+      "secrets": 5,
+      "score": 6,
+      "unsupportedSpecials": [
+        8,
+        23,
+        36,
+        38,
+        48,
+        71
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E4M2",
+      "linedefs": 4426,
+      "sectors": 830,
+      "things": 856,
+      "skill3": 684,
+      "monsters": {
+        "9": 75,
+        "58": 30,
+        "3001": 169,
+        "3002": 22,
+        "3004": 127,
+        "3005": 7,
+        "3006": 26
+      },
+      "items": 267,
+      "secrets": 7,
+      "score": 20,
+      "unsupportedSpecials": [
+        5,
+        12,
+        13,
+        18,
+        19,
+        20,
+        23,
+        37,
+        38,
+        48,
+        56,
+        60,
+        68,
+        69,
+        82,
+        97,
+        102,
+        130
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E4M3",
+      "linedefs": 2152,
+      "sectors": 417,
+      "things": 496,
+      "skill3": 395,
+      "monsters": {
+        "9": 66,
+        "58": 12,
+        "3001": 90,
+        "3002": 16,
+        "3004": 88
+      },
+      "items": 185,
+      "secrets": 11,
+      "score": 6,
+      "unsupportedSpecials": [
+        19,
+        23,
+        38,
+        71,
+        109,
+        133
+      ],
+      "unsupportedMonsters": []
+    },
+    {
+      "name": "E4M4",
+      "linedefs": 1814,
+      "sectors": 395,
+      "things": 556,
+      "skill3": 471,
+      "monsters": {
+        "9": 34,
+        "58": 17,
+        "3001": 68,
+        "3002": 12,
+        "3004": 81,
+        "3005": 6,
+        "3006": 19
+      },
+      "items": 193,
+      "secrets": 7,
+      "score": 10,
+      "unsupportedSpecials": [
+        22,
+        23,
+        97,
+        102,
+        109,
+        112,
+        123,
+        126
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E4M5",
+      "linedefs": 2042,
+      "sectors": 401,
+      "things": 506,
+      "skill3": 417,
+      "monsters": {
+        "9": 54,
+        "58": 14,
+        "3001": 84,
+        "3002": 11,
+        "3004": 83,
+        "3005": 6,
+        "3006": 8
+      },
+      "items": 198,
+      "secrets": 9,
+      "score": 11,
+      "unsupportedSpecials": [
+        6,
+        16,
+        19,
+        20,
+        23,
+        102,
+        109,
+        120,
+        126
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E4M6",
+      "linedefs": 2871,
+      "sectors": 518,
+      "things": 694,
+      "skill3": 577,
+      "monsters": {
+        "9": 69,
+        "58": 13,
+        "3001": 122,
+        "3002": 9,
+        "3003": 2,
+        "3004": 102,
+        "3005": 4,
+        "3006": 16
+      },
+      "items": 251,
+      "secrets": 10,
+      "score": 9,
+      "unsupportedSpecials": [
+        20,
+        38,
+        45,
+        56,
+        97,
+        109,
+        123
+      ],
+      "unsupportedMonsters": [
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E4M7",
+      "linedefs": 5329,
+      "sectors": 983,
+      "things": 1187,
+      "skill3": 971,
+      "monsters": {
+        "9": 102,
+        "58": 22,
+        "3001": 237,
+        "3002": 31,
+        "3003": 13,
+        "3004": 168,
+        "3005": 21,
+        "3006": 25
+      },
+      "items": 420,
+      "secrets": 10,
+      "score": 16,
+      "unsupportedSpecials": [
+        7,
+        18,
+        19,
+        20,
+        23,
+        35,
+        37,
+        38,
+        48,
+        56,
+        60,
+        97,
+        119,
+        120
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006
+      ]
+    },
+    {
+      "name": "E4M8",
+      "linedefs": 2097,
+      "sectors": 348,
+      "things": 406,
+      "skill3": 347,
+      "monsters": {
+        "7": 2,
+        "9": 17,
+        "16": 4,
+        "58": 5,
+        "3001": 51,
+        "3002": 26,
+        "3004": 29,
+        "3005": 8,
+        "3006": 13
+      },
+      "items": 193,
+      "secrets": 7,
+      "score": 14,
+      "unsupportedSpecials": [
+        6,
+        14,
+        23,
+        24,
+        37,
+        48,
+        97,
+        123,
+        125,
+        126
+      ],
+      "unsupportedMonsters": [
+        7,
+        16,
+        3006,
+        3005
+      ]
+    },
+    {
+      "name": "E4M9",
+      "linedefs": 3867,
+      "sectors": 651,
+      "things": 1007,
+      "skill3": 802,
+      "monsters": {
+        "9": 83,
+        "16": 1,
+        "58": 28,
+        "3001": 180,
+        "3002": 40,
+        "3004": 122,
+        "3005": 16,
+        "3006": 36
+      },
+      "items": 373,
+      "secrets": 9,
+      "score": 15,
+      "unsupportedSpecials": [
+        23,
+        25,
+        37,
+        38,
+        48,
+        56,
+        71,
+        97,
+        102,
+        109,
+        123,
+        126
+      ],
+      "unsupportedMonsters": [
+        3005,
+        3006,
+        16
+      ]
+    }
+  ],
+  "lineSpecials": [
+    {
+      "special": 1,
+      "lines": 391,
+      "maps": 32,
+      "desc": "porta DR",
+      "supported": "sim"
+    },
+    {
+      "special": 62,
+      "lines": 240,
+      "maps": 29,
+      "desc": "elevador SR",
+      "supported": "sim"
+    },
+    {
+      "special": 103,
+      "lines": 99,
+      "maps": 27,
+      "desc": "porta abre S1",
+      "supported": "sim"
+    },
+    {
+      "special": 31,
+      "lines": 119,
+      "maps": 24,
+      "desc": "porta abre D1",
+      "supported": "sim"
+    },
+    {
+      "special": 23,
+      "lines": 73,
+      "maps": 24,
+      "desc": "piso desce ao menor S1",
+      "supported": "não"
+    },
+    {
+      "special": 97,
+      "lines": 289,
+      "maps": 22,
+      "desc": "teleporte WR",
+      "supported": "não"
+    },
+    {
+      "special": 88,
+      "lines": 101,
+      "maps": 22,
+      "desc": "elevador WR",
+      "supported": "sim"
+    },
+    {
+      "special": 11,
+      "lines": 23,
+      "maps": 22,
+      "desc": "saída S1",
+      "supported": "sim"
+    },
+    {
+      "special": 48,
+      "lines": 327,
+      "maps": 20,
+      "desc": "parede rolante",
+      "supported": "não"
+    },
+    {
+      "special": 126,
+      "lines": 149,
+      "maps": 20,
+      "desc": "teleporte de monstro WR",
+      "supported": "não"
+    },
+    {
+      "special": 123,
+      "lines": 88,
+      "maps": 20,
+      "desc": "elevador rápido SR",
+      "supported": "não"
+    },
+    {
+      "special": 38,
+      "lines": 79,
+      "maps": 19,
+      "desc": "piso desce ao menor W1",
+      "supported": "não"
+    },
+    {
+      "special": 2,
+      "lines": 63,
+      "maps": 19,
+      "desc": "porta abre W1",
+      "supported": "sim"
+    },
+    {
+      "special": 27,
+      "lines": 56,
+      "maps": 19,
+      "desc": "porta amarela DR",
+      "supported": "sim"
+    },
+    {
+      "special": 28,
+      "lines": 41,
+      "maps": 16,
+      "desc": "porta vermelha DR",
+      "supported": "sim"
+    },
+    {
+      "special": 26,
+      "lines": 39,
+      "maps": 14,
+      "desc": "porta azul DR",
+      "supported": "sim"
+    },
+    {
+      "special": 19,
+      "lines": 69,
+      "maps": 13,
+      "desc": "piso desce ao maior vizinho W1",
+      "supported": "não"
+    },
+    {
+      "special": 52,
+      "lines": 44,
+      "maps": 13,
+      "desc": "saída W1",
+      "supported": "sim"
+    },
+    {
+      "special": 109,
+      "lines": 60,
+      "maps": 12,
+      "desc": "porta rápida abre W1",
+      "supported": "não"
+    },
+    {
+      "special": 117,
+      "lines": 35,
+      "maps": 12,
+      "desc": "porta rápida DR",
+      "supported": "sim"
+    },
+    {
+      "special": 71,
+      "lines": 24,
+      "maps": 12,
+      "desc": "piso desce ao maior + 8 S1",
+      "supported": "não"
+    },
+    {
+      "special": 32,
+      "lines": 24,
+      "maps": 12,
+      "desc": "porta azul D1",
+      "supported": "sim"
+    },
+    {
+      "special": 63,
+      "lines": 72,
+      "maps": 11,
+      "desc": "porta SR",
+      "supported": "sim"
+    },
+    {
+      "special": 37,
+      "lines": 55,
+      "maps": 10,
+      "desc": "piso desce ao menor e muda textura W1",
+      "supported": "não"
+    },
+    {
+      "special": 36,
+      "lines": 54,
+      "maps": 10,
+      "desc": "piso desce ao maior + 8 W1",
+      "supported": "não"
+    },
+    {
+      "special": 120,
+      "lines": 30,
+      "maps": 10,
+      "desc": "elevador rápido WR",
+      "supported": "não"
+    },
+    {
+      "special": 33,
+      "lines": 15,
+      "maps": 9,
+      "desc": "porta vermelha D1",
+      "supported": "sim"
+    },
+    {
+      "special": 18,
+      "lines": 13,
+      "maps": 8,
+      "desc": "piso sobe ao próximo S1",
+      "supported": "não"
+    },
+    {
+      "special": 102,
+      "lines": 11,
+      "maps": 7,
+      "desc": "piso desce ao maior S1",
+      "supported": "não"
+    },
+    {
+      "special": 112,
+      "lines": 10,
+      "maps": 7,
+      "desc": "porta rápida abre S1",
+      "supported": "não"
+    },
+    {
+      "special": 20,
+      "lines": 9,
+      "maps": 7,
+      "desc": "piso sobe ao próximo e muda textura S1",
+      "supported": "não"
+    },
+    {
+      "special": 61,
+      "lines": 9,
+      "maps": 7,
+      "desc": "porta abre SR",
+      "supported": "sim"
+    },
+    {
+      "special": 125,
+      "lines": 18,
+      "maps": 6,
+      "desc": "teleporte de monstro W1",
+      "supported": "não"
+    },
+    {
+      "special": 127,
+      "lines": 5,
+      "maps": 5,
+      "desc": "escada rápida S1",
+      "supported": "não"
+    },
+    {
+      "special": 6,
+      "lines": 18,
+      "maps": 4,
+      "desc": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "special": 34,
+      "lines": 10,
+      "maps": 4,
+      "desc": "porta amarela D1",
+      "supported": "sim"
+    },
+    {
+      "special": 46,
+      "lines": 9,
+      "maps": 4,
+      "desc": "piso sobe ao próximo G1",
+      "supported": "não"
+    },
+    {
+      "special": 5,
+      "lines": 7,
+      "maps": 4,
+      "desc": "piso sobe ao teto vizinho W1",
+      "supported": "não"
+    },
+    {
+      "special": 135,
+      "lines": 6,
+      "maps": 4,
+      "desc": "porta vermelha rápida S1 ?",
+      "supported": "não"
+    },
+    {
+      "special": 40,
+      "lines": 6,
+      "maps": 4,
+      "desc": "teto sobe W1",
+      "supported": "não"
+    },
+    {
+      "special": 56,
+      "lines": 5,
+      "maps": 4,
+      "desc": "piso sobe esmagando W1",
+      "supported": "não"
+    },
+    {
+      "special": 7,
+      "lines": 4,
+      "maps": 4,
+      "desc": "escada S1",
+      "supported": "não"
+    },
+    {
+      "special": 22,
+      "lines": 4,
+      "maps": 4,
+      "desc": "piso sobe ao próximo e muda textura W1",
+      "supported": "não"
+    },
+    {
+      "special": 133,
+      "lines": 4,
+      "maps": 4,
+      "desc": "porta azul rápida S1 ?",
+      "supported": "não"
+    },
+    {
+      "special": 110,
+      "lines": 4,
+      "maps": 4,
+      "desc": "porta rápida fecha W1",
+      "supported": "não"
+    },
+    {
+      "special": 13,
+      "lines": 7,
+      "maps": 3,
+      "desc": "luz 255 W1",
+      "supported": "não"
+    },
+    {
+      "special": 130,
+      "lines": 7,
+      "maps": 3,
+      "desc": "piso rápido sobe ao próximo W1",
+      "supported": "não"
+    },
+    {
+      "special": 105,
+      "lines": 6,
+      "maps": 3,
+      "desc": "porta rápida WR",
+      "supported": "não"
+    },
+    {
+      "special": 114,
+      "lines": 4,
+      "maps": 3,
+      "desc": "porta rápida SR",
+      "supported": "não"
+    },
+    {
+      "special": 137,
+      "lines": 4,
+      "maps": 3,
+      "desc": "porta amarela rápida S1 ?",
+      "supported": "não"
+    },
+    {
+      "special": 53,
+      "lines": 3,
+      "maps": 3,
+      "desc": "piso móvel W1",
+      "supported": "não"
+    },
+    {
+      "special": 119,
+      "lines": 3,
+      "maps": 3,
+      "desc": "piso sobe ao próximo W1",
+      "supported": "não"
+    },
+    {
+      "special": 60,
+      "lines": 9,
+      "maps": 2,
+      "desc": "piso desce ao menor SR",
+      "supported": "não"
+    },
+    {
+      "special": 82,
+      "lines": 8,
+      "maps": 2,
+      "desc": "piso desce ao menor WR",
+      "supported": "não"
+    },
+    {
+      "special": 3,
+      "lines": 7,
+      "maps": 2,
+      "desc": "porta fecha W1",
+      "supported": "sim"
+    },
+    {
+      "special": 12,
+      "lines": 6,
+      "maps": 2,
+      "desc": "luz ao máximo vizinho W1",
+      "supported": "não"
+    },
+    {
+      "special": 124,
+      "lines": 5,
+      "maps": 2,
+      "desc": "saída secreta W1",
+      "supported": "sim"
+    },
+    {
+      "special": 25,
+      "lines": 4,
+      "maps": 2,
+      "desc": "esmagador W1",
+      "supported": "não"
+    },
+    {
+      "special": 8,
+      "lines": 3,
+      "maps": 2,
+      "desc": "escada W1",
+      "supported": "não"
+    },
+    {
+      "special": 35,
+      "lines": 3,
+      "maps": 2,
+      "desc": "luz 35 W1",
+      "supported": "não"
+    },
+    {
+      "special": 51,
+      "lines": 2,
+      "maps": 2,
+      "desc": "saída secreta S1",
+      "supported": "sim"
+    },
+    {
+      "special": 118,
+      "lines": 2,
+      "maps": 2,
+      "desc": "porta rápida D1",
+      "supported": "sim"
+    },
+    {
+      "special": 77,
+      "lines": 15,
+      "maps": 1,
+      "desc": "esmagador rápido WR",
+      "supported": "não"
+    },
+    {
+      "special": 47,
+      "lines": 3,
+      "maps": 1,
+      "desc": "piso sobe ao próximo e muda textura G1",
+      "supported": "não"
+    },
+    {
+      "special": 45,
+      "lines": 2,
+      "maps": 1,
+      "desc": "piso desce ao maior SR",
+      "supported": "não"
+    },
+    {
+      "special": 14,
+      "lines": 2,
+      "maps": 1,
+      "desc": "piso sobe 32 e muda textura S1",
+      "supported": "não"
+    },
+    {
+      "special": 58,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso sobe 24 W1",
+      "supported": "não"
+    },
+    {
+      "special": 138,
+      "lines": 1,
+      "maps": 1,
+      "desc": "luz 255 SR",
+      "supported": "não"
+    },
+    {
+      "special": 107,
+      "lines": 1,
+      "maps": 1,
+      "desc": "porta rápida fecha WR",
+      "supported": "não"
+    },
+    {
+      "special": 75,
+      "lines": 1,
+      "maps": 1,
+      "desc": "porta fecha WR",
+      "supported": "sim"
+    },
+    {
+      "special": 101,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso sobe ao teto S1",
+      "supported": "não"
+    },
+    {
+      "special": 100,
+      "lines": 1,
+      "maps": 1,
+      "desc": "escada rápida W1",
+      "supported": "não"
+    },
+    {
+      "special": 131,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso rápido sobe ao próximo S1",
+      "supported": "não"
+    },
+    {
+      "special": 141,
+      "lines": 1,
+      "maps": 1,
+      "desc": "esmagador silencioso W1",
+      "supported": "não"
+    },
+    {
+      "special": 106,
+      "lines": 1,
+      "maps": 1,
+      "desc": "porta rápida abre WR",
+      "supported": "não"
+    },
+    {
+      "special": 68,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso sobe ao próximo e muda textura SR",
+      "supported": "não"
+    },
+    {
+      "special": 69,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso sobe ao próximo SR",
+      "supported": "não"
+    },
+    {
+      "special": 16,
+      "lines": 1,
+      "maps": 1,
+      "desc": "porta fecha 30 s W1",
+      "supported": "não"
+    },
+    {
+      "special": 24,
+      "lines": 1,
+      "maps": 1,
+      "desc": "piso sobe ao teto G1",
+      "supported": "não"
+    }
+  ],
+  "sectorSpecials": [
+    {
+      "special": 1,
+      "sectors": 160,
+      "maps": 26,
+      "desc": "luz piscando aleatória",
+      "supported": "não"
+    },
+    {
+      "special": 2,
+      "sectors": 19,
+      "maps": 9,
+      "desc": "estroboscópica rápida",
+      "supported": "não"
+    },
+    {
+      "special": 3,
+      "sectors": 27,
+      "maps": 9,
+      "desc": "estroboscópica lenta",
+      "supported": "não"
+    },
+    {
+      "special": 4,
+      "sectors": 5,
+      "maps": 3,
+      "desc": "estroboscópica lenta com dano de 20",
+      "supported": "não"
+    },
+    {
+      "special": 5,
+      "sectors": 236,
+      "maps": 21,
+      "desc": "dano de 10",
+      "supported": "não"
+    },
+    {
+      "special": 7,
+      "sectors": 220,
+      "maps": 22,
+      "desc": "dano de 5",
+      "supported": "não"
+    },
+    {
+      "special": 8,
+      "sectors": 330,
+      "maps": 27,
+      "desc": "luz oscilante",
+      "supported": "não"
+    },
+    {
+      "special": 9,
+      "sectors": 183,
+      "maps": 34,
+      "desc": "secreto",
+      "supported": "não"
+    },
+    {
+      "special": 12,
+      "sectors": 12,
+      "maps": 5,
+      "desc": "estroboscópica lenta sincronizada",
+      "supported": "não"
+    },
+    {
+      "special": 13,
+      "sectors": 1,
+      "maps": 1,
+      "desc": "estroboscópica rápida sincronizada",
+      "supported": "não"
+    },
+    {
+      "special": 16,
+      "sectors": 122,
+      "maps": 17,
+      "desc": "dano de 20",
+      "supported": "não"
+    },
+    {
+      "special": 17,
+      "sectors": 72,
+      "maps": 18,
+      "desc": "luz tremulante tipo fogo",
+      "supported": "não"
+    }
+  ],
+  "things": [
+    {
+      "type": 1,
+      "count": 36,
+      "maps": 36,
+      "category": "início de jogador",
+      "name": "jogador 1",
+      "supported": "ignorado"
+    },
+    {
+      "type": 2,
+      "count": 36,
+      "maps": 36,
+      "category": "início de jogador",
+      "name": "jogador 2",
+      "supported": "ignorado"
+    },
+    {
+      "type": 3,
+      "count": 36,
+      "maps": 36,
+      "category": "início de jogador",
+      "name": "jogador 3",
+      "supported": "ignorado"
+    },
+    {
+      "type": 4,
+      "count": 36,
+      "maps": 36,
+      "category": "início de jogador",
+      "name": "jogador 4",
+      "supported": "ignorado"
+    },
+    {
+      "type": 5,
+      "count": 18,
+      "maps": 18,
+      "category": "item",
+      "name": "blueCard (BKEY)",
+      "supported": "sim"
+    },
+    {
+      "type": 6,
+      "count": 16,
+      "maps": 16,
+      "category": "item",
+      "name": "yellowCard (YKEY)",
+      "supported": "sim"
+    },
+    {
+      "type": 7,
+      "count": 3,
+      "maps": 2,
+      "category": "monstro",
+      "name": "spider mastermind (?)",
+      "supported": "não"
+    },
+    {
+      "type": 8,
+      "count": 69,
+      "maps": 33,
+      "category": "item",
+      "name": "backpack (BPAK)",
+      "supported": "sim"
+    },
+    {
+      "type": 9,
+      "count": 1350,
+      "maps": 31,
+      "category": "monstro",
+      "name": "sargento (SPOS)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 10,
+      "count": 72,
+      "maps": 19,
+      "category": "decoração",
+      "name": "PLAY",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 11,
+      "count": 278,
+      "maps": 36,
+      "category": "início de jogador",
+      "name": "deathmatch",
+      "supported": "ignorado"
+    },
+    {
+      "type": 12,
+      "count": 21,
+      "maps": 10,
+      "category": "decoração",
+      "name": "PLAY",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 13,
+      "count": 19,
+      "maps": 19,
+      "category": "item",
+      "name": "redCard (RKEY)",
+      "supported": "sim"
+    },
+    {
+      "type": 14,
+      "count": 190,
+      "maps": 29,
+      "category": "destino de teleporte",
+      "name": "destino de teleporte",
+      "supported": "não"
+    },
+    {
+      "type": 15,
+      "count": 142,
+      "maps": 26,
+      "category": "decoração",
+      "name": "PLAY",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 16,
+      "count": 11,
+      "maps": 7,
+      "category": "monstro",
+      "name": "cyberdemon (?)",
+      "supported": "não"
+    },
+    {
+      "type": 17,
+      "count": 28,
+      "maps": 12,
+      "category": "item",
+      "name": "cellPack (CELP)",
+      "supported": "sim"
+    },
+    {
+      "type": 18,
+      "count": 34,
+      "maps": 15,
+      "category": "decoração",
+      "name": "POSS",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 19,
+      "count": 27,
+      "maps": 12,
+      "category": "decoração",
+      "name": "SPOS",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 20,
+      "count": 42,
+      "maps": 11,
+      "category": "decoração",
+      "name": "TROO",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 21,
+      "count": 25,
+      "maps": 12,
+      "category": "decoração",
+      "name": "SARG",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 22,
+      "count": 12,
+      "maps": 8,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 24,
+      "count": 72,
+      "maps": 20,
+      "category": "decoração",
+      "name": "POL5",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 25,
+      "count": 8,
+      "maps": 6,
+      "category": "decoração",
+      "name": "POL1",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 26,
+      "count": 18,
+      "maps": 8,
+      "category": "decoração",
+      "name": "POL6",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 27,
+      "count": 12,
+      "maps": 6,
+      "category": "decoração",
+      "name": "POL4",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 28,
+      "count": 9,
+      "maps": 3,
+      "category": "decoração",
+      "name": "POL2",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 29,
+      "count": 9,
+      "maps": 6,
+      "category": "decoração",
+      "name": "POL3",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 30,
+      "count": 14,
+      "maps": 5,
+      "category": "decoração",
+      "name": "COL1",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 31,
+      "count": 7,
+      "maps": 4,
+      "category": "decoração",
+      "name": "COL2",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 32,
+      "count": 21,
+      "maps": 5,
+      "category": "decoração",
+      "name": "COL3",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 33,
+      "count": 29,
+      "maps": 3,
+      "category": "decoração",
+      "name": "COL4",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 34,
+      "count": 124,
+      "maps": 19,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 35,
+      "count": 82,
+      "maps": 21,
+      "category": "decoração",
+      "name": "CBRA",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 36,
+      "count": 17,
+      "maps": 9,
+      "category": "decoração",
+      "name": "COL5",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 37,
+      "count": 13,
+      "maps": 3,
+      "category": "decoração",
+      "name": "COL6",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 38,
+      "count": 7,
+      "maps": 7,
+      "category": "item",
+      "name": "redSkull (RSKU)",
+      "supported": "sim"
+    },
+    {
+      "type": 39,
+      "count": 9,
+      "maps": 9,
+      "category": "item",
+      "name": "yellowSkull (YSKU)",
+      "supported": "sim"
+    },
+    {
+      "type": 40,
+      "count": 5,
+      "maps": 5,
+      "category": "item",
+      "name": "blueSkull (BSKU)",
+      "supported": "sim"
+    },
+    {
+      "type": 41,
+      "count": 20,
+      "maps": 7,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 42,
+      "count": 26,
+      "maps": 8,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 43,
+      "count": 96,
+      "maps": 16,
+      "category": "decoração",
+      "name": "TRE1",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 44,
+      "count": 12,
+      "maps": 4,
+      "category": "decoração",
+      "name": "TBLU",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 45,
+      "count": 22,
+      "maps": 6,
+      "category": "decoração",
+      "name": "TGRN",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 46,
+      "count": 51,
+      "maps": 10,
+      "category": "decoração",
+      "name": "TRED",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 47,
+      "count": 63,
+      "maps": 12,
+      "category": "decoração",
+      "name": "SMIT",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 48,
+      "count": 130,
+      "maps": 22,
+      "category": "decoração",
+      "name": "ELEC",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 51,
+      "count": 1,
+      "maps": 1,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 53,
+      "count": 4,
+      "maps": 3,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 54,
+      "count": 80,
+      "maps": 14,
+      "category": "decoração",
+      "name": "TRE2",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 55,
+      "count": 10,
+      "maps": 5,
+      "category": "decoração",
+      "name": "SMBT",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 56,
+      "count": 14,
+      "maps": 5,
+      "category": "decoração",
+      "name": "SMGT",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 57,
+      "count": 43,
+      "maps": 9,
+      "category": "decoração",
+      "name": "SMRT",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 58,
+      "count": 381,
+      "maps": 34,
+      "category": "monstro",
+      "name": "espectro (SARG)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 59,
+      "count": 15,
+      "maps": 6,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 60,
+      "count": 22,
+      "maps": 10,
+      "category": "decoração",
+      "name": "GOR4",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 61,
+      "count": 4,
+      "maps": 3,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 62,
+      "count": 10,
+      "maps": 7,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 63,
+      "count": 21,
+      "maps": 9,
+      "category": "outro",
+      "name": "desconhecido",
+      "supported": "não"
+    },
+    {
+      "type": 2001,
+      "count": 164,
+      "maps": 36,
+      "category": "item",
+      "name": "shotgun (SHOT)",
+      "supported": "sim"
+    },
+    {
+      "type": 2002,
+      "count": 95,
+      "maps": 35,
+      "category": "item",
+      "name": "chaingun (MGUN)",
+      "supported": "sim"
+    },
+    {
+      "type": 2003,
+      "count": 70,
+      "maps": 35,
+      "category": "item",
+      "name": "rocketLauncher (LAUN)",
+      "supported": "sim"
+    },
+    {
+      "type": 2004,
+      "count": 33,
+      "maps": 23,
+      "category": "item",
+      "name": "plasma (PLAS)",
+      "supported": "sim"
+    },
+    {
+      "type": 2005,
+      "count": 37,
+      "maps": 29,
+      "category": "item",
+      "name": "chainsaw (CSAW)",
+      "supported": "sim"
+    },
+    {
+      "type": 2006,
+      "count": 7,
+      "maps": 6,
+      "category": "item",
+      "name": "bfg (BFUG)",
+      "supported": "sim"
+    },
+    {
+      "type": 2007,
+      "count": 516,
+      "maps": 33,
+      "category": "item",
+      "name": "clip (CLIP)",
+      "supported": "sim"
+    },
+    {
+      "type": 2008,
+      "count": 753,
+      "maps": 35,
+      "category": "item",
+      "name": "shells (SHEL)",
+      "supported": "sim"
+    },
+    {
+      "type": 2010,
+      "count": 379,
+      "maps": 29,
+      "category": "item",
+      "name": "rocket (ROCK)",
+      "supported": "sim"
+    },
+    {
+      "type": 2011,
+      "count": 583,
+      "maps": 34,
+      "category": "item",
+      "name": "stimpack (STIM)",
+      "supported": "sim"
+    },
+    {
+      "type": 2012,
+      "count": 302,
+      "maps": 36,
+      "category": "item",
+      "name": "medikit (MEDI)",
+      "supported": "sim"
+    },
+    {
+      "type": 2013,
+      "count": 42,
+      "maps": 28,
+      "category": "item",
+      "name": "soulsphere (SOUL)",
+      "supported": "sim"
+    },
+    {
+      "type": 2014,
+      "count": 1108,
+      "maps": 34,
+      "category": "item",
+      "name": "healthBonus (BON1)",
+      "supported": "sim"
+    },
+    {
+      "type": 2015,
+      "count": 1164,
+      "maps": 33,
+      "category": "item",
+      "name": "armorBonus (BON2)",
+      "supported": "sim"
+    },
+    {
+      "type": 2018,
+      "count": 83,
+      "maps": 36,
+      "category": "item",
+      "name": "greenArmor (ARM1)",
+      "supported": "sim"
+    },
+    {
+      "type": 2019,
+      "count": 33,
+      "maps": 24,
+      "category": "item",
+      "name": "blueArmor (ARM2)",
+      "supported": "sim"
+    },
+    {
+      "type": 2022,
+      "count": 4,
+      "maps": 4,
+      "category": "decoração",
+      "name": "PINV",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2023,
+      "count": 31,
+      "maps": 22,
+      "category": "decoração",
+      "name": "PSTR",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2024,
+      "count": 14,
+      "maps": 13,
+      "category": "decoração",
+      "name": "PINS",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2025,
+      "count": 45,
+      "maps": 16,
+      "category": "decoração",
+      "name": "SUIT",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2026,
+      "count": 9,
+      "maps": 9,
+      "category": "decoração",
+      "name": "PMAP",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2028,
+      "count": 387,
+      "maps": 23,
+      "category": "decoração",
+      "name": "COLU",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2035,
+      "count": 401,
+      "maps": 22,
+      "category": "outro",
+      "name": "BAR1",
+      "supported": "sim"
+    },
+    {
+      "type": 2045,
+      "count": 3,
+      "maps": 3,
+      "category": "decoração",
+      "name": "PVIS",
+      "supported": "sim (sprite)"
+    },
+    {
+      "type": 2046,
+      "count": 166,
+      "maps": 31,
+      "category": "item",
+      "name": "rocketBox (BROK)",
+      "supported": "sim"
+    },
+    {
+      "type": 2047,
+      "count": 87,
+      "maps": 21,
+      "category": "item",
+      "name": "cell (CELL)",
+      "supported": "sim"
+    },
+    {
+      "type": 2048,
+      "count": 212,
+      "maps": 34,
+      "category": "item",
+      "name": "ammoBox (AMMO)",
+      "supported": "sim"
+    },
+    {
+      "type": 2049,
+      "count": 166,
+      "maps": 36,
+      "category": "item",
+      "name": "shellBox (SBOX)",
+      "supported": "sim"
+    },
+    {
+      "type": 3001,
+      "count": 2366,
+      "maps": 34,
+      "category": "monstro",
+      "name": "diabrete (TROO)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 3002,
+      "count": 531,
+      "maps": 33,
+      "category": "monstro",
+      "name": "demônio (SARG)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 3003,
+      "count": 111,
+      "maps": 17,
+      "category": "monstro",
+      "name": "barão (BOSS)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 3004,
+      "count": 1590,
+      "maps": 31,
+      "category": "monstro",
+      "name": "zumbi (POSS)",
+      "supported": "sim (IA)"
+    },
+    {
+      "type": 3005,
+      "count": 260,
+      "maps": 24,
+      "category": "monstro",
+      "name": "cacodemônio (HEAD)",
+      "supported": "parcial (passivo)"
+    },
+    {
+      "type": 3006,
+      "count": 349,
+      "maps": 22,
+      "category": "monstro",
+      "name": "alma perdida (SKUL)",
+      "supported": "parcial (passivo)"
+    }
+  ],
+  "animations": [
+    {
+      "family": "flat NUKAGE",
+      "uses": 461,
+      "maps": 24
+    },
+    {
+      "family": "flat SLIME",
+      "uses": 203,
+      "maps": 19
+    },
+    {
+      "family": "flat BLOOD",
+      "uses": 206,
+      "maps": 16
+    },
+    {
+      "family": "parede FIREBLU",
+      "uses": 157,
+      "maps": 14
+    },
+    {
+      "family": "flat FWATER",
+      "uses": 193,
+      "maps": 13
+    },
+    {
+      "family": "flat LAVA",
+      "uses": 51,
+      "maps": 12
+    },
+    {
+      "family": "parede SLADRIP",
+      "uses": 104,
+      "maps": 11
+    },
+    {
+      "family": "parede BFALL",
+      "uses": 236,
+      "maps": 10
+    },
+    {
+      "family": "parede ROCKRED",
+      "uses": 1441,
+      "maps": 10
+    },
+    {
+      "family": "parede SFALL",
+      "uses": 68,
+      "maps": 9
+    },
+    {
+      "family": "parede WFALL",
+      "uses": 80,
+      "maps": 6
+    },
+    {
+      "family": "parede GSTFONT",
+      "uses": 9,
+      "maps": 4
+    },
+    {
+      "family": "parede FIREWAL",
+      "uses": 22,
+      "maps": 4
+    },
+    {
+      "family": "flat RROCK05-08",
+      "uses": 18,
+      "maps": 3
+    },
+    {
+      "family": "parede DBRAIN",
+      "uses": 25,
+      "maps": 3
+    },
+    {
+      "family": "parede BLODRIP",
+      "uses": 31,
+      "maps": 3
+    },
+    {
+      "family": "parede BLODGR",
+      "uses": 16,
+      "maps": 3
+    },
+    {
+      "family": "parede FIRELAV",
+      "uses": 21,
+      "maps": 2
+    },
+    {
+      "family": "parede FIREMAG",
+      "uses": 55,
+      "maps": 2
+    }
+  ],
+  "animatedFamiliesInWad": {
+    "flats": {
+      "NUKAGE": [
+        "NUKAGE1",
+        "NUKAGE2",
+        "NUKAGE3"
+      ],
+      "FWATER": [
+        "FWATER1",
+        "FWATER2",
+        "FWATER3",
+        "FWATER4"
+      ],
+      "LAVA": [
+        "LAVA1",
+        "LAVA2",
+        "LAVA3",
+        "LAVA4"
+      ],
+      "BLOOD": [
+        "BLOOD1",
+        "BLOOD2",
+        "BLOOD3"
+      ],
+      "RROCK05-08": [
+        "RROCK05",
+        "RROCK06",
+        "RROCK07",
+        "RROCK08"
+      ],
+      "SLIME": [
+        "SLIME01",
+        "SLIME02",
+        "SLIME03",
+        "SLIME04",
+        "SLIME05",
+        "SLIME06",
+        "SLIME07",
+        "SLIME08",
+        "SLIME09",
+        "SLIME10",
+        "SLIME11",
+        "SLIME12",
+        "SLIME13",
+        "SLIME14",
+        "SLIME15",
+        "SLIME16"
+      ]
+    },
+    "walls": {
+      "BLODGR": [
+        "BLODGR1",
+        "BLODGR2",
+        "BLODGR3",
+        "BLODGR4"
+      ],
+      "BLODRIP": [
+        "BLODRIP1",
+        "BLODRIP2",
+        "BLODRIP3",
+        "BLODRIP4"
+      ],
+      "FIREBLU": [
+        "FIREBLU1",
+        "FIREBLU2"
+      ],
+      "FIRELAV": [
+        "FIRELAV2",
+        "FIRELAV3",
+        "FIRELAVA"
+      ],
+      "FIREMAG": [
+        "FIREMAG1",
+        "FIREMAG2",
+        "FIREMAG3"
+      ],
+      "FIREWAL": [
+        "FIREWALA",
+        "FIREWALB",
+        "FIREWALL"
+      ],
+      "GSTFONT": [
+        "GSTFONT1",
+        "GSTFONT2",
+        "GSTFONT3"
+      ],
+      "ROCKRED": [
+        "ROCKRED1",
+        "ROCKRED2",
+        "ROCKRED3"
+      ],
+      "SLADRIP": [
+        "SLADRIP1",
+        "SLADRIP2",
+        "SLADRIP3"
+      ],
+      "BFALL": [
+        "BFALL1",
+        "BFALL2",
+        "BFALL3",
+        "BFALL4"
+      ],
+      "SFALL": [
+        "SFALL1",
+        "SFALL2",
+        "SFALL3",
+        "SFALL4"
+      ],
+      "WFALL": [
+        "WFALL1",
+        "WFALL2",
+        "WFALL3",
+        "WFALL4"
+      ],
+      "DBRAIN": [
+        "DBRAIN1",
+        "DBRAIN2",
+        "DBRAIN3",
+        "DBRAIN4"
+      ]
+    }
+  },
+  "grates": 1756,
+  "scrollers": 327,
+  "tags666": [
+    "E1M8 linha tag 666",
+    "E1M8 setor tag 666"
+  ],
+  "bosses": {
+    "7": [
+      "E3M8",
+      "E4M8"
+    ],
+    "16": [
+      "E2M8",
+      "E3M4",
+      "E3M5",
+      "E3M6",
+      "E3M7",
+      "E4M8",
+      "E4M9"
+    ],
+    "3003": [
+      "E1M8",
+      "E2M3",
+      "E2M4",
+      "E2M5",
+      "E2M6",
+      "E2M7",
+      "E2M9",
+      "E3M2",
+      "E3M3",
+      "E3M4",
+      "E3M5",
+      "E3M6",
+      "E3M7",
+      "E3M8",
+      "E3M9",
+      "E4M6",
+      "E4M7"
+    ]
+  },
+  "ranking": [
+    {
+      "name": "E1M1",
+      "score": 1
+    },
+    {
+      "name": "E1M8",
+      "score": 1
+    },
+    {
+      "name": "E1M5",
+      "score": 2
+    },
+    {
+      "name": "E1M3",
+      "score": 4
+    },
+    {
+      "name": "E1M4",
+      "score": 4
+    },
+    {
+      "name": "E1M9",
+      "score": 4
+    },
+    {
+      "name": "E3M1",
+      "score": 4
+    },
+    {
+      "name": "E2M8",
+      "score": 5
+    },
+    {
+      "name": "E3M8",
+      "score": 6
+    },
+    {
+      "name": "E3M9",
+      "score": 6
+    }
+  ]
+}
