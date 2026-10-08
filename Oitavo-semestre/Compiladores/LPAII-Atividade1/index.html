@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Tradutor de #hashtags e @menções</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+    }
+    button {
+      margin: 10px 0;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+    #saida {
+      border: 1px solid #ccc;
+      padding: 10px;
+      min-height: 40px;
+      white-space: pre-wrap;
+    }
+    #contador {
+      margin-top: 8px;
+      color: #333;
+      font-size: 14px;
+    }
+    .erro {
+      background: #fdd;
+      color: #900;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tradutor de #hashtags e @menções</h1>
+
+  <textarea id="entrada" placeholder="Digite seu texto aqui"></textarea>
+  <br>
+  <button id="botao">Traduzir</button>
+
+  <h3>Resultado</h3>
+  <div id="saida"></div>
+  <!-- Desafio 1: contador -->
+  <div id="contador"></div>
+
+  <h3>Erros encontrados</h3>
+  <ul id="erros"></ul>
+
+  <script>
+    // ===== Passo 2: dicionários =====
+    const emojis = {
+      "frutas:banana": "🍌",
+      "frutas:uva": "🍇",
+      "frutas:maçã": "🍎",
+      "frutas:laranja": "🍊",
+      "frutas:morango": "🍓",
+      "animais:gato": "🐱",
+      "animais:cachorro": "🐶",
+      "animais:leão": "🦁",
+      "comidas:pizza": "🍕",
+      "comidas:hamburguer": "🍔",
+      "comidas:sorvete": "🍦"
+    };
+
+    const pessoas = {
+      "joao": "João da Silva",
+      "maria": "Maria Oliveira",
+      "ana": "Ana Souza",
+      "pedro": "Pedro Santos",
+      "vitor": "Vitor",
+      "lucas": "Lucas Pereira",
+      "carla": "Carla Mendes",
+      "maria.silva": "Maria Silva" // Desafio 3: nome com ponto
+    };
+
+    // ===== Funções auxiliares =====
+    function marcarErro(trecho) {
+      return '<span class="erro">' + trecho + "</span>";
+    }
+
+    function escaparHtml(texto) {
+      return texto
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // ===== Passo 5 + Desafios 1, 2 e 3: menções =====
+    // (?<![\wÀ-ÿ.])          -> Desafio 2: o @ não pode estar colado em letra, dígito ou ponto (ignora e-mails)
+    // ([\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*) -> Desafio 3: o ponto só entra no nome se vier letra/dígito depois dele
+    function substituirMencoes(texto, erros, contagem) {
+      const padrao = /(?<![\wÀ-ÿ.])@([\wÀ-ÿ]+(?:\.[\wÀ-ÿ]+)*)/g;
+
+      return texto.replace(padrao, function (trecho, usuario) {
+        const chave = usuario.toLowerCase();
+
+        if (!Object.hasOwn(pessoas, chave)) {
+          erros.push("Menção desconhecida: " + trecho);
+          return marcarErro(trecho);
+        }
+
+        contagem.mencoes++; // Desafio 1
+        return pessoas[chave];
+      });
+    }
+
+    // ===== Passo 6 + Desafio 1: hashtags =====
+    function substituirHashtags(texto, erros, contagem) {
+      const padrao = /#([\wÀ-ÿ]+)(?::([\wÀ-ÿ]+))?/g;
+
+      return texto.replace(padrao, function (trecho, categoria, valor) {
+        if (valor === undefined) {
+          erros.push(
+            "Hashtag em formato inválido: " + trecho + " (use #categoria:valor)"
+          );
+          return marcarErro(trecho);
+        }
+
+        const chave = (categoria + ":" + valor).toLowerCase();
+
+        if (!Object.hasOwn(emojis, chave)) {
+          erros.push("Hashtag desconhecida: " + trecho);
+          return marcarErro(trecho);
+        }
+
+        contagem.hashtags++; // Desafio 1
+        return emojis[chave];
+      });
+    }
+
+    // ===== Desafio 4: $texto$ vira negrito =====
+    // \$         -> o caractere $ de abertura
+    // (?!\s)     -> logo depois do $ não pode vir espaço
+    // ([^$\n]+?) -> grupo 1: o conteúdo (qualquer coisa menos $ e quebra de linha)
+    // (?<!\s)    -> antes do $ de fechamento não pode haver espaço
+    // \$         -> o $ de fechamento
+    // As regras de espaço evitam que "R$ 10 e R$ 20" vire negrito por engano.
+    function substituirNegrito(texto, contagem) {
+      const padrao = /\$(?!\s)([^$\n]+?)(?<!\s)\$/g;
+
+      return texto.replace(padrao, function (trecho, conteudo) {
+        contagem.negritos++;
+        return "<strong>" + conteudo + "</strong>";
+      });
+    }
+
+    // ===== Passo 7: função principal =====
+    function traduzir() {
+      const erros = [];
+      const contagem = { mencoes: 0, hashtags: 0, negritos: 0 };
+      let texto = escaparHtml(document.getElementById("entrada").value);
+
+      texto = substituirMencoes(texto, erros, contagem);
+      texto = substituirHashtags(texto, erros, contagem);
+      texto = substituirNegrito(texto, contagem);
+
+      document.getElementById("saida").innerHTML = texto;
+
+      // Desafio 1: mostra o contador
+      document.getElementById("contador").textContent =
+        "Menções traduzidas: " + contagem.mencoes +
+        " | Hashtags traduzidas: " + contagem.hashtags +
+        " | Trechos em negrito: " + contagem.negritos;
+
+      const lista = document.getElementById("erros");
+      lista.innerHTML = "";
+
+      if (erros.length === 0) {
+        lista.innerHTML = "<li>Nenhum erro encontrado.</li>";
+      }
+
+      for (const mensagem of erros) {
+        const item = document.createElement("li");
+        item.className = "erro";
+        item.textContent = mensagem;
+        lista.appendChild(item);
+      }
+    }
+
+    document.getElementById("botao").addEventListener("click", traduzir);
+  </script>
+</body>
+</html>
