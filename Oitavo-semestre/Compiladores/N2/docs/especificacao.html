@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Especificação da linguagem Traço</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,700&display=swap">
+<style>
+  @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+  :root { --tinta: #18202e; --suave: #5a6576; --grade: #d5dce7; --acento: #1f5fbf; --fundo: #f3f6fa; }
+  body { font-family: "IBM Plex Sans", "Segoe UI", sans-serif; font-size: 10pt; line-height: 1.45; color: var(--tinta); margin: 0; }
+  h1 { font-family: "Bricolage Grotesque", sans-serif; font-size: 24pt; margin: 0 0 2pt; line-height: 1.1; }
+  h2 { font-family: "Bricolage Grotesque", sans-serif; font-size: 15pt; margin: 18pt 0 6pt; color: var(--acento); break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12pt 0 4pt; break-after: avoid; }
+  p { margin: 0 0 6pt; }
+  .sobre { text-transform: uppercase; letter-spacing: .08em; font-size: 8.5pt; color: var(--suave); margin: 0 0 4pt; }
+  .meta { color: var(--suave); margin-bottom: 10pt; }
+  code, pre { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 8.8pt; }
+  pre { background: var(--fundo); border: 1px solid var(--grade); border-radius: 4px; padding: 7pt 9pt; margin: 4pt 0 8pt; white-space: pre-wrap; break-inside: avoid; }
+  pre.longo { break-inside: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 8pt; font-size: 9pt; }
+  th, td { border: 1px solid var(--grade); padding: 3pt 6pt; text-align: left; vertical-align: top; }
+  th { background: var(--fundo); font-weight: 600; }
+  tr { break-inside: avoid; }
+  td code { font-size: 8.6pt; overflow-wrap: anywhere; }
+  .ign { color: var(--suave); }
+  ol, ul { margin: 0 0 6pt; padding-left: 16pt; }
+  li { margin-bottom: 3pt; }
+  .exemplos { display: grid; gap: 8pt; }
+  .exemplos pre { margin: 0; }
+  .legenda { font-size: 8.5pt; color: var(--suave); margin: 2pt 0 0; }
+</style>
+</head>
+<body>
+
+<p class="sobre">Compiladores · Atividade Fase 1</p>
+<h1>A linguagem Traço</h1>
+<p class="meta">Especificação léxica, sintática e da AST · Laboratório de Programação Avançada II · Lucca Giordano</p>
+
+<h2>1. Descrição da linguagem</h2>
+<p><strong>Traço</strong> é uma linguagem de comandos para descrever desenhos 2D. Todo programa começa declarando a <strong>tela</strong> (largura e altura) e depois lista formas e grupos, em qualquer quantidade. As palavras-chave são em português e em minúsculas.</p>
+<ul>
+  <li><strong>Tela:</strong> <code>tela LARGURA por ALTURA</code>, obrigatória, única e no início.</li>
+  <li><strong>Formas:</strong> pontos são escritos como <code>(x, y)</code>.
+    <code>reta (x1, y1) (x2, y2)</code> liga dois pontos;
+    <code>circulo (cx, cy) RAIO</code> recebe o centro e o raio;
+    <code>retangulo (x, y) LARGURA por ALTURA</code> recebe o canto superior esquerdo e as dimensões.</li>
+  <li><strong>Estilo (opcional):</strong> depois da forma, <code>com</code> seguido de um a três atributos, em qualquer ordem e sem repetição: <code>traco COR</code>, <code>preenchimento COR</code>, <code>espessura N</code>.</li>
+  <li><strong>Grupo:</strong> <code>grupo MODIFICADORES { ITENS }</code>. Reúne formas e outros grupos, com aninhamento livre. Os modificadores, opcionais e só para grupos, são <code>rotaciona ÂNGULO</code> e <code>desloca (dx, dy)</code>; podem aparecer em qualquer ordem e quantidade, e a ordem é preservada.</li>
+  <li><strong>Cores:</strong> <code>preto branco vermelho verde azul amarelo laranja roxo rosa cinza</code> ou <code>#RRGGBB</code>.</li>
+  <li><strong>Números:</strong> inteiros sem sinal, incluindo o zero, sem zeros à esquerda.</li>
+  <li><strong>Comentário:</strong> de <code>//</code> até o fim da linha.</li>
+</ul>
+
+<h3>Programas de exemplo</h3>
+<div class="exemplos">
+  <div><pre>tela 400 por 300
+// um carro simples
+retangulo (50, 150) 200 por 60 com preenchimento azul
+grupo desloca (70, 190) {
+    circulo (0, 0) 25 com preenchimento preto
+    grupo rotaciona 45 {
+        reta (0, 0) (20, 0) com traco branco espessura 2
+    }
+}
+grupo desloca (200, 190) {
+    circulo (0, 0) 25 com preenchimento preto
+}</pre><p class="legenda">Exemplo 1: o carro do enunciado, reescrito em Traço.</p></div>
+  <div><pre>tela 300 por 300 // tela quadrada
+retângulo (50, 120) 200 por 150 com espessura 3 traco #4A2C0F preenchimento #F5DEB3
+reta (50, 120) (150, 40) com traco vermelho espessura 4
+reta(150,40)(250,120)com traco vermelho espessura 4
+retangulo (130, 200) 40 por 70 com preenchimento #8b4513
+círculo (250, 50) 20 com preenchimento amarelo traço laranja</pre><p class="legenda">Exemplo 2: uma casa com cores hexadecimais, os três atributos e palavras acentuadas.</p></div>
+</div>
+
+<h2>2. Definição léxica</h2>
+<p>O analisador léxico percorre o texto com uma <strong>lista ordenada de regras</strong> (expressões regulares com a flag <code>y</code>, ancoradas na posição atual); vence a primeira regra que casa. As regras de palavras, cores e números terminam com a verificação de <strong>fim de palavra</strong> <code>F = (?![\p{L}\p{N}_])</code> (flag <code>u</code>): o lexema não pode ser seguido de letra, dígito ou sublinhado. É ela que impede <code>reta</code> de casar com o começo de <code>retangulo</code> ou de <code>retas</code>, e <code>0</code> de casar com o começo de <code>05</code>.</p>
+<table>
+  <tr><th style="width:19%">Token</th><th style="width:43%">Expressão regular</th><th>Descrição</th></tr>
+  <tr class="ign"><td>ESPACO <em>(ignorado)</em></td><td><code>\s+</code></td><td>espaços, tabulações e quebras de linha; usadas para contar linhas</td></tr>
+  <tr class="ign"><td>COMENTARIO <em>(ignorado)</em></td><td><code>\/\/[^\n]*</code></td><td>de <code>//</code> até o fim da linha</td></tr>
+  <tr><td>TELA</td><td><code>tela</code>F</td><td>declaração da tela</td></tr>
+  <tr><td>POR</td><td><code>por</code>F</td><td>separa largura e altura (tela e retângulo)</td></tr>
+  <tr><td>RETANGULO</td><td><code>(retangulo|retângulo)</code>F</td><td>forma retângulo</td></tr>
+  <tr><td>RETA</td><td><code>reta</code>F</td><td>forma reta (segmento)</td></tr>
+  <tr><td>CIRCULO</td><td><code>(circulo|círculo)</code>F</td><td>forma círculo</td></tr>
+  <tr><td>GRUPO</td><td><code>grupo</code>F</td><td>início de grupo</td></tr>
+  <tr><td>ROTACIONA</td><td><code>rotaciona</code>F</td><td>modificador de rotação</td></tr>
+  <tr><td>DESLOCA</td><td><code>desloca</code>F</td><td>modificador de deslocamento</td></tr>
+  <tr><td>COM</td><td><code>com</code>F</td><td>introduz os atributos de estilo</td></tr>
+  <tr><td>TRACO</td><td><code>(traco|traço)</code>F</td><td>atributo cor do traço</td></tr>
+  <tr><td>PREENCHIMENTO</td><td><code>preenchimento</code>F</td><td>atributo cor do preenchimento</td></tr>
+  <tr><td>ESPESSURA</td><td><code>espessura</code>F</td><td>atributo espessura do traço</td></tr>
+  <tr><td>COR_NOME</td><td><code>(preto|branco|vermelho|verde|azul|amarelo|laranja|roxo|rosa|cinza)</code>F</td><td>cor da lista fechada (10 nomes)</td></tr>
+  <tr><td>COR_HEX</td><td><code>#[0-9A-Fa-f]{6}</code>F</td><td>cor hexadecimal #RRGGBB</td></tr>
+  <tr><td>NUM</td><td><code>(0|[1-9][0-9]*)</code>F</td><td>inteiro sem sinal, sem zero à esquerda</td></tr>
+  <tr><td>ABRE_PAR</td><td><code>\(</code></td><td>abre ponto</td></tr>
+  <tr><td>FECHA_PAR</td><td><code>\)</code></td><td>fecha ponto</td></tr>
+  <tr><td>VIRGULA</td><td><code>,</code></td><td>separa x e y no ponto</td></tr>
+  <tr><td>ABRE_CHAVE</td><td><code>\{</code></td><td>abre o corpo do grupo</td></tr>
+  <tr><td>FECHA_CHAVE</td><td><code>\}</code></td><td>fecha o corpo do grupo</td></tr>
+</table>
+<p>Um trecho que não forma nenhum token é um <strong>erro léxico</strong>: o analisador registra a linha e a palavra inteira (do ponto do erro até o próximo espaço), pula esse trecho e continua, para relatar todos os erros léxicos de uma vez.</p>
+
+<h2>3. Definição sintática</h2>
+<p>Notação: palavras em MAIÚSCULAS são tokens, em minúsculas são variáveis; <code>|</code> separa alternativas e <code>ε</code> é a cadeia vazia. <strong>Símbolo inicial: <code>programa</code>.</strong> Depois de <code>programa</code>, a entrada precisa ter acabado.</p>
+<pre>programa      → tela itens
+tela          → TELA NUM POR NUM
+itens         → item itens | ε
+item          → forma | grupo
+forma         → RETA ponto ponto estilo
+              | CIRCULO ponto NUM estilo
+              | RETANGULO ponto NUM POR NUM estilo
+ponto         → ABRE_PAR NUM VIRGULA NUM FECHA_PAR
+grupo         → GRUPO modificadores ABRE_CHAVE itens FECHA_CHAVE
+modificadores → modificador modificadores | ε
+modificador   → ROTACIONA NUM | DESLOCA ponto
+estilo        → COM atributos | ε
+atributos     → TRACO cor resto_PE | PREENCHIMENTO cor resto_TE | ESPESSURA NUM resto_TP
+resto_PE      → PREENCHIMENTO cor resto_E | ESPESSURA NUM resto_P | ε
+resto_TE      → TRACO cor resto_E | ESPESSURA NUM resto_T | ε
+resto_TP      → TRACO cor resto_P | PREENCHIMENTO cor resto_T | ε
+resto_T       → TRACO cor | ε
+resto_P       → PREENCHIMENTO cor | ε
+resto_E       → ESPESSURA NUM | ε
+cor           → COR_NOME | COR_HEX</pre>
+<p>O índice de <code>resto_XY</code> diz quais atributos ainda podem aparecer (T = traço, P = preenchimento, E = espessura). Assim a própria gramática garante que, depois de <code>com</code>, venha pelo menos um atributo, em qualquer ordem, e que <strong>nenhum se repita</strong>. No parser, essa família é uma única função <code>atributos(disponiveis, …)</code>, chamada com o conjunto de atributos restantes.</p>
+
+<h3>Por que a gramática serve a um parser descendente recursivo (LL(1))</h3>
+<ul>
+  <li><strong>Sem recursão à esquerda:</strong> toda alternativa começa por um token ou por <code>forma</code>/<code>grupo</code>, que começam por tokens. As listas (<code>itens</code>, <code>modificadores</code>) são recursivas à direita.</li>
+  <li><strong>Escolha pelo próximo token:</strong> as alternativas de cada variável começam por tokens diferentes, e cada variável que deriva ε tem FIRST disjunto de FOLLOW:</li>
+</ul>
+<table>
+  <tr><th style="width:20%">Variável</th><th>FIRST (sem ε)</th><th>FOLLOW</th></tr>
+  <tr><td><code>itens</code></td><td>RETA, CIRCULO, RETANGULO, GRUPO</td><td>FECHA_CHAVE, fim</td></tr>
+  <tr><td><code>modificadores</code></td><td>ROTACIONA, DESLOCA</td><td>ABRE_CHAVE</td></tr>
+  <tr><td><code>estilo</code></td><td>COM</td><td>RETA, CIRCULO, RETANGULO, GRUPO, FECHA_CHAVE, fim</td></tr>
+  <tr><td><code>resto_*</code></td><td>subconjunto de TRACO, PREENCHIMENTO, ESPESSURA</td><td>igual ao FOLLOW de <code>estilo</code></td></tr>
+</table>
+<p>Um programa cuja sequência de tokens não obedece à gramática tem um <strong>erro sintático</strong>. O parser para no primeiro e informa a linha, o que era esperado (os tokens aceitos naquele ponto) e o que foi encontrado (tipo e lexema, ou “o fim do programa”). Exemplo: <code>Erro sintático na linha 2: esperado ABRE_PAR, encontrado NUM "1"</code>.</p>
+
+<h2>4. Árvore sintática abstrata (AST)</h2>
+<p>A AST é feita de objetos JavaScript, cada um com o campo <code>tipo</code>. Números são <code>Number</code>; não há pontuação nem delimitadores; os grupos se aninham como no texto; os modificadores ficam na ordem em que foram escritos.</p>
+<table>
+  <tr><th style="width:16%">tipo</th><th style="width:36%">Campos</th><th>Significado</th></tr>
+  <tr><td><code>programa</code></td><td><code>tela</code>, <code>itens</code></td><td>raiz; <code>tela</code> é um nó tela e <code>itens</code> a lista de formas e grupos de nível superior, na ordem do texto</td></tr>
+  <tr><td><code>tela</code></td><td><code>largura</code>, <code>altura</code></td><td>dimensões do desenho</td></tr>
+  <tr><td><code>reta</code></td><td><code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>, <code>estilo</code></td><td>segmento do ponto (x1, y1) ao ponto (x2, y2)</td></tr>
+  <tr><td><code>circulo</code></td><td><code>cx</code>, <code>cy</code>, <code>raio</code>, <code>estilo</code></td><td>centro e raio</td></tr>
+  <tr><td><code>retangulo</code></td><td><code>x</code>, <code>y</code>, <code>largura</code>, <code>altura</code>, <code>estilo</code></td><td>canto superior esquerdo e dimensões</td></tr>
+  <tr><td><code>grupo</code></td><td><code>modificadores</code>, <code>itens</code></td><td>lista de modificadores (na ordem escrita, pode ser vazia) e lista de formas e grupos internos (pode ser vazia)</td></tr>
+  <tr><td><code>rotacao</code></td><td><code>angulo</code></td><td>modificador de grupo: ângulo em graus</td></tr>
+  <tr><td><code>deslocamento</code></td><td><code>dx</code>, <code>dy</code></td><td>modificador de grupo: deslocamento horizontal e vertical</td></tr>
+  <tr><td><em>estilo</em> (objeto sem <code>tipo</code>)</td><td><code>traco?</code>, <code>preenchimento?</code>, <code>espessura?</code></td><td>só os atributos escritos aparecem; <code>{}</code> se a forma não tem estilo. Cores são texto como escrito (<code>"azul"</code>, <code>"#F5DEB3"</code>); espessura é número</td></tr>
+</table>
+
+<h3>AST do exemplo 1 (carro)</h3>
+<pre class="longo">{
+  "tipo": "programa",
+  "tela": { "tipo": "tela", "largura": 400, "altura": 300 },
+  "itens": [
+    {
+      "tipo": "retangulo",
+      "x": 50,
+      "y": 150,
+      "largura": 200,
+      "altura": 60,
+      "estilo": { "preenchimento": "azul" }
+    },
+    {
+      "tipo": "grupo",
+      "modificadores": [
+        { "tipo": "deslocamento", "dx": 70, "dy": 190 }
+      ],
+      "itens": [
+        {
+          "tipo": "circulo",
+          "cx": 0,
+          "cy": 0,
+          "raio": 25,
+          "estilo": { "preenchimento": "preto" }
+        },
+        {
+          "tipo": "grupo",
+          "modificadores": [
+            { "tipo": "rotacao", "angulo": 45 }
+          ],
+          "itens": [
+            {
+              "tipo": "reta",
+              "x1": 0,
+              "y1": 0,
+              "x2": 20,
+              "y2": 0,
+              "estilo": { "traco": "branco", "espessura": 2 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "grupo",
+      "modificadores": [
+        { "tipo": "deslocamento", "dx": 200, "dy": 190 }
+      ],
+      "itens": [
+        {
+          "tipo": "circulo",
+          "cx": 0,
+          "cy": 0,
+          "raio": 25,
+          "estilo": { "preenchimento": "preto" }
+        }
+      ]
+    }
+  ]
+}</pre>
+
+<h2>5. Decisões de projeto</h2>
+<ol>
+  <li><strong>Palavras-chave</strong> em minúsculas e sensíveis a maiúsculas: <code>Tela</code> é erro léxico. As formas acentuadas <code>retângulo</code>, <code>círculo</code> e <code>traço</code> também são aceitas e geram o mesmo token; o lexema guarda o que foi escrito.</li>
+  <li><strong>Palavra maior que começa com palavra-chave</strong> (<code>retas</code>, <code>retangulos</code>, <code>telas</code>, <code>azulado</code>, <code>400px</code>) é erro léxico da palavra inteira. Nunca é quebrada em dois tokens, graças ao teste de fim de palavra.</li>
+  <li><strong>Números:</strong> <code>0</code> é aceito. Zeros à esquerda (<code>05</code>, <code>00</code>, <code>007</code>) são <strong>erro léxico</strong>, pois a regra é <code>0|[1-9][0-9]*</code> seguida do fim de palavra. Não há sinal nem casas decimais, então coordenadas e deslocamentos negativos não podem ser escritos (consequência do requisito “inteiros sem sinal”).</li>
+  <li><strong>Comentário</strong> com <code>//</code>, que não conflita com <code>#</code>: <code>#</code> só aparece no começo de cores hexadecimais. Um comentário pode ocupar a linha toda ou vir depois de código, e dentro dele vale qualquer texto. Uma barra simples <code>/</code> é erro léxico.</li>
+  <li><strong>Cores:</strong> 10 nomes. Hexadecimal com exatamente 6 dígitos, maiúsculos ou minúsculos (<code>#fff</code> e <code>#12345G</code> são erros léxicos). A AST guarda a cor como foi escrita.</li>
+  <li><strong>Erro léxico:</strong> todos são relatados (linha e trecho até o próximo espaço). Se houver algum, a análise sintática não roda e não há AST.</li>
+  <li><strong>Tela:</strong> obrigatória, exatamente uma e antes de qualquer forma (comentários podem vir antes). Uma segunda <code>tela</code> é erro sintático. Dimensões zero são aceitas na sintaxe; validar valores é tarefa da Fase 2.</li>
+  <li><strong>Programa só com a tela</strong> é válido (desenho vazio). Um programa vazio é erro sintático (falta a tela).</li>
+  <li><strong>Grupo vazio</strong> (<code>grupo { }</code>) é aceito e gera <code>itens: []</code>. Grupo sem modificadores também.</li>
+  <li><strong>Modificadores:</strong> só em grupos, entre <code>grupo</code> e <code>{</code>. Zero ou mais, em qualquer ordem, <strong>repetições permitidas</strong> (por exemplo, desloca, rotaciona, desloca), porque compor transformações faz sentido e a ordem fica registrada na AST. Modificador depois de uma forma é erro sintático.</li>
+  <li><strong>Estilo:</strong> só em formas, introduzido por <code>com</code>, com 1 a 3 atributos em qualquer ordem. <strong>Atributo repetido é erro sintático</strong> (a gramática não o gera); <code>com</code> sem atributo também. Estilo em grupo é erro sintático. <code>espessura 0</code> é aceita.</li>
+  <li><strong>Espaços e pontuação:</strong> espaços e quebras de linha são livres entre tokens, e a pontuação dispensa espaço (<code>reta(0,0)(1,1)</code> é válido). Um ponto exige parênteses e vírgula: <code>desloca 10 20</code> é erro sintático.</li>
+  <li><strong>Erro sintático:</strong> o parser para no primeiro. Se o programa terminar antes da hora, a linha informada é a do último token e o encontrado é “o fim do programa”.</li>
+  <li><strong>AST:</strong> só é gerada sem erros. Números como <code>Number</code>, sem tokens de pontuação, estilo apenas com os atributos presentes.</li>
+</ol>
+
+<h2>6. Implementação e testes</h2>
+<p>Arquivos (JavaScript puro, módulos ES, sem bibliotecas de análise): <code>tokens.js</code> (regras), <code>lexer.js</code> (analisador léxico), <code>parser.js</code> (descendente recursivo e AST), <code>main.js</code> e <code>index.html</code> (página de teste), <code>geradorMermaid.js</code> (desenho opcional da árvore), <code>casos.js</code> (casos de teste) e <code>testes.mjs</code> (conferência automática com <code>node testes.mjs</code>). Os 5 programas válidos e os 3 inválidos, com o resultado esperado de cada um, estão em <code>casos_de_teste.md</code>; a página permite carregar cada caso e confere o resultado obtido com o esperado.</p>
+
+</body>
+</html>

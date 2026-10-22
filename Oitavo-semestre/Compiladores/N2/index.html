@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Analisador Traço</title>
+    <meta name="claude:viewport-fit-sides" content="cover">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+    <style>
+        /* Prancheta de desenho técnico: editor à esquerda, leitura do resultado à direita.
+           Papel milimetrado levemente azulado, tinta nanquim e lápis vermelho para erros. */
+        :root {
+            --papel: #f6f8fb;
+            --folha: #ffffff;
+            --tinta: #18202e;
+            --tinta-suave: #5a6576;
+            --grade: #dfe5ee;
+            --acento: #1f5fbf;
+            --acento-texto: #ffffff;
+            --ok: #1d7a4a;
+            --ok-fundo: #e7f5ec;
+            --erro: #b42318;
+            --erro-fundo: #fdecea;
+            --fonte-titulo: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+            --fonte-texto: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+            --fonte-codigo: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+            --raio: 6px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --papel: #10151d;
+                --folha: #171e29;
+                --tinta: #e4e9f1;
+                --tinta-suave: #98a3b4;
+                --grade: #2a3442;
+                --acento: #6ea2f0;
+                --acento-texto: #0d1420;
+                --ok: #5fcf8f;
+                --ok-fundo: #15291f;
+                --erro: #ff8a7a;
+                --erro-fundo: #33191a;
+                color-scheme: dark;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --papel: #10151d;
+            --folha: #171e29;
+            --tinta: #e4e9f1;
+            --tinta-suave: #98a3b4;
+            --grade: #2a3442;
+            --acento: #6ea2f0;
+            --acento-texto: #0d1420;
+            --ok: #5fcf8f;
+            --ok-fundo: #15291f;
+            --erro: #ff8a7a;
+            --erro-fundo: #33191a;
+            color-scheme: dark;
+        }
+
+        * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+
+        body {
+            margin: 0;
+            background-color: var(--papel);
+            background-image:
+                linear-gradient(var(--grade) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: var(--tinta);
+            font-family: var(--fonte-texto);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .pagina {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding-block: 28px 48px;
+            padding-left: max(16px, env(safe-area-inset-left, 0px));
+            padding-right: max(16px, env(safe-area-inset-right, 0px));
+            display: grid;
+            gap: 20px;
+        }
+
+        header { display: grid; gap: 4px; }
+
+        .sobretitulo {
+            margin: 0;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--tinta-suave);
+        }
+
+        h1 {
+            margin: 0;
+            font-family: var(--fonte-titulo);
+            font-size: clamp(28px, 4vw, 38px);
+            line-height: 1.1;
+            text-wrap: balance;
+        }
+
+        h2 {
+            margin: 0;
+            font-family: var(--fonte-titulo);
+            font-size: 18px;
+        }
+
+        .subtitulo { margin: 0; color: var(--tinta-suave); max-width: 65ch; }
+
+        .colunas {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 880px) {
+            .colunas { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        .painel {
+            background: var(--folha);
+            border: 1px solid var(--grade);
+            border-radius: var(--raio);
+            padding: 16px;
+            display: grid;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .coluna { display: grid; gap: 20px; min-width: 0; }
+
+        .barra {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px 12px;
+        }
+
+        label { font-size: 13px; color: var(--tinta-suave); }
+
+        select, button, textarea { font: inherit; color: inherit; }
+
+        select {
+            background: var(--folha);
+            border: 1px solid var(--grade);
+            border-radius: var(--raio);
+            padding: 6px 8px;
+            max-width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 340px;
+            resize: vertical;
+            font-family: var(--fonte-codigo);
+            font-size: 14px;
+            line-height: 1.6;
+            tab-size: 4;
+            padding: 12px;
+            background: var(--papel);
+            border: 1px solid var(--grade);
+            border-radius: var(--raio);
+        }
+
+        textarea:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible {
+            outline: 2px solid var(--acento);
+            outline-offset: 2px;
+        }
+
+        #botao {
+            background: var(--acento);
+            color: var(--acento-texto);
+            border: none;
+            border-radius: var(--raio);
+            padding: 9px 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #botao:hover { filter: brightness(1.08); }
+
+        .atalho { font-size: 13px; color: var(--tinta-suave); }
+
+        kbd {
+            font-family: var(--fonte-codigo);
+            font-size: 12px;
+            border: 1px solid var(--grade);
+            border-radius: 4px;
+            padding: 0 4px;
+        }
+
+        /* veredito e conferência */
+        #veredito, #conferencia {
+            border-radius: var(--raio);
+            padding: 14px 16px;
+            border-left: 4px solid var(--tinta-suave);
+            background: var(--folha);
+            display: grid;
+            gap: 6px;
+        }
+
+        #veredito[data-estado="ok"], #conferencia[data-estado="ok"] {
+            border-left-color: var(--ok);
+            background: var(--ok-fundo);
+        }
+
+        #veredito[data-estado="erro"], #conferencia[data-estado="erro"] {
+            border-left-color: var(--erro);
+            background: var(--erro-fundo);
+        }
+
+        .titulo-veredito {
+            margin: 0;
+            font-family: var(--fonte-titulo);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        #veredito[data-estado="ok"] .titulo-veredito { color: var(--ok); }
+        #veredito[data-estado="erro"] .titulo-veredito { color: var(--erro); }
+
+        .resumo { margin: 0; color: var(--tinta-suave); }
+
+        #veredito ul { margin: 0; padding-left: 20px; font-family: var(--fonte-codigo); font-size: 14px; }
+
+        .detalhe { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+
+        .rotulo {
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--tinta-suave);
+            min-width: 88px;
+        }
+
+        .detalhe code { font-family: var(--fonte-codigo); font-size: 14px; overflow-wrap: anywhere; }
+
+        #conferencia { font-size: 14px; }
+        #conferencia span { color: var(--tinta-suave); }
+
+        /* tokens */
+        .rolagem { overflow: auto; max-height: 420px; border: 1px solid var(--grade); border-radius: var(--raio); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: var(--folha);
+            text-align: left;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--tinta-suave);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--grade);
+        }
+
+        td { padding: 4px 12px; border-bottom: 1px solid var(--grade); font-family: var(--fonte-codigo); }
+        tr:last-child td { border-bottom: none; }
+        td.num { font-variant-numeric: tabular-nums; color: var(--tinta-suave); width: 4.5em; }
+        td.tipo { color: var(--acento); font-weight: 500; }
+        td.lexema { white-space: pre; }
+        td.vazio { color: var(--tinta-suave); font-family: var(--fonte-texto); }
+
+        #contagem { font-size: 13px; color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+
+        /* AST */
+        .abas { display: flex; gap: 4px; }
+
+        .abas button {
+            background: transparent;
+            border: 1px solid var(--grade);
+            border-radius: var(--raio);
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .abas button[aria-selected="true"] { background: var(--acento); border-color: var(--acento); color: var(--acento-texto); }
+
+        #ast-json, #ast-arvore pre {
+            margin: 0;
+            font-family: var(--fonte-codigo);
+            font-size: 13px;
+            line-height: 1.5;
+            background: var(--papel);
+            border: 1px solid var(--grade);
+            border-radius: var(--raio);
+            padding: 12px;
+            overflow: auto;
+            max-height: 520px;
+        }
+
+        #ast-arvore { overflow: auto; max-height: 560px; }
+        #ast-arvore svg { max-width: none; height: auto; }
+
+        /* referência da linguagem */
+        details summary { cursor: pointer; font-family: var(--fonte-titulo); font-weight: 600; font-size: 16px; }
+
+        .referencia {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px 24px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .referencia div { min-width: 0; }
+        .referencia h3 { margin: 0 0 4px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-suave); font-weight: 500; }
+        .referencia code { font-family: var(--fonte-codigo); font-size: 13px; overflow-wrap: anywhere; }
+        .referencia p { margin: 0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pagina">
+        <header>
+            <p class="sobretitulo">Compiladores · Fase 1 · do texto à AST</p>
+            <h1>Analisador Traço</h1>
+            <p class="subtitulo">Escreva um desenho na linguagem Traço e clique em Analisar. A página mostra os
+                tokens e, conforme o caso, os erros léxicos, o erro sintático ou a AST.</p>
+        </header>
+
+        <div class="colunas">
+            <div class="coluna">
+                <section class="painel" aria-labelledby="titulo-programa">
+                    <div class="barra">
+                        <h2 id="titulo-programa">Programa</h2>
+                        <div>
+                            <label for="exemplos">Casos de teste</label>
+                            <select id="exemplos">
+                                <option value="">texto livre</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="entrada" spellcheck="false" aria-label="Programa em Traço"></textarea>
+                    <div class="barra">
+                        <button id="botao">Analisar</button>
+                        <span class="atalho"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> também analisa</span>
+                    </div>
+                </section>
+
+                <section class="painel">
+                    <details>
+                        <summary>Referência rápida da linguagem</summary>
+                        <div class="referencia">
+                            <div>
+                                <h3>Tela (obrigatória, primeira)</h3>
+                                <p><code>tela 400 por 300</code></p>
+                            </div>
+                            <div>
+                                <h3>Formas</h3>
+                                <p><code>reta (x1, y1) (x2, y2)</code><br>
+                                    <code>circulo (cx, cy) raio</code><br>
+                                    <code>retangulo (x, y) largura por altura</code></p>
+                            </div>
+                            <div>
+                                <h3>Estilo (opcional, sem repetir)</h3>
+                                <p><code>… com traco azul preenchimento #FFAA00 espessura 2</code></p>
+                            </div>
+                            <div>
+                                <h3>Grupo e modificadores</h3>
+                                <p><code>grupo desloca (10, 20) rotaciona 45 { … }</code></p>
+                            </div>
+                            <div>
+                                <h3>Cores</h3>
+                                <p><code>preto branco vermelho verde azul amarelo laranja roxo rosa cinza</code> ou
+                                    <code>#RRGGBB</code></p>
+                            </div>
+                            <div>
+                                <h3>Comentário e números</h3>
+                                <p><code>// até o fim da linha</code><br>inteiros sem sinal, sem zero à esquerda
+                                    (<code>0</code> sim, <code>05</code> não)</p>
+                            </div>
+                        </div>
+                    </details>
+                </section>
+            </div>
+
+            <div class="coluna">
+                <div id="veredito" aria-live="polite"></div>
+                <div id="conferencia" hidden></div>
+
+                <section class="painel" id="bloco-ast" aria-labelledby="titulo-ast">
+                    <div class="barra">
+                        <h2 id="titulo-ast">AST</h2>
+                        <div class="abas" role="tablist">
+                            <button role="tab" data-aba="ast-json" aria-selected="true">JSON</button>
+                            <button role="tab" data-aba="ast-arvore" aria-selected="false">Árvore</button>
+                        </div>
+                    </div>
+                    <pre id="ast-json"></pre>
+                    <div id="ast-arvore" hidden></div>
+                </section>
+
+                <section class="painel" aria-labelledby="titulo-tokens">
+                    <div class="barra">
+                        <h2 id="titulo-tokens">Tokens</h2>
+                        <span id="contagem"></span>
+                    </div>
+                    <div class="rolagem">
+                        <table>
+                            <thead>
+                                <tr><th>Linha</th><th>Tipo</th><th>Lexema</th></tr>
+                            </thead>
+                            <tbody id="tokens"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
