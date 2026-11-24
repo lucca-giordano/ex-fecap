@@ -1,3 +1,8 @@
+Integrantes do grupo:
+
+Lucca Giordano - 23024522
+Beatriz Ferreira - 23024947
+
 # Analisador léxico e sintático do Robô
 
 *Tutorial passo a passo em JavaScript, sem bibliotecas*

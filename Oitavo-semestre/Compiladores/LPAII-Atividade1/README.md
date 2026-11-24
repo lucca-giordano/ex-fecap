@@ -9,6 +9,8 @@
 - Lucca Giordano - 23024522
 - Beatriz Ferreira - 23024947
 
+Perdão pelo atraso, imaginamos que pudesse entregar até hoje.
+
 Para executar, basta abrir o `index.html` no navegador.
 
 ---
